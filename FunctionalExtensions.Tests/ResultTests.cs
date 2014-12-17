@@ -107,11 +107,13 @@ namespace FunctionalExtensions.Tests
                 Orders = new[] { new Order(), new Order { ProductName = "Axt" , Cost = -8999.56m } }
             };
 
+            var validateOrders = Validation.EnumerableValidator<Order>(ValidateOrder);
+
             var result =
                 from surname in Validation.NonNull(customer.Surname, "Surname can't be null")
                 from surname2 in Validation.NotEqual(customer.Surname, "foo", "Surname can't be foo")
                 join address in ValidateAddress(customer.Address) on 1 equals 1
-                join orders in ValidateOrders()(customer.Orders) on 1 equals 1
+                join orders in validateOrders(customer.Orders) on 1 equals 1
                 select customer;
 
             result.Match(
@@ -129,23 +131,19 @@ namespace FunctionalExtensions.Tests
                 Orders = null
             };
 
+            var validateOrders = Validation.EnumerableValidator<Order>(ValidateOrder);
+
             var result =
-                from surname in Validation.NonNull(customer.Surname, "Surname can't be null")
+                from surname in Validation.IsNullOrEmpty(customer.Surname, "Surname can't be null")
                 from surname2 in Validation.NotEqual(customer.Surname, "foo", "Surname can't be foo")
                 join address in ValidateAddress(customer.Address) on 1 equals 1
                 join ordersnotnull in Validation.NonNull(customer.Orders, "Orders cannot be NULL") on 1 equals 1
-                from orders in ValidateOrders()(customer.Orders) 
+                from orders in validateOrders(customer.Orders) 
                 select customer;
 
             result.Match(
                 customer1 => { },
                 errors => Assert.That(errors.Messages.ToList(), Is.EquivalentTo(new[] { "Address cannot be null", "Surname can't be null", "Orders cannot be NULL" })));
-        }
-
-        private static Func<IEnumerable<Order>, Choice<IEnumerable<Order>, Errors>> ValidateOrders()
-        {
-            var validateOrders = Validation.EnumerableValidator<Order>(ValidateOrder);
-            return validateOrders;
         }
 
         private static Choice<Address, Errors> ValidateAddress(Address a)
