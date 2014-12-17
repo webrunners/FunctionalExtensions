@@ -10,12 +10,12 @@ namespace FunctionalExtensions.Tests
         public void ValidationWithOptionMonad_HappyDay_Test()
         {
             var result = 0.0;
-            var d1 = new Func<Option<Double>>(() => Option.Some(2.5));
-            var d2 = new Func<Option<Double>>(() => Option.Some(2.5));
+            var d1 = Lambda.Create(() => Option.Some(2.5));
+            var d2 = Lambda.Create(() => Option.Some(2.5));
 
-            var callbackSome = new Action<double>(x => result = x);
+            var callbackSome = Lambda.Create((double x) => result = x);
 
-            var callbackNone = new Action(Assert.Fail);
+            var callbackNone = Lambda.Create(Assert.Fail);
 
             // happy day
             ValidationWithOptionMonad(d1, d2, Devide, callbackSome, callbackNone);
@@ -26,9 +26,9 @@ namespace FunctionalExtensions.Tests
         public void ValidationWithOptionMonad_RainyDay_Test()
         {
             var isCalled = false;
-            var d1 = new Func<Option<Double>>(() => Option.Some(2.5));
-            var zero = new Func<Option<Double>>(() => Option.Some(0.0));
-            var ex = new Func<Option<double>>(Option.None<double>);
+            var d1 = Lambda.Create(() => Option.Some(2.5));
+            var zero = Lambda.Create(() => Option.Some(0.0));
+            var ex = Lambda.Create(() => Option.None<double>());
 
             // errors
             Action callbackNone = () => isCalled = true;

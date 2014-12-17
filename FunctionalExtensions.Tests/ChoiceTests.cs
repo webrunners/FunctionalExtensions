@@ -10,8 +10,8 @@ namespace FunctionalExtensions.Tests
         public void ValidationWithChoiceMonad_HappyDay_Test()
         {
             var result = 0.0;
-            var d1 = new Func<Choice<double, string>>(() => Choice.NewChoice1Of2<double, string>(2.5));
-            var d2 = new Func<Choice<double, string>>(() => Choice.NewChoice1Of2<double, string>(2.5));
+            var d1 = Lambda.Create(() => Choice.NewChoice1Of2<double, string>(2.5));
+            var d2 = Lambda.Create(() => Choice.NewChoice1Of2<double, string>(2.5));
 
             var callbackSome = new Action<double>(x => result = x);
 
@@ -25,10 +25,10 @@ namespace FunctionalExtensions.Tests
         [Test]
         public void ValidationWithChoiceMonad_RainyDay_Test()
         {
-            var d1 = new Func<Choice<double, string>>(() => Choice.NewChoice1Of2<double, string>(2.5));
-            var ex1 = new Func<Choice<double, string>>(() => Choice.NewChoice2Of2<double, string>("Error1"));
-            var ex2 = new Func<Choice<double, string>>(() => Choice.NewChoice2Of2<double, string>("Error2"));
-            var zero = new Func<Choice<double, string>>(() => Choice.NewChoice1Of2<double, string>(0.0));
+            var d1 = Lambda.Create(() => Choice.NewChoice1Of2<double, string>(2.5));
+            var ex1 = Lambda.Create(() => Choice.NewChoice2Of2<double, string>("Error1"));
+            var ex2 = Lambda.Create(() => Choice.NewChoice2Of2<double, string>("Error2"));
+            var zero = Lambda.Create(() => Choice.NewChoice1Of2<double, string>(0.0));
 
             // errors
             var error = String.Empty;

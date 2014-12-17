@@ -12,12 +12,12 @@ namespace FunctionalExtensions.Tests
         public void ValidationWithResultApplicativeFunctor_HappyDay_Test()
         {
             var result = 0.0;
-            var d1 = new Func<Choice<double, Errors>>(() => Choice.NewChoice1Of2<double, Errors>(2.5));
-            var d2 = new Func<Choice<double, Errors>>(() => Choice.NewChoice1Of2<double, Errors>(2.5));
+            var d1 = Lambda.Create(() => Choice.NewChoice1Of2<double, Errors>(2.5));
+            var d2 = Lambda.Create(() => Choice.NewChoice1Of2<double, Errors>(2.5));
 
-            var callbackSome = new Action<double>(x => result = x);
+            var callbackSome = Lambda.Create((double x) => result = x);
 
-            var callbackNone = new Action<Errors>(x => Assert.Fail());
+            var callbackNone = Lambda.Create((Errors x) => Assert.Fail());
 
             // happy day
             ValidationWithResultApplicativeFunctor(d1, d2, callbackSome, callbackNone);
@@ -27,10 +27,10 @@ namespace FunctionalExtensions.Tests
         [Test]
         public void ValidationWithResultApplicativeFunctor_RainyDay_Test()
         {
-            var d1 = new Func<Choice<double, Errors>>(() => Choice.NewChoice1Of2<double, Errors>(2.5));
-            var ex1 = new Func<Choice<double, Errors>>(() => Choice.NewChoice2Of2<double, Errors>(new Errors("Error1")));
-            var ex2 = new Func<Choice<double, Errors>>(() => Choice.NewChoice2Of2<double, Errors>(new Errors("Error2")));
-            var zero = new Func<Choice<double, Errors>>(() => Choice.NewChoice1Of2<double, Errors>(0.0));
+            var d1 = Lambda.Create(() => Choice.NewChoice1Of2<double, Errors>(2.5));
+            var ex1 = Lambda.Create(() => Choice.NewChoice2Of2<double, Errors>(new Errors("Error1")));
+            var ex2 = Lambda.Create(() => Choice.NewChoice2Of2<double, Errors>(new Errors("Error2")));
+            var zero = Lambda.Create(() => Choice.NewChoice1Of2<double, Errors>(0.0));
 
             // errors
             var errors = new List<string>();

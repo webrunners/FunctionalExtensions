@@ -25,8 +25,8 @@ namespace FunctionalExtensions
         {
             var zero = Choice.NewChoice1Of2<IEnumerable<T>, Errors>(new List<T>());
 
-            return x =>
-                x.Select(validateOrder)
+            return x => x
+                .Select(validateOrder)
                 .Aggregate(zero,
                     (e, c) =>
                         from a in e
