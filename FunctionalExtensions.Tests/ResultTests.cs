@@ -134,7 +134,7 @@ namespace FunctionalExtensions.Tests
             var validateOrders = Validation.EnumerableValidator<Order>(ValidateOrder);
 
             var result =
-                from surname in Validation.IsNullOrEmpty(customer.Surname, "Surname can't be null")
+                from surname in Validation.NotNullOrEmpty(customer.Surname, "Surname can't be null")
                 from surname2 in Validation.NotEqual(customer.Surname, "foo", "Surname can't be foo")
                 join address in ValidateAddress(customer.Address) on 1 equals 1
                 join ordersnotnull in Validation.NonNull(customer.Orders, "Orders cannot be NULL") on 1 equals 1

@@ -16,7 +16,7 @@ namespace FunctionalExtensions
             return value.Equals(pattern) ? Result.Error<T>(err) : Result.Ok(value);
         }
 
-        public static Choice<string, Errors> IsNullOrEmpty(string value, string err)
+        public static Choice<string, Errors> NotNullOrEmpty(string value, string err)
         {
             return String.IsNullOrEmpty(value) ? Result.Error<string>(err) : Result.Ok(value);
         }
