@@ -1,19 +1,19 @@
 ﻿using System;
 
-namespace FunctionalExtensions
+namespace FunctionalExtensions.Validation.Fluent
 {
-    public class Validator<T> where T : class
+    public class FluentValidator<T> where T : class
     {
         private readonly T _instance;
 
-        internal Validator(T instance)
+        internal FluentValidator(T instance)
         {
             _instance = instance;
         }
 
         public Continuation<T> IsNotNull(string err)
         {
-            Result = Validation.NonNull(_instance, err);
+            Result = Validator.NonNull(_instance, err);
             return new Continuation<T>(this, Result);
         }
 
@@ -27,10 +27,10 @@ namespace FunctionalExtensions
 
     public class Continuation<T> where T : class
     {
-        private readonly Validator<T> _validator;
+        private readonly FluentValidator<T> _validator;
         private readonly Choice<T, Errors> _result;
 
-        public Continuation(Validator<T> validator, Choice<T, Errors> result)
+        public Continuation(FluentValidator<T> validator, Choice<T, Errors> result)
         {
             _validator = validator;
             _result = result;
@@ -57,10 +57,10 @@ namespace FunctionalExtensions
         where T : class
         where TMember : class
     {
-        private readonly Validator<T> _validator;
+        private readonly FluentValidator<T> _validator;
         private readonly TMember _member;
 
-        public MemberValidator(Validator<T> validator, TMember member)
+        public MemberValidator(FluentValidator<T> validator, TMember member)
         {
             _validator = validator;
             _member = member;
@@ -101,9 +101,9 @@ namespace FunctionalExtensions
 
     public static class Validate
     {
-        public static Validator<T> That<T>(T instance) where T : class
+        public static FluentValidator<T> That<T>(T instance) where T : class
         {
-            return new Validator<T>(instance);
+            return new FluentValidator<T>(instance);
         }
     }
 }

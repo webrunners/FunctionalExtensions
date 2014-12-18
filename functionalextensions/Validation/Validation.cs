@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FunctionalExtensions
+namespace FunctionalExtensions.Validation
 {
-    public static class Validation
+    public static class Validator
     {
         public static Choice<T, Errors> NonNull<T>(T value, string err) where T : class
         {
@@ -21,7 +21,7 @@ namespace FunctionalExtensions
             return String.IsNullOrEmpty(value) ? Result.Error<string>(err) : Result.Ok(value);
         }
 
-        public static Func<T, Choice<T, Errors>> Validator<T>(Predicate<T> pred, string err)
+        public static Func<T, Choice<T, Errors>> Create<T>(Predicate<T> pred, string err)
         {
             return x => pred(x) ? Result.Ok(x) : Result.Error<T>(err);
         }

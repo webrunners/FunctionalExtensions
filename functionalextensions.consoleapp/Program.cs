@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FunctionalExtensions.Validation;
+using System;
 using System.Linq;
 
 namespace FunctionalExtensions.ConsoleApp

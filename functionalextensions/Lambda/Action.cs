@@ -1,14 +1,9 @@
 ﻿using System;
 
-namespace FunctionalExtensions
+namespace FunctionalExtensions.Lambda
 {
-    public static class Lambda
+    public static class Act
     {
-        public static Func<T> Create<T>(Func<T> del)
-        {
-            return del;
-        }
-
         public static Action<T> Create<T>(Action<T> del)
         {
             return del;
