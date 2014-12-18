@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using NUnit.Framework;
 
 namespace FunctionalExtensions.Tests
@@ -89,9 +91,118 @@ namespace FunctionalExtensions.Tests
             public int Id { get; set; }
             public string Surname { get; set; }
             public string Forename { get; set; }
+            public string Gender { get; set; }
             public decimal Discount { get; set; }
             public Address Address { get; set; }
             public IList<Order> Orders { get; set; }
+        }
+
+        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "M", true, new string[] {})]
+        [TestCase(null, "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be null" })]
+        [TestCase("al-Chwarizmi", null, "M", false, new[] { "forename cannot be null" })]
+        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", null, false, new[] { "gender cannot be null" })]
+        [TestCase(null, null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be null" })]
+        [TestCase("kukku mukku", null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be kukku mukku" })]
+        [TestCase("kukku mukku", "friedrich", null, false, new[] { "gender cannot be null", "forename cannot be friedrich", "surname cannot be kukku mukku", "forename must start with \'A\'" })]
+        [TestCase("kukku mukku", "friedrich", "sdfsdffsdfd", false, new[] { "forename cannot be friedrich", "surname cannot be kukku mukku", "gender must be \'M\' or \'F\'", "forename must start with \'A\'" })]
+        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "sdfsdf", false, new[] { "gender must be \'M\' or \'F\'" })]
+        public void TestStrings(string surname, string forename, string gender, bool isValid, string[] errors)
+        {
+            var customer = new Customer
+            {
+                Surname = surname,
+                Forename = forename,
+                Gender = gender
+            };
+
+            var genderValidation = Validation.Validator<string>(g => g.ToUpper() == "M" || g.ToUpper() == "F", "gender must be \'M\' or \'F\'");
+            var forenameValidation = Validation.Validator<string>(fn => fn.StartsWith("A"), "forename must start with \'A\'");
+
+            var result =
+                from surnamecheck in (
+                    from surnamenotnull in Validation.NonNull(customer.Surname, "surname cannot be null")
+                    from surnamenotkukkumukku in Validation.NotEqual(customer.Surname, "kukku mukku", "surname cannot be kukku mukku") select customer)
+
+                join forenamecheck in (
+                    from fornamenotnull in Validation.NonNull(customer.Forename, "forename cannot be null")
+                    from forenamenotnull in (
+                        from forenamenotfriedrich in Validation.NotEqual(customer.Forename, "friedrich", "forename cannot be friedrich")
+                        join forenamestartswith in forenameValidation(customer.Forename) on 1 equals 1
+                        select customer) select customer) on 1 equals 1
+
+                join gendercheck in ( 
+                    from gendernotnull in Validation.NonNull(customer.Gender, "gender cannot be null")
+                    from  gender2 in genderValidation(customer.Gender) select customer) on 1 equals 1
+
+                select customer;
+
+            result.Match(
+                x => Assert.That(isValid),
+                err =>
+                {
+                    Assert.That(!isValid);
+                    Assert.That(err.Messages, Is.EquivalentTo(errors));
+                });
+        }
+
+        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "M", true, new string[] { })]
+        [TestCase(null, "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be null" })]
+        [TestCase("kukku mukku", "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be kukku mukku" })]
+        [TestCase("al-Chwarizmi", null, "M", false, new[] { "forename cannot be null" })]
+        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", null, false, new[] { "gender cannot be null" })]
+        [TestCase(null, null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be null" })]
+        [TestCase("kukku mukku", null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be kukku mukku" })]
+        [TestCase("kukku mukku", "friedrich", null, false, new[] { "gender cannot be null", "forename connot be friedrich", "surname cannot be kukku mukku", "forename must start with an \'A\'" })]
+        [TestCase("kukku mukku", "friedrich", "sdfsdffsdfd", false, new[] { "forename connot be friedrich", "surname cannot be kukku mukku", "gender must be \'M\' or \'F\'", "forename must start with an \'A\'" })]
+        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "sdfsdf", false, new[] { "gender must be \'M\' or \'F\'" })]
+        public void TestFluent(string surname, string forename, string gender, bool isValid, string[] errors)
+        {
+            var customer = new Customer
+            {
+                Surname = surname,
+                Forename = forename,
+                Gender = gender
+            };
+
+            var result = Validate
+                .That(customer).IsNotNull("customer cannot be null")
+                .And(x => x.Surname).IsNotNull("surname cannot be null")
+                .And(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
+                .And(x => x.Forename).IsNotNull("forename cannot be null")
+                .And(x => x.Forename).Fulfills(x => x != "friedrich", "forename connot be friedrich")
+                .And(x => x.Forename).Fulfills(x => x.StartsWith("A"), "forename must start with an \'A\'")
+                .And(x => x.Gender).IsNotNull("gender cannot be null")
+                .And(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
+                .Result;
+
+            result.Match(
+                x => Assert.That(isValid),
+                err =>
+                {
+                    Assert.That(!isValid);
+                    Assert.That(err.Messages, Is.EquivalentTo(errors));
+                });
+        }
+
+        [Test]
+        public void TestCusotmerNull()
+        {
+            Customer customer = null;
+
+            var result = Validate
+                .That(customer).IsNotNull("customer cannot be null")
+                .And(x => x.Surname).IsNotNull("surname cannot be null")
+                .And(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
+                .And(x => x.Forename).IsNotNull("forename cannot be null")
+                .And(x => x.Forename).Fulfills(x => x != "friedrich", "forename connot be friedrich")
+                .And(x => x.Forename).Fulfills(x => x.StartsWith("A"), "forename must start with an \'A\'")
+                .And(x => x.Gender).IsNotNull("gender cannot be null")
+                .And(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
+                .Result;
+
+            result.Match(
+                x => Assert.Fail(),
+                err => Assert.That(err.Messages, Is.EquivalentTo(new[] { "customer cannot be null" })));
         }
 
         [Test]
@@ -131,14 +242,16 @@ namespace FunctionalExtensions.Tests
                 Orders = null
             };
 
-            var validateOrders = Validation.EnumerableValidator<Order>(ValidateOrder);
+            Func<string, string, Choice<string, Errors>> notNullOrEmpty = (s, s1) => Validation.Validator<string>(x => !String.IsNullOrEmpty(x), s1)(s);
 
             var result =
-                from surname in Validation.NotNullOrEmpty(customer.Surname, "Surname can't be null")
-                from surname2 in Validation.NotEqual(customer.Surname, "foo", "Surname can't be foo")
-                join address in ValidateAddress(customer.Address) on 1 equals 1
-                join ordersnotnull in Validation.NonNull(customer.Orders, "Orders cannot be NULL") on 1 equals 1
-                from orders in validateOrders(customer.Orders) 
+                from c in Validation.NonNull(customer, "Customer cannot be null")
+                from notNull in (
+                    from surname in notNullOrEmpty(customer.Surname, "Surname can't be null")
+                    from surname2 in Validation.NotEqual(customer.Surname, "foo", "Surname can't be foo")
+                    join address in ValidateAddress(customer.Address) on 1 equals 1
+                    join orders in ValidateOrders(customer.Orders) on 1 equals 1
+                    select customer)
                 select customer;
 
             result.Match(
@@ -146,13 +259,13 @@ namespace FunctionalExtensions.Tests
                 errors => Assert.That(errors.Messages.ToList(), Is.EquivalentTo(new[] { "Address cannot be null", "Surname can't be null", "Orders cannot be NULL" })));
         }
 
-        private static Choice<Address, Errors> ValidateAddress(Address a)
+        static Choice<Address, Errors> ValidateAddress(Address a)
         {
             var validateAddressLines = Validation.Validator<Address>(x => x.Line1 != null || x.Line2 == null, "Line1 is empty but Line2 is not");
 
             return
-                from notull in Validation.NonNull(a, "Address cannot be null")
-                from onlyIfNotNull in
+                from address in Validation.NonNull(a, "Address cannot be null")
+                from notNull in
                     (
                         from x in Validation.NonNull(a.Postcode, "Post code can't be null")
                         join y in validateAddressLines(a) on 1 equals 1
@@ -161,9 +274,18 @@ namespace FunctionalExtensions.Tests
                 select a;
         }
 
+        static Choice<IEnumerable<Order>, Errors> ValidateOrders(IEnumerable<Order> orders)
+        {
+            return
+                from o in Validation.NonNull(orders, "Orders cannot be NULL")
+                from notNull in Validation.EnumerableValidator<Order>(ValidateOrder)(orders)
+                select orders;
+        }
+
         static Choice<Order, Errors> ValidateOrder(Order o)
         {
             return
+                from order in Validation.NonNull(o, "Order cannot be NULL")
                 from name in Validation.NonNull(o.ProductName, "Product name can't be null")
                 from cost in Validation.Validator<Order>(x => x.Cost >= 0, string.Format("Cost for product '{0}' can't be negative", name))(o)
                 select o;
