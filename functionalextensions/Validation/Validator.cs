@@ -6,7 +6,7 @@ namespace FunctionalExtensions.Validation
 {
     public static class Validator
     {
-        public static Choice<T, Errors> NonNull<T>(T value, string err) where T : class
+        public static Choice<T, Errors> NotNull<T>(T value, string err) where T : class
         {
             return value == null ? Result.Error<T>(err) : Result.Ok(value);
         }

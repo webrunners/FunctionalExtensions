@@ -98,24 +98,24 @@ namespace FunctionalExtensions.Tests
 
             var result =
                 from surnamecheck in (
-                    from surnamenotnull in Validator.NonNull(customer.Surname, "surname cannot be null")
+                    from surnamenotnull in Validator.NotNull(customer.Surname, "surname cannot be null")
                     from surnamenotkukkumukku in Validator.NotEqual(customer.Surname, "kukku mukku", "surname cannot be kukku mukku") select customer)
 
                 join forenamecheck in (
-                    from fornamenotnull in Validator.NonNull(customer.Forename, "forename cannot be null")
+                    from fornamenotnull in Validator.NotNull(customer.Forename, "forename cannot be null")
                     from forenamenotnull in (
                         from forenamenotfriedrich in Validator.NotEqual(customer.Forename, "friedrich", "forename cannot be friedrich")
                         join forenamestartswith in validateForename(customer.Forename) on 1 equals 1
                         select customer) select customer) on 1 equals 1
 
                 join gendercheck in ( 
-                    from gendernotnull in Validator.NonNull(customer.Gender, "gender cannot be null")
+                    from gendernotnull in Validator.NotNull(customer.Gender, "gender cannot be null")
                     from  gender1 in validateGender(customer.Gender) select customer) on 1 equals 1
 
                 join addresscheck in ValidateAddress(customer.Address) on 1 equals 1
 
                 join orderscheck in (
-                    from ordersnotnull in Validator.NonNull(customer.Orders, "orders cannot be null")
+                    from ordersnotnull in Validator.NotNull(customer.Orders, "orders cannot be null")
                     from orders1 in validateOrders(customer.Orders) select customer) on 1 equals 1
 
                 select customer;
@@ -148,13 +148,13 @@ namespace FunctionalExtensions.Tests
             var result =
                 from surnamecheck in
                     (
-                        from surnamenotnull in Validator.NonNull(customer.Surname, "surname cannot be null")
+                        from surnamenotnull in Validator.NotNull(customer.Surname, "surname cannot be null")
                         from surnamenotkukkumukku in Validator.NotEqual(customer.Surname, "kukku mukku", "surname cannot be kukku mukku")
                         select customer)
 
                 join forenamecheck in
                     (
-                        from fornamenotnull in Validator.NonNull(customer.Forename, "forename cannot be null")
+                        from fornamenotnull in Validator.NotNull(customer.Forename, "forename cannot be null")
                         from forenamenotnull in
                             (
                                 from forenamenotfriedrich in Validator.NotEqual(customer.Forename, "friedrich", "forename cannot be friedrich")
@@ -164,7 +164,7 @@ namespace FunctionalExtensions.Tests
 
                 join gendercheck in
                     (
-                        from gendernotnull in Validator.NonNull(customer.Gender, "gender cannot be null")
+                        from gendernotnull in Validator.NotNull(customer.Gender, "gender cannot be null")
                         from gender1 in validateGender(customer.Gender)
                         select customer) on 1 equals 1
 
@@ -172,7 +172,7 @@ namespace FunctionalExtensions.Tests
 
                 join orderscheck in
                     (
-                        from ordersnotnull in Validator.NonNull(customer.Orders, "orders cannot be null")
+                        from ordersnotnull in Validator.NotNull(customer.Orders, "orders cannot be null")
                         from orders1 in validateOrders(customer.Orders)
                         select customer) on 1 equals 1
 
@@ -199,7 +199,7 @@ namespace FunctionalExtensions.Tests
             Func<string, string, Choice<string, Errors>> notNullOrEmpty = (s, s1) => Validator.Create<string>(x => !String.IsNullOrEmpty(x), s1)(s);
 
             var result =
-                from c in Validator.NonNull(customer, "Customer cannot be null")
+                from c in Validator.NotNull(customer, "Customer cannot be null")
                 from notNull in (
                     from surname in notNullOrEmpty(customer.Surname, "Surname can't be null")
                     from surname2 in Validator.NotEqual(customer.Surname, "foo", "Surname can't be foo")
@@ -218,10 +218,10 @@ namespace FunctionalExtensions.Tests
             var validateAddressLines = Validator.Create<Address>(x => x.Line1 != null || x.Line2 == null, "Line1 is empty but Line2 is not");
 
             return
-                from addresschek in Validator.NonNull(address, "Address cannot be null")
+                from addresschek in Validator.NotNull(address, "Address cannot be null")
                 from addressnotnull in
                     (
-                        from postcode in Validator.NonNull(address.Postcode, "Post code can't be null")
+                        from postcode in Validator.NotNull(address.Postcode, "Post code can't be null")
                         join addressline in validateAddressLines(address) on 1 equals 1
                         select address
                     )
@@ -231,7 +231,7 @@ namespace FunctionalExtensions.Tests
         static Choice<IEnumerable<Order>, Errors> ValidateOrders(IEnumerable<Order> orders)
         {
             return
-                from o in Validator.NonNull(orders, "Orders cannot be NULL")
+                from o in Validator.NotNull(orders, "Orders cannot be NULL")
                 from notNull in Validator.EnumerableValidator<Order>(ValidateOrder)(orders)
                 select orders;
         }
@@ -239,8 +239,8 @@ namespace FunctionalExtensions.Tests
         static Choice<Order, Errors> ValidateOrder(Order o)
         {
             return
-                from order in Validator.NonNull(o, "Order cannot be NULL")
-                from name in Validator.NonNull(o.ProductName, "Product name can't be null")
+                from order in Validator.NotNull(o, "Order cannot be NULL")
+                from name in Validator.NotNull(o.ProductName, "Product name can't be null")
                 from cost in Validator.Create<Order>(x => x.Cost >= 0, string.Format("Cost for product '{0}' can't be negative", name))(o)
                 select o;
         }

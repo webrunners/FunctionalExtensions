@@ -44,9 +44,10 @@
     <Compile Include="Lambda\Func.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\Fluent\Interfaces.cs" />
     <Compile Include="Validation\Result.cs" />
-    <Compile Include="Validation\Fluent\Validator.cs" />
-    <Compile Include="Validation\Validation.cs" />
+    <Compile Include="Validation\Fluent\FluentValidator.cs" />
+    <Compile Include="Validation\Validator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

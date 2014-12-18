@@ -13,7 +13,7 @@ namespace FunctionalExtensions.Validation.Fluent
 
         public Continuation<T> IsNotNull(string err)
         {
-            Result = Validator.NonNull(_instance, err);
+            Result = Validator.NotNull(_instance, err);
             return new Continuation<T>(this, Result);
         }
 

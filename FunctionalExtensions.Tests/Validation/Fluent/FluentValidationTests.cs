@@ -70,5 +70,20 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 x => Assert.Fail(),
                 err => Assert.That(err.Messages, Is.EquivalentTo(new[] { "customer cannot be null" })));
         }
+
+        [Test]
+        public void Test()
+        {
+            //var result = Validate2
+            //    .That(new Customer()).IsNotNull("customer cannot be null")
+            //    .And(x => x.Forename)
+            //    .Fulfills(x => x != "friedrich", "forename cannot be friedrich")
+            //    .And(x => x)
+            //    .Result;
+
+            //result.Match(
+            //    x => { },
+            //    err => { });
+        }
     }
 }
