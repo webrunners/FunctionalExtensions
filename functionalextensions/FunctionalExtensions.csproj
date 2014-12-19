@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Choice.cs" />
-    <Compile Include="Lambda\Action.cs" />
+    <Compile Include="Lambda\Act.cs" />
     <Compile Include="Lambda\Func.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

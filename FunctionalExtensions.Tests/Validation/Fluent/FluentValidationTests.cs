@@ -65,18 +65,45 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
         }
 
         [Test]
-        public void Test()
+        public void Validate_Instance_Test()
         {
-            //var result = Validate2
-            //    .That(new Customer()).IsNotNull("customer cannot be null")
-            //    .And(x => x.Forename)
-            //    .Fulfills(x => x != "friedrich", "forename cannot be friedrich")
-            //    .And(x => x)
-            //    .Result;
+            const string s = "hello World";
 
-            //result.Match(
-            //    x => { },
-            //    err => { });
+            var result = Validate.That(s)
+                .Fulfills(x => x.Length <= 10, "max length 10")
+                .Result;
+
+            result.Match(
+                x => Assert.Fail(),
+                err => Assert.That(err.Messages, Is.EquivalentTo(new[] { "max length 10" })));
+        }
+
+        [Test]
+        public void Validate_Test()
+        {
+            var result = Validate.That((Customer)null)
+                .IsNotNull("customer not null")
+                .And(x => x.Address)
+                .IsNotNull("adresse not null")
+                .Result;
+
+            result.Match(
+                x => Assert.Fail(),
+                err => Assert.That(err.Messages, Is.EquivalentTo(new[] { "customer not null" })));
+        }
+
+        [Test]
+        public void Validate_NotNullTwice_Test()
+        {
+            var result = Validate.That((Customer)null)
+                .IsNotNull("not null")
+                .And(x => x)
+                .IsNotNull("not null")
+                .Result;
+
+            result.Match(
+                x => Assert.Fail(),
+                err => Assert.That(err.Messages, Is.EquivalentTo(new[] {"not null"})));
         }
     }
 }

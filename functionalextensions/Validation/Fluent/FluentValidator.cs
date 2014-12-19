@@ -2,19 +2,64 @@
 
 namespace FunctionalExtensions.Validation.Fluent
 {
-    public class FluentValidator<T> where T : class
+    public interface IValidateThat<T> where T : class
+    {
+        IChain<T> IsNotNull(string err);
+        IChain<T> Fulfills(Func<T, bool> pred, string err);
+    }
+
+    public interface IValidateThatMember<T, out TMember>
+        where T : class
+        where TMember : class
+    {
+        IChain<T> IsNotNull(string err);
+        IChain<T> Fulfills(Func<TMember, bool> pred, string err);
+    }
+
+    public interface IChain<T> where T : class
+    {
+        IValidateThatMember<T, TResult> And<TResult>(Func<T, TResult> selector) where TResult : class;
+        Choice<T, Errors> Result { get; }
+    }
+
+    public static class Validate
+    {
+        public static IValidateThat<T> That<T>(T instance) where T : class
+        {
+            return new ValidateThat<T>(instance);
+        }
+    }
+
+    internal class ValidateThat<T> : IValidateThat<T> where T : class
     {
         private readonly T _instance;
 
-        internal FluentValidator(T instance)
+        internal ValidateThat(T instance)
         {
             _instance = instance;
+            Result = new Choice1Of2<T, Errors>(_instance);
         }
 
-        public Continuation<T> IsNotNull(string err)
+        public IChain<T> IsNotNull(string err)
         {
             Result = Validator.NotNull(_instance, err);
-            return new Continuation<T>(this);
+            return new Chain<T>(this);
+        }
+
+        public IChain<T> Fulfills(Func<T, bool> pred, string err)
+        {
+            if (_instance == default(T))
+            {
+                return new Chain<T>(this);
+            }
+            if (!pred(_instance))
+            {
+                Result =
+                    from x in Result
+                    join y in Choice.NewChoice2Of2<T, Errors>(new Errors(err)) on 1 equals 1
+                    select _instance;
+            }
+            return new Chain<T>(this);
         }
 
         internal T Instance
@@ -22,24 +67,24 @@ namespace FunctionalExtensions.Validation.Fluent
             get { return _instance; }
         }
 
-        public Choice<T, Errors> Result { get; internal set; }
+        internal Choice<T, Errors> Result { get; set; }
     }
 
-    public class Continuation<T> where T : class
+    internal class Chain<T> : IChain<T> where T : class
     {
-        private readonly FluentValidator<T> _validator;
+        private readonly ValidateThat<T> _validator;
 
-        public Continuation(FluentValidator<T> validator)
+        public Chain(ValidateThat<T> validator)
         {
             _validator = validator;
         }
 
-        public MemberValidator<T, TResult> And<TResult>(Func<T, TResult> selector)
+        public IValidateThatMember<T, TResult> And<TResult>(Func<T, TResult> selector)
             where TResult : class
         {
             return _validator.Instance == default(T)
-                ? new MemberValidator<T, TResult>(_validator, default(TResult))
-                : new MemberValidator<T, TResult>(_validator, selector(_validator.Instance));
+                ? new ValidateThatMember<T, TResult>(_validator, default(TResult))
+                : new ValidateThatMember<T, TResult>(_validator, selector(_validator.Instance));
         }
 
         public Choice<T, Errors> Result
@@ -51,24 +96,23 @@ namespace FunctionalExtensions.Validation.Fluent
         }
     }
 
-    public class MemberValidator<T, TMember>
-        where T : class
+    internal class ValidateThatMember<T, TMember> : IValidateThatMember<T, TMember> where T : class
         where TMember : class
     {
-        private readonly FluentValidator<T> _validator;
+        private readonly ValidateThat<T> _validator;
         private readonly TMember _member;
 
-        public MemberValidator(FluentValidator<T> validator, TMember member)
+        public ValidateThatMember(ValidateThat<T> validator, TMember member)
         {
             _validator = validator;
             _member = member;
         }
 
-        public Continuation<T> IsNotNull(string err)
+        public IChain<T> IsNotNull(string err)
         {
             if (_validator.Instance == default(T))
             {
-                return new Continuation<T>(_validator);
+                return new Chain<T>(_validator);
             }
             if (_member == default(TMember))
             {
@@ -77,14 +121,14 @@ namespace FunctionalExtensions.Validation.Fluent
                     join y in Choice.NewChoice2Of2<T, Errors>(new Errors(err)) on 1 equals 1
                     select _validator.Instance;
             }
-            return new Continuation<T>(_validator);
+            return new Chain<T>(_validator);
         }
 
-        public Continuation<T> Fulfills(Func<TMember, bool> pred, string err)
+        public IChain<T> Fulfills(Func<TMember, bool> pred, string err)
         {
             if (_member == default(TMember) || _validator.Instance == default(T))
             {
-                return new Continuation<T>(_validator);
+                return new Chain<T>(_validator);
             }
             if (!pred(_member))
             {
@@ -93,15 +137,7 @@ namespace FunctionalExtensions.Validation.Fluent
                     join y in Choice.NewChoice2Of2<T, Errors>(new Errors(err)) on 1 equals 1
                     select _validator.Instance;
             }
-            return new Continuation<T>(_validator);
-        }
-    }
-
-    public static class Validate
-    {
-        public static FluentValidator<T> That<T>(T instance) where T : class
-        {
-            return new FluentValidator<T>(instance);
+            return new Chain<T>(_validator);
         }
     }
 }
