@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\EnumDisplayNameAttribute.cs" />
     <Compile Include="Choice.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Lambda\Act.cs" />
     <Compile Include="Lambda\Func.cs" />
     <Compile Include="Option.cs" />

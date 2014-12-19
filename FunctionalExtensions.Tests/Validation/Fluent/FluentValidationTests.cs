@@ -1,5 +1,4 @@
-﻿using System;
-using FunctionalExtensions.Validation.Fluent;
+﻿using FunctionalExtensions.Validation.Fluent;
 using NUnit.Framework;
 
 namespace FunctionalExtensions.Tests.Validation.Fluent
