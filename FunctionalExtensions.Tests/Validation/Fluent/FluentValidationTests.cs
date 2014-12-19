@@ -27,13 +27,13 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
 
             var result = Validate
                 .That(customer).IsNotNull("customer cannot be null")
-                .And(x => x.Surname).IsNotNull("surname cannot be null")
-                .And(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
-                .And(x => x.Forename).IsNotNull("forename cannot be null")
-                .And(x => x.Forename).Fulfills(x => x != "friedrich", "forename connot be friedrich")
-                .And(x => x.Forename).Fulfills(x => x.StartsWith("A"), "forename must start with an \'A\'")
-                .And(x => x.Gender).IsNotNull("gender cannot be null")
-                .And(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
+                .AndMember(x => x.Surname).IsNotNull("surname cannot be null")
+                .AndMember(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
+                .AndMember(x => x.Forename).IsNotNull("forename cannot be null")
+                .AndMember(x => x.Forename).Fulfills(x => x != "friedrich", "forename connot be friedrich")
+                .AndMember(x => x.Forename).Fulfills(x => x.StartsWith("A"), "forename must start with an \'A\'")
+                .AndMember(x => x.Gender).IsNotNull("gender cannot be null")
+                .AndMember(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
                 .Result;
 
             result.Match(
@@ -50,13 +50,13 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
         {
             var result = Validate
                 .That<Customer>(null).IsNotNull("customer cannot be null")
-                .And(x => x.Surname).IsNotNull("surname cannot be null")
-                .And(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
-                .And(x => x.Forename).IsNotNull("forename cannot be null")
-                .And(x => x.Forename).Fulfills(x => x != "friedrich", "forename connot be friedrich")
-                .And(x => x.Forename).Fulfills(x => x.StartsWith("A"), "forename must start with an \'A\'")
-                .And(x => x.Gender).IsNotNull("gender cannot be null")
-                .And(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
+                .AndMember(x => x.Surname).IsNotNull("surname cannot be null")
+                .AndMember(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
+                .AndMember(x => x.Forename).IsNotNull("forename cannot be null")
+                .AndMember(x => x.Forename).Fulfills(x => x != "friedrich", "forename connot be friedrich")
+                .AndMember(x => x.Forename).Fulfills(x => x.StartsWith("A"), "forename must start with an \'A\'")
+                .AndMember(x => x.Gender).IsNotNull("gender cannot be null")
+                .AndMember(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
                 .Result;
 
             result.Match(
@@ -70,12 +70,13 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
             const string s = "hello World";
 
             var result = Validate.That(s)
-                .Fulfills(x => x.Length <= 10, "max length 10")
+                .Fulfills(x => x.Length <= 5, "max length 5")
+                .And.Fulfills(x => x.StartsWith("Hello"), "must start with \'Hello\'")
                 .Result;
 
             result.Match(
                 x => Assert.Fail(),
-                err => Assert.That(err.Messages, Is.EquivalentTo(new[] { "max length 10" })));
+                err => Assert.That(err.Messages, Is.EquivalentTo(new[] { "max length 5", "must start with \'Hello\'" })));
         }
 
         [Test]
@@ -83,7 +84,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
         {
             var result = Validate.That((Customer)null)
                 .IsNotNull("customer not null")
-                .And(x => x.Address)
+                .AndMember(x => x.Address)
                 .IsNotNull("adresse not null")
                 .Result;
 
@@ -97,7 +98,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
         {
             var result = Validate.That((Customer)null)
                 .IsNotNull("not null")
-                .And(x => x)
+                .AndMember(x => x)
                 .IsNotNull("not null")
                 .Result;
 

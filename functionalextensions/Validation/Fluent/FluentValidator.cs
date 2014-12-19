@@ -18,7 +18,8 @@ namespace FunctionalExtensions.Validation.Fluent
 
     public interface IChain<T> where T : class
     {
-        IValidateThatMember<T, TResult> And<TResult>(Func<T, TResult> selector) where TResult : class;
+        IValidateThat<T> And { get; }
+        IValidateThatMember<T, TResult> AndMember<TResult>(Func<T, TResult> selector) where TResult : class;
         Choice<T, Errors> Result { get; }
     }
 
@@ -79,7 +80,12 @@ namespace FunctionalExtensions.Validation.Fluent
             _validator = validator;
         }
 
-        public IValidateThatMember<T, TResult> And<TResult>(Func<T, TResult> selector)
+        public IValidateThat<T> And
+        {
+            get { return _validator; }
+        }
+
+        public IValidateThatMember<T, TResult> AndMember<TResult>(Func<T, TResult> selector)
             where TResult : class
         {
             return _validator.Instance == default(T)
