@@ -6,8 +6,14 @@ namespace FunctionalExtensions.ConsoleApp
 {
     class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
+            ValidationWithOptionMonad();
+            Console.WriteLine();
+
+            ValidationWithChoiceMonad();
+            Console.WriteLine();
+
             ValidationAppF();
         }
 
@@ -16,8 +22,8 @@ namespace FunctionalExtensions.ConsoleApp
             Console.WriteLine("Enter a (floating point) number:");
 
             (
-                from v1 in ReadDouble().ToChoice(new Errors("Could not parse input."))
-                join v2 in ReadDouble().ToChoice(new Errors("Could not parse input.")) on 1 equals 1
+                from v1 in ReadDecimal().ToChoice(new Errors("Could not parse 1st input."))
+                join v2 in ReadDecimal().ToChoice(new Errors("Could not parse 2nd input.")) on 1 equals 1
                 from result in Divide(v1, v2).ToChoice(new Errors("Cannot devide by zero."))
                 select result
                 )
@@ -32,8 +38,8 @@ namespace FunctionalExtensions.ConsoleApp
             Console.WriteLine("Enter two (floating point) numbers:");
 
             (
-                from v1 in ReadDouble()
-                from v2 in ReadDouble()
+                from v1 in ReadDecimal()
+                from v2 in ReadDecimal()
                 from result in Divide(v1, v2)
                 select result*100
             )
@@ -47,8 +53,8 @@ namespace FunctionalExtensions.ConsoleApp
             Console.WriteLine("Enter two (floating point) numbers:");
 
             (
-                from v1 in ReadDouble().ToChoice("Could not parse input.")
-                from v2 in ReadDouble().ToChoice("Could not parse input.")
+                from v1 in ReadDecimal().ToChoice("Could not parse input.")
+                from v2 in ReadDecimal().ToChoice("Could not parse input.")
                 from devisionResult in Divide(v1, v2).ToChoice("Cannot Divide by zero.")
                 select devisionResult*100
             )
@@ -57,15 +63,16 @@ namespace FunctionalExtensions.ConsoleApp
                     Console.WriteLine);
         }
 
-        public static Option<double> Divide(double a, double b)
+        internal static Option<decimal> Divide(decimal a, decimal b)
         {
-            return b == 0 ? Option.None<double>() : Option.Some(a / b);
+            try { return Option.Some(a / b); }
+            catch (DivideByZeroException) { return Option.None<decimal>(); }
         }
 
-        public static Option<Double> ReadDouble()
+        public static Option<decimal> ReadDecimal()
         {
-            double i;
-            return Double.TryParse(Console.ReadLine(), out i) ? Option.Some(i) : Option.None<double>();
+            decimal i;
+            return decimal.TryParse(Console.ReadLine(), out i) ? Option.Some(i) : Option.None<decimal>();
         }
     }
 }

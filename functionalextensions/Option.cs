@@ -39,14 +39,11 @@ namespace FunctionalExtensions
 
         public Choice<T, T2> ToChoice<T2>(T2 value)
         {
-            if (Tag == OptionType.Some)
-            {
-                T some;
-                MatchSome(out some);
-                return Choice.NewChoice1Of2<T, T2>(some);
-            }
-            else
-                return Choice.NewChoice2Of2<T, T2>(value);
+            if (Tag != OptionType.Some) return Choice.NewChoice2Of2<T, T2>(value);
+            
+            T some;
+            MatchSome(out some);
+            return Choice.NewChoice1Of2<T, T2>(some);
         }
     }
 

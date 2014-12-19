@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using NUnit.Framework;
 using FunctionalExtensions.Lambda;
 using FunctionalExtensions.Validation;
-using FunctionalExtensions.Validation.Fluent;
-using FunctionalExtensions.Tests.Validation;
+using NUnit.Framework;
 
-namespace FunctionalExtensions.Tests
+namespace FunctionalExtensions.Tests.Validation
 {
     [TestFixture]
     public class ValidationTests
@@ -17,12 +13,11 @@ namespace FunctionalExtensions.Tests
         [Test]
         public void ValidationWithResultApplicativeFunctor_HappyDay_Test()
         {
-            var result = 0.0;
-            var d1 = Fun.Create(() => Choice.NewChoice1Of2<double, Errors>(2.5));
-            var d2 = Fun.Create(() => Choice.NewChoice1Of2<double, Errors>(2.5));
+            var result = 0.0m;
+            var d1 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Errors>(2.5m));
+            var d2 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Errors>(2.5m));
 
-            var callbackSome = Act.Create((double x) => result = x);
-
+            var callbackSome = Act.Create((decimal x) => result = x);
             var callbackNone = Act.Create((Errors x) => Assert.Fail());
 
             ValidationWithResultApplicativeFunctor(d1, d2, callbackSome, callbackNone);
@@ -32,14 +27,14 @@ namespace FunctionalExtensions.Tests
         [Test]
         public void ValidationWithResultApplicativeFunctor_RainyDay_Test()
         {
-            var d1 = Fun.Create(() => Choice.NewChoice1Of2<double, Errors>(2.5));
-            var ex1 = Fun.Create(() => Choice.NewChoice2Of2<double, Errors>(new Errors("Error1")));
-            var ex2 = Fun.Create(() => Choice.NewChoice2Of2<double, Errors>(new Errors("Error2")));
-            var zero = Fun.Create(() => Choice.NewChoice1Of2<double, Errors>(0.0));
+            var d1 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Errors>(2.5m));
+            var ex1 = Fun.Create(() => Choice.NewChoice2Of2<decimal, Errors>(new Errors("Error1")));
+            var ex2 = Fun.Create(() => Choice.NewChoice2Of2<decimal, Errors>(new Errors("Error2")));
+            var zero = Fun.Create(() => Choice.NewChoice1Of2<decimal, Errors>(0.0m));
 
             var errors = new List<string>();
             Action<Errors> callbackNone = x => errors.AddRange(x.Messages);
-            Action<double> callbackSome = x => Assert.Fail();
+            Action<decimal> callbackSome = x => Assert.Fail();
 
             ValidationWithResultApplicativeFunctor(d1, ex2, callbackSome, callbackNone);
             Assert.That(errors, Is.EquivalentTo(new[] {"Error2"}));
@@ -57,20 +52,15 @@ namespace FunctionalExtensions.Tests
             Assert.That(errors, Is.EquivalentTo(new[] { "Cannot devide by zero." }));
         }
 
-        private static void ValidationWithResultApplicativeFunctor(Func<Choice<double, Errors>> readDouble1, Func<Choice<double, Errors>> readDouble2, Action<double> callBackSome, Action<Errors> callBackNone)
+        private static void ValidationWithResultApplicativeFunctor(Func<Choice<decimal, Errors>> readdecimal1, Func<Choice<decimal, Errors>> readdecimal2, Action<decimal> callBackSome, Action<Errors> callBackNone)
         {
             (
-                from v1 in readDouble1()
-                join v2 in readDouble2() on 1 equals 1
-                from result in Divide(v1, v2).ToChoice(new Errors("Cannot devide by zero."))
+                from v1 in readdecimal1()
+                join v2 in readdecimal2() on 1 equals 1
+                from result in Division.Divide(v1, v2).ToChoice(new Errors("Cannot devide by zero."))
                 select result * 100
             )
                 .Match(callBackSome, callBackNone);
-        }
-
-        private static Option<double> Divide(double a, double b)
-        {
-            return b == 0 ? Option.None<double>() : Option.Some(a / b);
         }
 
         [TestCase(null, "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be null", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
@@ -180,10 +170,7 @@ namespace FunctionalExtensions.Tests
 
             result.Match(
                 x => Assert.Pass(),
-                err =>
-                {
-                    Assert.Fail();
-                });
+                err => Assert.Fail());
         }
 
         [Test]

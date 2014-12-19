@@ -14,7 +14,7 @@ namespace FunctionalExtensions.Validation.Fluent
         public Continuation<T> IsNotNull(string err)
         {
             Result = Validator.NotNull(_instance, err);
-            return new Continuation<T>(this, Result);
+            return new Continuation<T>(this);
         }
 
         internal T Instance
@@ -28,12 +28,10 @@ namespace FunctionalExtensions.Validation.Fluent
     public class Continuation<T> where T : class
     {
         private readonly FluentValidator<T> _validator;
-        private readonly Choice<T, Errors> _result;
 
-        public Continuation(FluentValidator<T> validator, Choice<T, Errors> result)
+        public Continuation(FluentValidator<T> validator)
         {
             _validator = validator;
-            _result = result;
         }
 
         public MemberValidator<T, TResult> And<TResult>(Func<T, TResult> selector)
@@ -70,7 +68,7 @@ namespace FunctionalExtensions.Validation.Fluent
         {
             if (_validator.Instance == default(T))
             {
-                return new Continuation<T>(_validator, _validator.Result);
+                return new Continuation<T>(_validator);
             }
             if (_member == default(TMember))
             {
@@ -79,14 +77,14 @@ namespace FunctionalExtensions.Validation.Fluent
                     join y in Choice.NewChoice2Of2<T, Errors>(new Errors(err)) on 1 equals 1
                     select _validator.Instance;
             }
-            return new Continuation<T>(_validator, _validator.Result);
+            return new Continuation<T>(_validator);
         }
 
         public Continuation<T> Fulfills(Func<TMember, bool> pred, string err)
         {
             if (_member == default(TMember) || _validator.Instance == default(T))
             {
-                return new Continuation<T>(_validator, _validator.Result);
+                return new Continuation<T>(_validator);
             }
             if (!pred(_member))
             {
@@ -95,7 +93,7 @@ namespace FunctionalExtensions.Validation.Fluent
                     join y in Choice.NewChoice2Of2<T, Errors>(new Errors(err)) on 1 equals 1
                     select _validator.Instance;
             }
-            return new Continuation<T>(_validator, _validator.Result);
+            return new Continuation<T>(_validator);
         }
     }
 

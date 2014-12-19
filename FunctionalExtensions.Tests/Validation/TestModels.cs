@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 namespace FunctionalExtensions.Tests.Validation
 {
     internal class Address

@@ -1,10 +1,5 @@
 ﻿using FunctionalExtensions.Validation.Fluent;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FunctionalExtensions.Tests.Validation.Fluent
 {
@@ -53,10 +48,8 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
         [Test]
         public void Validate_Customer_Null()
         {
-            Customer customer = null;
-
             var result = Validate
-                .That(customer).IsNotNull("customer cannot be null")
+                .That<Customer>(null).IsNotNull("customer cannot be null")
                 .And(x => x.Surname).IsNotNull("surname cannot be null")
                 .And(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
                 .And(x => x.Forename).IsNotNull("forename cannot be null")
