@@ -1,4 +1,5 @@
-﻿using FunctionalExtensions.Validation.Fluent;
+﻿using System;
+using FunctionalExtensions.Validation.Fluent;
 using NUnit.Framework;
 
 namespace FunctionalExtensions.Tests.Validation.Fluent
@@ -25,7 +26,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 Gender = gender
             };
 
-            var result = Validate
+            var result = ValidateWithErrorType<string>
                 .That(customer).IsNotNull("customer cannot be null")
                 .AndMember(x => x.Surname).IsNotNull("surname cannot be null")
                 .AndMember(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
@@ -41,15 +42,14 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 err =>
                 {
                     Assert.That(!isValid);
-                    Assert.That(err.Messages, Is.EquivalentTo(errors));
+                    Assert.That(err.Get, Is.EquivalentTo(errors));
                 });
         }
 
         [Test]
         public void Validate_Customer_Null()
         {
-            var result = Validate
-                .That<Customer>(null).IsNotNull("customer cannot be null")
+            var result = ValidateWithErrorType<string>.That<Customer>(null).IsNotNull("customer cannot be null")
                 .AndMember(x => x.Surname).IsNotNull("surname cannot be null")
                 .AndMember(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
                 .AndMember(x => x.Forename).IsNotNull("forename cannot be null")
@@ -61,7 +61,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
 
             result.Match(
                 x => Assert.Fail(),
-                err => Assert.That(err.Messages, Is.EquivalentTo(new[] { "customer cannot be null" })));
+                err => Assert.That(err.Get, Is.EquivalentTo(new[] { "customer cannot be null" })));
         }
 
         [Test]
@@ -69,20 +69,20 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
         {
             const string s = "hello World";
 
-            var result = Validate.That(s)
+            var result = ValidateWithErrorType<string>.That(s)
                 .Fulfills(x => x.Length <= 5, "max length 5")
                 .And.Fulfills(x => x.StartsWith("Hello"), "must start with \'Hello\'")
                 .Result;
 
             result.Match(
                 x => Assert.Fail(),
-                err => Assert.That(err.Messages, Is.EquivalentTo(new[] { "max length 5", "must start with \'Hello\'" })));
+                err => Assert.That(err.Get, Is.EquivalentTo(new[] { "max length 5", "must start with \'Hello\'" })));
         }
 
         [Test]
         public void Validate_Test()
         {
-            var result = Validate.That((Customer)null)
+            var result = ValidateWithErrorType<string>.That((Customer)null)
                 .IsNotNull("customer not null")
                 .AndMember(x => x.Address)
                 .IsNotNull("adresse not null")
@@ -90,13 +90,13 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
 
             result.Match(
                 x => Assert.Fail(),
-                err => Assert.That(err.Messages, Is.EquivalentTo(new[] { "customer not null" })));
+                err => Assert.That(err.Get, Is.EquivalentTo(new[] { "customer not null" })));
         }
 
         [Test]
         public void Validate_NotNullTwice_Test()
         {
-            var result = Validate.That((Customer)null)
+            var result = ValidateWithErrorType<string>.That((Customer)null)
                 .IsNotNull("not null")
                 .AndMember(x => x)
                 .IsNotNull("not null")
@@ -104,7 +104,28 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
 
             result.Match(
                 x => Assert.Fail(),
-                err => Assert.That(err.Messages, Is.EquivalentTo(new[] {"not null"})));
+                err => Assert.That(err.Get, Is.EquivalentTo(new[] { "not null" })));
+        }
+
+        enum Error
+        {
+            LengthShouldBeSmallerThan10,
+            ShouldStartWithHello
+        }
+
+        [Test]
+        public void WithEnumTypeTest()
+        {
+            const string s = "hello World";
+
+            var result = ValidateWithErrorType<Error>.That(s)
+                .Fulfills(x => x.Length <= 5, Error.LengthShouldBeSmallerThan10)
+                .And.Fulfills(x => x.StartsWith("Hello"), Error.ShouldStartWithHello)
+                .Result;
+
+            result.Match(
+                x => Assert.Fail(),
+                err => Assert.That(err.Get, Is.EquivalentTo(new[] { Error.LengthShouldBeSmallerThan10, Error.ShouldStartWithHello })));
         }
     }
 }

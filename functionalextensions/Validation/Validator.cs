@@ -6,29 +6,29 @@ namespace FunctionalExtensions.Validation
 {
     public static class Validator
     {
-        public static Choice<T, Errors> NotNull<T>(T value, string err) where T : class
+        public static Choice<T, Errors<TError>> NotNull<T, TError>(T value, TError err) where T : class
         {
-            return value == null ? Result.Error<T>(err) : Result.Ok(value);
+            return value != null ? Result.Ok<T, TError>(value) : Result.Error<T, TError>(err);
         }
 
-        public static Choice<T, Errors> NotEqual<T>(T value, T pattern, string err) where T : class
+        public static Choice<T, Errors<TError>> NotEqual<T, TError>(T value, T pattern, TError err) where T : class
         {
-            return value.Equals(pattern) ? Result.Error<T>(err) : Result.Ok(value);
+            return !value.Equals(pattern) ? Result.Ok<T, TError>(value) : Result.Error<T, TError>(err);
         }
 
-        public static Choice<string, Errors> NotNullOrEmpty(string value, string err)
+        public static Choice<string, Errors<TError>> NotNullOrEmpty<TError>(string value, TError err)
         {
-            return String.IsNullOrEmpty(value) ? Result.Error<string>(err) : Result.Ok(value);
+            return !String.IsNullOrEmpty(value) ? Result.Ok<string, TError>(value) : Result.Error<string, TError>(err);
         }
 
-        public static Func<T, Choice<T, Errors>> Create<T>(Predicate<T> pred, string err)
+        public static Func<T, Choice<T, Errors<TError>>> Create<T, TError>(Predicate<T> pred, TError err)
         {
-            return x => pred(x) ? Result.Ok(x) : Result.Error<T>(err);
+            return x => pred(x) ? Result.Ok<T, TError>(x) : Result.Error<T, TError>(err);
         }
 
-        public static Func<IEnumerable<T>, Choice<IEnumerable<T>, Errors>> EnumerableValidator<T>(Func<T, Choice<T, Errors>> validateOrder)
+        public static Func<IEnumerable<T>, Choice<IEnumerable<T>, Errors<TError>>> EnumerableValidator<T, TError>(Func<T, Choice<T, Errors<TError>>> validateOrder)
         {
-            var zero = Choice.NewChoice1Of2<IEnumerable<T>, Errors>(new List<T>());
+            var zero = Choice.NewChoice1Of2<IEnumerable<T>, Errors<TError>>(new List<T>());
 
             return x => x
                 .Select(validateOrder)
