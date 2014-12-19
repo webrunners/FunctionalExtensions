@@ -95,25 +95,77 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
         [Test]
         public void Validate_NotNullTwice_Test()
         {
-            var result = ValidateWithErrorType<string>.That((Customer)null)
+            ValidateWithErrorType<string>.That((Customer)null)
                 .IsNotNull("not null")
-                .AndMember(x => x)
+                .And
                 .IsNotNull("not null")
-                .Result;
+                .Result
+                .Match(
+                    x => Assert.Fail(),
+                    err => Assert.That(err.Get, Is.EquivalentTo(new[] { "not null", "not null" })));
 
-            result.Match(
-                x => Assert.Fail(),
-                err => Assert.That(err.Get, Is.EquivalentTo(new[] { "not null" })));
+            ValidateWithErrorType<string>.That(new Customer())
+                .IsNotNull("not null")
+                .And
+                .IsNotNull("not null")
+                .Result
+                .Match(
+                    x => Assert.Pass(),
+                    err => Assert.Fail());
+        }
+
+        [Test]
+        public void Validate_NotNull_Fulfills_NotNull_Test()
+        {
+            ValidateWithErrorType<Error>.That("Bar")
+                .IsNotNull(Error.ShouldNotBeNull)
+                .And.IsEqualTo("Foo", Error.ShouldEqualFoo)
+                .And.IsNotNull(Error.ShouldNotBeNull)
+                .Result.Match(
+                    x => Assert.Fail(),
+                    err => Assert.That(err.Get, Is.EquivalentTo(new[] { Error.ShouldEqualFoo })));
+
+            ValidateWithErrorType<Error>
+                .That(new Customer { Forename = null })
+                .Member(x => x.Forename)
+                .IsNotNull(Error.ShouldNotBeNull)
+                .AndMember(x => x.Forename).Fulfills(x => x.Length < 10, Error.LengthShouldBeSmallerThan10)
+                .AndMember(x => x.Forename).IsNotNull(Error.ShouldNotBeNull)
+                .Result.Match(
+                    x => Assert.Fail(),
+                    err => Assert.That(err.Get, Is.EquivalentTo(new[] { Error.ShouldNotBeNull, Error.ShouldNotBeNull })));
         }
 
         enum Error
         {
             LengthShouldBeSmallerThan10,
-            ShouldStartWithHello
+            ShouldStartWithHello,
+            ShouldEqualFoo,
+            ShouldNotBeNull
         }
 
         [Test]
-        public void WithEnumTypeTest()
+        public void IsEqualTo_Test()
+        {
+            ValidateWithErrorType<Error>
+                .That("Bar")
+                .IsEqualTo("Foo", Error.ShouldEqualFoo)
+                .Result
+                .Match(
+                    x => Assert.Fail(),
+                    err => Assert.That(err.Get, Is.EquivalentTo(new[] {Error.ShouldEqualFoo})));
+
+            ValidateWithErrorType<Error>
+                .That("Foo")
+                .IsEqualTo("Foo", Error.ShouldEqualFoo)
+                .Result
+                .Match(
+                    x => Assert.Pass(),
+                    err => Assert.Fail());
+        }
+
+        [Test]
+        public void WithEnumType_Test()
         {
             const string s = "hello World";
 

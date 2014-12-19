@@ -50,9 +50,10 @@
     <Compile Include="Validation\Fluent\Chain.cs" />
     <Compile Include="Validation\Fluent\IChain.cs" />
     <Compile Include="Validation\Fluent\IValidateThat.cs" />
+    <Compile Include="Validation\Fluent\IValidateThatInstance.cs" />
     <Compile Include="Validation\Fluent\IValidateThatMember.cs" />
     <Compile Include="Validation\Fluent\ValidateWithErrorType.cs" />
-    <Compile Include="Validation\Fluent\ValidateThat.cs" />
+    <Compile Include="Validation\Fluent\ValidateThatInstance.cs" />
     <Compile Include="Validation\Result.cs" />
     <Compile Include="Validation\Fluent\ValidateThatMember.cs" />
     <Compile Include="Validation\ResultExtensions.cs" />

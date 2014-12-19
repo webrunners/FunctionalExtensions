@@ -4,7 +4,7 @@ namespace FunctionalExtensions.Validation.Fluent
 {
     public interface IChain<T, TError> where T : class
     {
-        IValidateThat<T, TError> And { get; }
+        IValidateThatInstance<T, TError> And { get; }
         IValidateThatMember<T, TResult, TError> AndMember<TResult>(Func<T, TResult> selector) where TResult : class;
         Choice<T, Errors<TError>> Result { get; }
     }

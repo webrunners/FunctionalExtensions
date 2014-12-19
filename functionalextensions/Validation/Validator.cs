@@ -8,12 +8,17 @@ namespace FunctionalExtensions.Validation
     {
         public static Choice<T, Errors<TError>> NotNull<T, TError>(T value, TError err) where T : class
         {
-            return value != null ? Result.Ok<T, TError>(value) : Result.Error<T, TError>(err);
+            return value != default(T) ? Result.Ok<T, TError>(value) : Result.Error<T, TError>(err);
         }
 
         public static Choice<T, Errors<TError>> NotEqual<T, TError>(T value, T pattern, TError err) where T : class
         {
             return !value.Equals(pattern) ? Result.Ok<T, TError>(value) : Result.Error<T, TError>(err);
+        }
+
+        public static Choice<T, Errors<TError>> Equal<T, TError>(T value, T pattern, TError err) where T : class
+        {
+            return value.Equals(pattern) ? Result.Ok<T, TError>(value) : Result.Error<T, TError>(err);
         }
 
         public static Choice<string, Errors<TError>> NotNullOrEmpty<TError>(string value, TError err)

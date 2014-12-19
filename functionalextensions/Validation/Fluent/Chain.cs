@@ -4,14 +4,14 @@ namespace FunctionalExtensions.Validation.Fluent
 {
     internal class Chain<T, TError> : IChain<T, TError> where T : class
     {
-        private readonly ValidateThat<T, TError> _validator;
+        private readonly ValidateThatInstance<T, TError> _validator;
 
-        public Chain(ValidateThat<T, TError> validator)
+        public Chain(ValidateThatInstance<T, TError> validator)
         {
             _validator = validator;
         }
 
-        public IValidateThat<T, TError> And
+        public IValidateThatInstance<T, TError> And
         {
             get { return _validator; }
         }

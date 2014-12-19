@@ -6,10 +6,10 @@ namespace FunctionalExtensions.Validation.Fluent
         where T : class
         where TMember : class
     {
-        private readonly ValidateThat<T, TError> _validator;
+        private readonly ValidateThatInstance<T, TError> _validator;
         private readonly TMember _member;
 
-        public ValidateThatMember(ValidateThat<T, TError> validator, TMember member)
+        public ValidateThatMember(ValidateThatInstance<T, TError> validator, TMember member)
         {
             _validator = validator;
             _member = member;
@@ -21,29 +21,27 @@ namespace FunctionalExtensions.Validation.Fluent
             {
                 return new Chain<T, TError>(_validator);
             }
-            if (_member == default(TMember))
-            {
-                _validator.Result =
-                    from x in _validator.Result
-                    join y in Choice.NewChoice2Of2<T, Errors<TError>>(new Errors<TError>(err)) on 1 equals 1
-                    select _validator.Instance;
-            }
+
+            _validator.Result =
+                from x in _validator.Result
+                join y in Validator.NotNull(_member, err) on 1 equals 1
+                select _validator.Instance;
+
             return new Chain<T, TError>(_validator);
         }
 
-        public IChain<T, TError> Fulfills(Func<TMember, bool> pred, TError err)
+        public IChain<T, TError> Fulfills(Predicate<TMember> pred, TError err)
         {
             if (_member == default(TMember) || _validator.Instance == default(T))
             {
                 return new Chain<T, TError>(_validator);
             }
-            if (!pred(_member))
-            {
-                _validator.Result =
-                    from x in _validator.Result
-                    join y in Choice.NewChoice2Of2<T, Errors<TError>>(new Errors<TError>(err)) on 1 equals 1
-                    select _validator.Instance;
-            }
+
+            _validator.Result =
+                from x in _validator.Result
+                join y in Validator.Create(pred, err)(_member) on 1 equals 1
+                select _validator.Instance;
+
             return new Chain<T, TError>(_validator);
         }
     }
