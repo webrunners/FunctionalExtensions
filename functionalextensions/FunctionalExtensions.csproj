@@ -49,6 +49,7 @@
     <Compile Include="Validation\Errors.cs" />
     <Compile Include="Validation\Fluent\Chain.cs" />
     <Compile Include="Validation\Fluent\IChain.cs" />
+    <Compile Include="Validation\Fluent\IChainFromThat.cs" />
     <Compile Include="Validation\Fluent\IValidateThat.cs" />
     <Compile Include="Validation\Fluent\IValidateThatInstance.cs" />
     <Compile Include="Validation\Fluent\IValidateThatMember.cs" />
@@ -58,6 +59,12 @@
     <Compile Include="Validation\Fluent\ValidateThatMember.cs" />
     <Compile Include="Validation\ResultExtensions.cs" />
     <Compile Include="Validation\Validator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SolutionItems\FluentGrammar\validate.ebnf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SolutionItems\FluentGrammar\Validate.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
