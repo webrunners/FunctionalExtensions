@@ -49,7 +49,6 @@
     <Compile Include="Validation\Errors.cs" />
     <Compile Include="Validation\Fluent\Chain.cs" />
     <Compile Include="Validation\Fluent\IChain.cs" />
-    <Compile Include="Validation\Fluent\IChainFromThat.cs" />
     <Compile Include="Validation\Fluent\IValidateThat.cs" />
     <Compile Include="Validation\Fluent\IValidateThatInstance.cs" />
     <Compile Include="Validation\Fluent\IValidateThatMember.cs" />
