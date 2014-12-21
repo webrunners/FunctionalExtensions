@@ -5,17 +5,18 @@ namespace FunctionalExtensions.Validation.Fluent
     internal class FluentValidator<T, TError> : IIntermediate1<T, TError>, IIntermediate2<T, TError>, IIntermediate3<T, TError> where T : class
     {
         private readonly T _instance;
+        private readonly Choice<T, Failures<TError>> _result;
 
         internal FluentValidator(T instance)
         {
             _instance = instance;
-            Result = new Choice1Of2<T, Failures<TError>>(_instance);
+            _result = new Choice1Of2<T, Failures<TError>>(_instance);
         }
 
         internal FluentValidator(T instance, Choice<T, Failures<TError>> result)
         {
             _instance = instance;
-            Result = result;
+            _result = result;
         }
 
         public IIntermediate2<T, TError> IsNotNull(TError err)
@@ -36,7 +37,10 @@ namespace FunctionalExtensions.Validation.Fluent
                     select _instance);
         }
 
-        public Choice<T, Failures<TError>> Result { get; private set; }
+        public Choice<T, Failures<TError>> Result
+        {
+            get { return _result; }
+        }
 
         public IIntermediate3<T, TError> And
         {
