@@ -34,14 +34,14 @@ namespace FunctionalExtensions.ConsoleApp
             Console.WriteLine("Enter a (floating point) number:");
 
             (
-                from v1 in ReadDecimal().ToChoice(new Errors<Error>(Error.CannotNotParse1StInput))
-                join v2 in ReadDecimal().ToChoice(new Errors<Error>(Error.CannotNotParse2NdInput)) on 1 equals 1
-                from result in Divide(v1, v2).ToChoice(new Errors<Error>(Error.CannotDivideByZero))
+                from v1 in ReadDecimal().ToChoice(new Failures<Error>(Error.CannotNotParse1StInput))
+                join v2 in ReadDecimal().ToChoice(new Failures<Error>(Error.CannotNotParse2NdInput)) on 1 equals 1
+                from result in Divide(v1, v2).ToChoice(new Failures<Error>(Error.CannotDivideByZero))
                 select result
                 )
                 .Match(
                     x => Console.WriteLine("Result = {0}", x),
-                    err => err.Get.ToList().ForEach(x => Console.WriteLine(x.GetDisplayName())));
+                    err => err.Errors.ToList().ForEach(x => Console.WriteLine(x.GetDisplayName())));
         }
 
 

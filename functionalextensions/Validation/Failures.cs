@@ -3,28 +3,28 @@ using System.Linq;
 
 namespace FunctionalExtensions.Validation
 {
-    public class Errors<T>
+    public class Failures<T>
     {
         private readonly List<T> _errors = new List<T>();
 
-        public IReadOnlyCollection<T> Get
+        public IReadOnlyCollection<T> Errors
         {
             get { return _errors; }
         } 
 
-        public Errors(T message)
+        public Failures(T message)
         {
             _errors.Add(message);
         }
 
-        private Errors(IEnumerable<T> messages)
+        private Failures(IEnumerable<T> messages)
         {
             _errors.AddRange(messages);
         }
 
-        public static Errors<T> Create(IEnumerable<T> messages)
+        public static Failures<T> Create(IEnumerable<T> messages)
         {
-            return new Errors<T>(messages);
+            return new Failures<T>(messages);
         }
 
         public void AddError(T message)
@@ -37,9 +37,9 @@ namespace FunctionalExtensions.Validation
             return _errors.Any();
         }
 
-        public static Errors<T> Merge(Errors<T> errors1, Errors<T> errors2)
+        public static Failures<T> Merge(Failures<T> errors1, Failures<T> errors2)
         {
-            return Create(errors1.Get.Concat(errors2.Get));
+            return Create(errors1.Errors.Concat(errors2.Errors));
         }
     }
 }

@@ -44,16 +44,17 @@
     <Compile Include="Lambda\Func.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validation\Errors.cs" />
-    <Compile Include="Validation\Fluent\Chain.cs" />
-    <Compile Include="Validation\Fluent\IChain.cs" />
-    <Compile Include="Validation\Fluent\IValidateThat.cs" />
-    <Compile Include="Validation\Fluent\IValidateThatInstance.cs" />
-    <Compile Include="Validation\Fluent\IValidateThatMember.cs" />
+    <Compile Include="Validation\Failures.cs" />
+    <Compile Include="Validation\Fluent\IResult.cs" />
+    <Compile Include="Validation\Fluent\FluentSelectionValidator.cs" />
+    <Compile Include="Validation\Fluent\IIntermediate1.cs" />
+    <Compile Include="Validation\Fluent\IIntermediate2.cs" />
+    <Compile Include="Validation\Fluent\IIntermediate3.cs" />
+    <Compile Include="Validation\Fluent\IIntermediate4.cs" />
+    <Compile Include="Validation\Fluent\Validate.cs" />
+    <Compile Include="Validation\Fluent\FluentValidator.cs" />
     <Compile Include="Validation\Fluent\ValidateWithErrorType.cs" />
-    <Compile Include="Validation\Fluent\ValidateThatInstance.cs" />
     <Compile Include="Validation\Result.cs" />
-    <Compile Include="Validation\Fluent\ValidateThatMember.cs" />
     <Compile Include="Validation\ResultExtensions.cs" />
     <Compile Include="Validation\Validator.cs" />
   </ItemGroup>

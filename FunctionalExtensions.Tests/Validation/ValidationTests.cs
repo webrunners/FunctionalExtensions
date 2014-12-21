@@ -14,11 +14,11 @@ namespace FunctionalExtensions.Tests.Validation
         public void ValidationWithResultApplicativeFunctor_HappyDay_Test()
         {
             var result = 0.0m;
-            var d1 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Errors<string>>(2.5m));
-            var d2 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Errors<string>>(2.5m));
+            var d1 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Failures<string>>(2.5m));
+            var d2 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Failures<string>>(2.5m));
 
             var callbackSome = Act.Create((decimal x) => result = x);
-            var callbackNone = Act.Create((Errors<string> x) => Assert.Fail());
+            var callbackNone = Act.Create((Failures<string> x) => Assert.Fail());
 
             ValidationWithResultApplicativeFunctor(d1, d2, callbackSome, callbackNone);
             Assert.That(result, Is.EqualTo(100));
@@ -27,13 +27,13 @@ namespace FunctionalExtensions.Tests.Validation
         [Test]
         public void ValidationWithResultApplicativeFunctor_RainyDay_Test()
         {
-            var d1 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Errors<string>>(2.5m));
-            var ex1 = Fun.Create(() => Choice.NewChoice2Of2<decimal, Errors<string>>(new Errors<string>("Error1")));
-            var ex2 = Fun.Create(() => Choice.NewChoice2Of2<decimal, Errors<string>>(new Errors<string>("Error2")));
-            var zero = Fun.Create(() => Choice.NewChoice1Of2<decimal, Errors<string>>(0.0m));
+            var d1 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Failures<string>>(2.5m));
+            var ex1 = Fun.Create(() => Choice.NewChoice2Of2<decimal, Failures<string>>(new Failures<string>("Error1")));
+            var ex2 = Fun.Create(() => Choice.NewChoice2Of2<decimal, Failures<string>>(new Failures<string>("Error2")));
+            var zero = Fun.Create(() => Choice.NewChoice1Of2<decimal, Failures<string>>(0.0m));
 
             var errors = new List<string>();
-            Action<Errors<string>> callbackNone = x => errors.AddRange(x.Get);
+            Action<Failures<string>> callbackNone = x => errors.AddRange(x.Errors);
             Action<decimal> callbackSome = x => Assert.Fail();
 
             ValidationWithResultApplicativeFunctor(d1, ex2, callbackSome, callbackNone);
@@ -52,12 +52,12 @@ namespace FunctionalExtensions.Tests.Validation
             Assert.That(errors, Is.EquivalentTo(new[] { "Cannot devide by zero." }));
         }
 
-        private static void ValidationWithResultApplicativeFunctor(Func<Choice<decimal, Errors<string>>> readdecimal1, Func<Choice<decimal, Errors<string>>> readdecimal2, Action<decimal> callBackSome, Action<Errors<string>> callBackNone)
+        private static void ValidationWithResultApplicativeFunctor(Func<Choice<decimal, Failures<string>>> readdecimal1, Func<Choice<decimal, Failures<string>>> readdecimal2, Action<decimal> callBackSome, Action<Failures<string>> callBackNone)
         {
             (
                 from v1 in readdecimal1()
                 join v2 in readdecimal2() on 1 equals 1
-                from result in Division.Divide(v1, v2).ToChoice(new Errors<string>("Cannot devide by zero."))
+                from result in Division.Divide(v1, v2).ToChoice(new Failures<string>("Cannot devide by zero."))
                 select result * 100
             )
                 .Match(callBackSome, callBackNone);
@@ -115,7 +115,7 @@ namespace FunctionalExtensions.Tests.Validation
                 err =>
                 {
                     Assert.That(!isValid);
-                    Assert.That(err.Get, Is.EquivalentTo(errors));
+                    Assert.That(err.Errors, Is.EquivalentTo(errors));
                 });
         }
 
@@ -183,7 +183,7 @@ namespace FunctionalExtensions.Tests.Validation
                 Orders = null
             };
 
-            Func<string, string, Choice<string, Errors<string>>> notNullOrEmpty = (s, s1) => Validator.Create<string, string>(x => !String.IsNullOrEmpty(x), s1)(s);
+            Func<string, string, Choice<string, Failures<string>>> notNullOrEmpty = (s, s1) => Validator.Create<string, string>(x => !String.IsNullOrEmpty(x), s1)(s);
 
             var result =
                 from c in Validator.NotNull(customer, "Customer cannot be null")
@@ -197,10 +197,10 @@ namespace FunctionalExtensions.Tests.Validation
 
             result.Match(
                 customer1 => { },
-                errors => Assert.That(errors.Get.ToList(), Is.EquivalentTo(new[] { "Address cannot be null", "Surname can't be null", "Orders cannot be NULL" })));
+                errors => Assert.That(errors.Errors.ToList(), Is.EquivalentTo(new[] { "Address cannot be null", "Surname can't be null", "Orders cannot be NULL" })));
         }
 
-        static Choice<Address, Errors<string>> ValidateAddress(Address address)
+        static Choice<Address, Failures<string>> ValidateAddress(Address address)
         {
             var validateAddressLines = Validator.Create<Address, string>(x => x.Line1 != null || x.Line2 == null, "Line1 is empty but Line2 is not");
 
@@ -215,7 +215,7 @@ namespace FunctionalExtensions.Tests.Validation
                 select address;
         }
 
-        static Choice<IEnumerable<Order>, Errors<string>> ValidateOrders(IEnumerable<Order> orders)
+        static Choice<IEnumerable<Order>, Failures<string>> ValidateOrders(IEnumerable<Order> orders)
         {
             return
                 from o in Validator.NotNull(orders, "Orders cannot be NULL")
@@ -223,7 +223,7 @@ namespace FunctionalExtensions.Tests.Validation
                 select orders;
         }
 
-        static Choice<Order, Errors<string>> ValidateOrder(Order o)
+        static Choice<Order, Failures<string>> ValidateOrder(Order o)
         {
             return
                 from order in Validator.NotNull(o, "Order cannot be NULL")

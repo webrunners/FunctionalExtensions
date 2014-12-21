@@ -6,34 +6,34 @@ namespace FunctionalExtensions.Validation
 {
     public static class Validator
     {
-        public static Choice<T, Errors<TError>> NotNull<T, TError>(T value, TError err) where T : class
+        public static Choice<T, Failures<TError>> NotNull<T, TError>(T value, TError err) where T : class
         {
-            return value != default(T) ? Result.Ok<T, TError>(value) : Result.Error<T, TError>(err);
+            return value != default(T) ? Result.Success<T, TError>(value) : Result.Failure<T, TError>(err);
         }
 
-        public static Choice<T, Errors<TError>> NotEqual<T, TError>(T value, T pattern, TError err) where T : class
+        public static Choice<T, Failures<TError>> NotEqual<T, TError>(T value, T pattern, TError err) where T : class
         {
-            return !value.Equals(pattern) ? Result.Ok<T, TError>(value) : Result.Error<T, TError>(err);
+            return !value.Equals(pattern) ? Result.Success<T, TError>(value) : Result.Failure<T, TError>(err);
         }
 
-        public static Choice<T, Errors<TError>> Equal<T, TError>(T value, T pattern, TError err) where T : class
+        public static Choice<T, Failures<TError>> Equal<T, TError>(T value, T pattern, TError err) where T : class
         {
-            return value.Equals(pattern) ? Result.Ok<T, TError>(value) : Result.Error<T, TError>(err);
+            return value.Equals(pattern) ? Result.Success<T, TError>(value) : Result.Failure<T, TError>(err);
         }
 
-        public static Choice<string, Errors<TError>> NotNullOrEmpty<TError>(string value, TError err)
+        public static Choice<string, Failures<TError>> NotNullOrEmpty<TError>(string value, TError err)
         {
-            return !String.IsNullOrEmpty(value) ? Result.Ok<string, TError>(value) : Result.Error<string, TError>(err);
+            return !String.IsNullOrEmpty(value) ? Result.Success<string, TError>(value) : Result.Failure<string, TError>(err);
         }
 
-        public static Func<T, Choice<T, Errors<TError>>> Create<T, TError>(Predicate<T> pred, TError err)
+        public static Func<T, Choice<T, Failures<TError>>> Create<T, TError>(Predicate<T> pred, TError err)
         {
-            return x => pred(x) ? Result.Ok<T, TError>(x) : Result.Error<T, TError>(err);
+            return x => pred(x) ? Result.Success<T, TError>(x) : Result.Failure<T, TError>(err);
         }
 
-        public static Func<IEnumerable<T>, Choice<IEnumerable<T>, Errors<TError>>> EnumerableValidator<T, TError>(Func<T, Choice<T, Errors<TError>>> validateOrder)
+        public static Func<IEnumerable<T>, Choice<IEnumerable<T>, Failures<TError>>> EnumerableValidator<T, TError>(Func<T, Choice<T, Failures<TError>>> validateOrder)
         {
-            var zero = Choice.NewChoice1Of2<IEnumerable<T>, Errors<TError>>(new List<T>());
+            var zero = Choice.NewChoice1Of2<IEnumerable<T>, Failures<TError>>(new List<T>());
 
             return x => x
                 .Select(validateOrder)
