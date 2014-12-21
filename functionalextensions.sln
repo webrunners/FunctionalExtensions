@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalExtensions.Consol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalExtensions.Tests", "FunctionalExtensions.Tests\FunctionalExtensions.Tests.csproj", "{A2A4BD91-9F36-4537-AA44-584F2CE51964}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumExtensions", "EnumExtensions\EnumExtensions.csproj", "{71321685-A629-443C-A573-07B9E8FAA7DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A2A4BD91-9F36-4537-AA44-584F2CE51964}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2A4BD91-9F36-4537-AA44-584F2CE51964}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2A4BD91-9F36-4537-AA44-584F2CE51964}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71321685-A629-443C-A573-07B9E8FAA7DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71321685-A629-443C-A573-07B9E8FAA7DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71321685-A629-443C-A573-07B9E8FAA7DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71321685-A629-443C-A573-07B9E8FAA7DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
