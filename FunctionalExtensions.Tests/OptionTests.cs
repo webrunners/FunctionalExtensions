@@ -56,5 +56,53 @@ namespace FunctionalExtensions.Tests
             )
                 .Match(callBackSome, callBackNone);
         }
+
+        [Test]
+        public void ToOption_Test()
+        {
+            var option1 = 5.ToOption();
+
+            option1.Match(
+                x => Assert.That(x, Is.EqualTo(5)),
+                () => Assert.Fail());
+
+            String s = null;
+
+            var option2 = s.ToOption();
+
+            option2.Match(
+                x => Assert.Fail(),
+                () => Assert.Pass());
+        }
+
+        [Test]
+        public void Equals_Test()
+        {
+            Assert.That(42.ToOption(), Is.EqualTo(42.ToOption()));
+            Assert.That(Option.None<int>(), Is.EqualTo(Option.None<int>()));
+            Assert.That(Option.Some(42).Equals(Option.Some(42)));
+            Assert.That((Option.Some(42).Equals(42)));
+            Assert.That(!Option.None<int>().Equals(Option.None<string>()));
+            Assert.That(Option.None<int>().Equals(null));
+        }
+
+        [Test]
+        public void Monad_Test()
+        {
+            var k = Fun.Create((int x) => Option.Some(x * 2));
+
+            // Left Identity
+            Assert.That(Option.Some(42).Bind(k), Is.EqualTo(k(42)));
+
+            // Right Identity
+            var m = Option.Some(42);
+            Assert.That(m.Bind(x => x.ToOption()), Is.EqualTo(m));
+
+            // Associative
+            var h = Fun.Create((int x) => Option.Some(x + 1));
+            Assert.That(
+                m.Bind(x => k(x).Bind(h)),
+                Is.EqualTo(m.Bind(k).Bind(h)));
+        }
     }
 }

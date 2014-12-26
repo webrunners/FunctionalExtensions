@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FunctionalExtensions
 {
@@ -37,13 +38,29 @@ namespace FunctionalExtensions
                 onNone();
         }
 
-        public Choice<T, T2> ToChoice<T2>(T2 value)
+        public override int GetHashCode()
         {
-            if (Tag != OptionType.Some) return Choice.NewChoice2Of2<T, T2>(value);
-            
-            T some;
-            MatchSome(out some);
-            return Choice.NewChoice1Of2<T, T2>(some);
+            return Tag == OptionType.Some ? EqualityComparer<T>.Default.GetHashCode(((Some<T>)this).Value) : EqualityComparer<T>.Default.GetHashCode(default(T));
+        }
+
+        private bool Equals(T other)
+        {
+            return other == null && Tag == OptionType.None
+                || Tag == OptionType.Some && EqualityComparer<T>.Default.Equals(((Some<T>)this).Value, other);
+        }
+
+        private bool Equals(Option<T> other)
+        {
+            return other == null && Tag == OptionType.None
+                || Tag == OptionType.Some && other.Tag == OptionType.Some && Equals(((Some<T>)this).Value, ((Some<T>)other).Value)
+                || Tag == OptionType.None && other.Tag == OptionType.None;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj == null && Tag == OptionType.None
+                || obj is T && Equals((T)obj)
+                || obj is Option<T> && Equals((Option<T>)obj);
         }
     }
 
@@ -97,6 +114,11 @@ namespace FunctionalExtensions
         public static Option<TResult> SelectMany<TSource, TValue, TResult>(this Option<TSource> source, Func<TSource, Option<TValue>> valueSelector, Func<TSource, TValue, TResult> resultSelector)
         {
             return source.Bind(s => valueSelector(s).Map(v => resultSelector(s, v)));
+        }
+
+        public static Option<T> ToOption<T>(this T value)
+        {
+            return value != null ? Option.Some(value) : Option.None<T>();
         }
     }
 }

@@ -118,5 +118,14 @@ namespace FunctionalExtensions
         {
             return source.Bind(s => valueSelector(s).Map(v => resultSelector(s, v)));
         }
+
+        public static Choice<T, T2> ToChoice<T, T2>(this Option<T> source, T2 value)
+        {
+            if (source.Tag != OptionType.Some) return Choice.NewChoice2Of2<T, T2>(value);
+
+            T some;
+            source.MatchSome(out some);
+            return Choice.NewChoice1Of2<T, T2>(some);
+        }
     }
 }
