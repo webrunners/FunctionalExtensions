@@ -43,24 +43,30 @@ namespace FunctionalExtensions
             return Tag == OptionType.Some ? EqualityComparer<T>.Default.GetHashCode(((Some<T>)this).Value) : EqualityComparer<T>.Default.GetHashCode(default(T));
         }
 
-        private bool Equals(T other)
+        private bool EqualsOption(Option<T> other)
         {
-            return other == null && Tag == OptionType.None
-                || Tag == OptionType.Some && EqualityComparer<T>.Default.Equals(((Some<T>)this).Value, other);
-        }
-
-        private bool Equals(Option<T> other)
-        {
-            return other == null && Tag == OptionType.None
-                || Tag == OptionType.Some && other.Tag == OptionType.Some && Equals(((Some<T>)this).Value, ((Some<T>)other).Value)
+            return Tag == OptionType.Some && other.Tag == OptionType.Some && Equals(((Some<T>)this).Value, ((Some<T>)other).Value)
                 || Tag == OptionType.None && other.Tag == OptionType.None;
         }
 
         public override bool Equals(object obj)
         {
             return obj == null && Tag == OptionType.None
-                || obj is T && Equals((T)obj)
-                || obj is Option<T> && Equals((Option<T>)obj);
+                || obj is Option<T> && EqualsOption((Option<T>)obj);
+        }
+
+        public static bool operator ==(Option<T> a, Option<T> b)
+        {
+            if (System.Object.ReferenceEquals(a, b))
+                return true;
+            if ((object)a == null)
+                return b.Equals(a);
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Option<T> a, Option<T> b)
+        {
+            return !(a == b);
         }
     }
 

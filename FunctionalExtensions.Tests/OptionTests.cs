@@ -78,16 +78,25 @@ namespace FunctionalExtensions.Tests
         [Test]
         public void Equals_Test()
         {
-            Assert.That(42.ToOption(), Is.EqualTo(42.ToOption()));
-            Assert.That(Option.None<int>(), Is.EqualTo(Option.None<int>()));
-            Assert.That(Option.Some(42).Equals(Option.Some(42)));
-            Assert.That((Option.Some(42).Equals(42)));
+            Assert.That(Option.Some(42), Is.EqualTo(Option.Some(42)));
+            Assert.That(Option.Some(42) == Option.Some(42));
+            Assert.That(Option.Some(42) != Option.Some(24));
+            Assert.That(Option.None<int>() != Option.Some(42));
+
+            Option<int> nullOption1 = null;
+            Option<int> nullOption2 = null;
+
+            Assert.That(nullOption1 == nullOption2);
+
+            Assert.That(Option.None<int>() == Option.None<int>());
             Assert.That(!Option.None<int>().Equals(Option.None<string>()));
-            Assert.That(Option.None<int>().Equals(null));
+
+            Assert.That(null == Option.None<int>());
+            Assert.That(Option.None<int>() == null);
         }
 
         [Test]
-        public void Monad_Test()
+        public void Monad_Credentials_Test()
         {
             var k = Fun.Create((int x) => Option.Some(x * 2));
 
