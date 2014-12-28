@@ -162,5 +162,22 @@ namespace FunctionalExtensions.Tests.FluentOption
                     x => Assert.Fail(),
                     () => Assert.Pass());
         }
+
+        [Test]
+        public void Multiple_Combinations_Test()
+        {
+            OptionMonad
+                .From(() => Option.Some(1))
+                .Bind(x => Option.Some(x + 1))
+                .Bind(x => Option.Some(x + 1))
+                .From(() => Option.Some(1))
+                .Select((x, y) => x + y)
+                .From(() => Option.Some(1))
+                .Bind((x, y) => Option.Some(x + y))
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(5)),
+                    () => Assert.Fail());
+        }
     }
 }   
