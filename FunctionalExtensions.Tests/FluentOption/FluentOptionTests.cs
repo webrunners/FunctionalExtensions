@@ -178,6 +178,21 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Match(
                     x => Assert.That(x, Is.EqualTo(5)),
                     () => Assert.Fail());
+
+            OptionMonad
+                .From(() => Option.Some(1))
+                .Bind(x => Option.Some(x + 1))
+                .Bind(x => Option.Some(x + 1))
+                .From(() => Option.Some(1))
+                .Select((x, y) => x + y)
+                .From(() => Option.Some(1))
+                .Bind((x, y) => Option.Some(x + y))
+                .From(() => Option.None<string>())
+                .Select((x, s) => Option.Some(s + x))
+                .Result()
+                .Match(
+                    x => Assert.Fail(),
+                    () => Assert.Pass());
         }
     }
 }   
