@@ -1,5 +1,6 @@
 ﻿using FunctionalExtensions.Attributes;
 using FunctionalExtensions.Extensions;
+using FunctionalExtensions.FluentOption;
 using FunctionalExtensions.Validation;
 using System;
 using System.Linq;
@@ -10,13 +11,16 @@ namespace FunctionalExtensions.ConsoleApp
     {
         private static void Main()
         {
-            ValidationWithOptionMonad();
-            Console.WriteLine();
+            Console.WriteLine("Enter two (floating point) numbers:");
 
-            ValidationWithChoiceMonad();
-            Console.WriteLine();
-
-            ValidationAppF();
+            OptionMonad
+                .From(ReadDecimal)
+                .From(ReadDecimal)
+                .Bind(Divide)
+                .Result()
+                .Match(
+                    x => Console.WriteLine("Result = {0} %", x.ToString("F")),
+                    () => Console.WriteLine("An error occurred."));
         }
 
         enum Error
