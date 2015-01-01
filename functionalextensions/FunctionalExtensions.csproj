@@ -40,7 +40,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Choice.cs" />
-    <Compile Include="FluentOption\FluentApi.cs" />
+    <Compile Include="FluentOption\Intermediate3.cs" />
+    <Compile Include="FluentOption\IIntermediate1.cs" />
+    <Compile Include="FluentOption\IIntermediate2.cs" />
+    <Compile Include="FluentOption\IIntermediate3.cs" />
+    <Compile Include="FluentOption\IIntermediate4.cs" />
+    <Compile Include="FluentOption\IIntermediate5.cs" />
+    <Compile Include="FluentOption\IIntermediate6.cs" />
+    <Compile Include="FluentOption\IIntermediate7.cs" />
+    <Compile Include="FluentOption\IIntermediate8.cs" />
+    <Compile Include="FluentOption\Intermediate1.cs" />
+    <Compile Include="FluentOption\Intermediate2.cs" />
+    <Compile Include="FluentOption\Intermediate4.cs" />
+    <Compile Include="FluentOption\Intermediate5.cs" />
+    <Compile Include="FluentOption\Intermediate6.cs" />
+    <Compile Include="FluentOption\Intermediate7.cs" />
+    <Compile Include="FluentOption\Intermediate8.cs" />
+    <Compile Include="FluentOption\IResult.cs" />
+    <Compile Include="FluentOption\OptionMonad.cs" />
     <Compile Include="Lambda\Act.cs" />
     <Compile Include="Lambda\Func.cs" />
     <Compile Include="Option.cs" />
