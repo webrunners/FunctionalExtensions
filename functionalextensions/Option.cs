@@ -3,11 +3,6 @@ using System.Collections.Generic;
 
 namespace FunctionalExtensions
 {
-    public enum OptionType
-    {
-        Some, None
-    }
-
     public abstract class Option<T>
     {
         private readonly OptionType _tag;
@@ -70,22 +65,6 @@ namespace FunctionalExtensions
         }
     }
 
-    internal class None<T> : Option<T>
-    {
-        public None() : base(OptionType.None) { }
-    }
-
-    internal class Some<T> : Option<T>
-    {
-        public Some(T value)
-            : base(OptionType.Some)
-        {
-            _value = value;
-        }
-        private readonly T _value;
-        public T Value { get { return _value; } }
-    }
-
     public static class Option
     {
         public static Option<T> None<T>()
@@ -95,36 +74,6 @@ namespace FunctionalExtensions
         public static Option<T> Some<T>(T value)
         {
             return new Some<T>(value);
-        }
-    }
-
-    public static class OptionExtensions
-    {
-        public static Option<TResult> Map<T, TResult>(this Option<T> source, Func<T, TResult> selector)
-        {
-            T value;
-            return source.MatchSome(out value) ? Option.Some(selector(value)) : Option.None<TResult>();
-        }
-
-        public static Option<TResult> Bind<T, TResult>(this Option<T> source, Func<T, Option<TResult>> selector)
-        {
-            T value;
-            return source.MatchSome(out value) ? selector(value) : Option.None<TResult>();
-        }
-
-        public static Option<TResult> Select<T, TResult>(this Option<T> source, Func<T, TResult> selector)
-        {
-            return source.Map(selector);
-        }
-
-        public static Option<TResult> SelectMany<TSource, TValue, TResult>(this Option<TSource> source, Func<TSource, Option<TValue>> valueSelector, Func<TSource, TValue, TResult> resultSelector)
-        {
-            return source.Bind(s => valueSelector(s).Map(v => resultSelector(s, v)));
-        }
-
-        public static Option<T> ToOption<T>(this T value)
-        {
-            return value != null ? Option.Some(value) : Option.None<T>();
         }
     }
 }

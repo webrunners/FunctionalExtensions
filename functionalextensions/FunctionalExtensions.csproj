@@ -40,6 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Choice.cs" />
+    <Compile Include="Choice1Of2.cs" />
+    <Compile Include="Choice2Of2.cs" />
+    <Compile Include="ChoiceExtensions.cs" />
+    <Compile Include="ChoiceType.cs" />
     <Compile Include="FluentOption\Intermediate3.cs" />
     <Compile Include="FluentOption\IIntermediate1.cs" />
     <Compile Include="FluentOption\IIntermediate2.cs" />
@@ -60,8 +64,12 @@
     <Compile Include="FluentOption\OptionMonad.cs" />
     <Compile Include="Lambda\Act.cs" />
     <Compile Include="Lambda\Func.cs" />
+    <Compile Include="None.cs" />
     <Compile Include="Option.cs" />
+    <Compile Include="OptionExtensions.cs" />
+    <Compile Include="OptionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Some.cs" />
     <Compile Include="Validation\Failures.cs" />
     <Compile Include="Validation\Fluent\IResult.cs" />
     <Compile Include="Validation\Fluent\FluentSelectionValidator.cs" />
