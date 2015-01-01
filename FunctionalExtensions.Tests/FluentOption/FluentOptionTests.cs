@@ -193,6 +193,172 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Match(
                     x => Assert.Fail(),
                     () => Assert.Pass());
+
+            OptionMonad
+                .From(() => Option.Some(1))
+                .Bind(x => Option.Some(x + 1))
+                .Bind(x => Option.Some(x + 1))
+                .Bind(x => Option.Some(x + 1))
+                .Bind(x => Option.Some(x + 1))
+                .Bind(x => Option.Some(x + 1))
+                .Bind(x => Option.Some(x + 1))
+                .Bind(x => Option.Some(x + 1))
+                .Bind(x => Option.Some(x.ToString()))
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo("8")),
+                    () => Assert.Fail());
+
+        }
+
+        [Test]
+        public void From_8x_Test()
+        {
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Bind((x1, x2, x3, x4, x5, x6, x7, x8) => Option.Some(x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8))
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(8)),
+                    () => Assert.Fail());
+
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Select((x1, x2, x3, x4, x5, x6, x7, x8) => x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8)
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(8)),
+                    () => Assert.Fail());
+        }
+
+        [Test]
+        public void From_7x_Test()
+        {
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Bind((x1, x2, x3, x4, x5, x6, x7) => Option.Some(x1 + x2 + x3 + x4 + x5 + x6 + x7))
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(7)),
+                    () => Assert.Fail());
+
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Select((x1, x2, x3, x4, x5, x6, x7) => x1 + x2 + x3 + x4 + x5 + x6 + x7)
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(7)),
+                    () => Assert.Fail());
+        }
+
+        [Test]
+        public void From_6x_Test()
+        {
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Bind((x1, x2, x3, x4, x5, x6) => Option.Some(x1 + x2 + x3 + x4 + x5 + x6))
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(6)),
+                    () => Assert.Fail());
+
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Select((x1, x2, x3, x4, x5, x6) => x1 + x2 + x3 + x4 + x5 + x6)
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(6)),
+                    () => Assert.Fail());
+        }
+
+        [Test]
+        public void From_5x_Test()
+        {
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Bind((x1, x2, x3, x4, x5) => Option.Some(x1 + x2 + x3 + x4 + x5))
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(5)),
+                    () => Assert.Fail());
+
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Select((x1, x2, x3, x4, x5) => x1 + x2 + x3 + x4 + x5)
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(5)),
+                    () => Assert.Fail());
+        }
+
+        [Test]
+        public void From_4x_Test()
+        {
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Bind((x1, x2, x3, x4) => Option.Some(x1 + x2 + x3 + x4))
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(4)),
+                    () => Assert.Fail());
+
+            OptionMonad
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .From(() => Option.Some(1))
+                .Select((x1, x2, x3, x4) => x1 + x2 + x3 + x4)
+                .Result()
+                .Match(
+                    x => Assert.That(x, Is.EqualTo(4)),
+                    () => Assert.Fail());
         }
     }
 }   
