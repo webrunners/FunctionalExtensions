@@ -2,7 +2,7 @@
 
 namespace FunctionalExtensions.Validation.Fluent
 {
-    internal class FluentValidator<T, TError> : IIntermediate1<T, TError>, IIntermediate2<T, TError>, IIntermediate3<T, TError> where T : class
+    internal class FluentValidator<T, TError> : IIntermediate1<T, TError>, IIntermediate2<T, TError>, IIntermediate3<T, TError>, IIntermediate2A<T, TError> where T : class
     {
         private readonly T _instance;
         private readonly Choice<T, Failures<TError>> _result;

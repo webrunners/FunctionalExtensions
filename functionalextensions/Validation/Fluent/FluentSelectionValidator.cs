@@ -17,7 +17,7 @@ namespace FunctionalExtensions.Validation.Fluent
             _result = result;
         }
 
-        public IIntermediate2<T, TError> IsNotNull(TError error)
+        public IIntermediate2A<T, TError> IsNotNull(TError error)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace FunctionalExtensions.Validation.Fluent
             }
         }
 
-        public IIntermediate2<T, TError> Fulfills(Predicate<TResult> predicate, TError error)
+        public IIntermediate2A<T, TError> Fulfills(Predicate<TResult> predicate, TError error)
         {
             try
             {
