@@ -27,7 +27,7 @@ namespace FunctionalExtensions.Validation.Fluent
                     join y in Validator.NotNull(selection, error) on 1 equals 1
                     select _instance);
             }
-            catch (Exception)
+            catch (NullReferenceException)
             {
                 return new FluentValidator<T, TError>(_instance, _result);
             }
@@ -45,7 +45,7 @@ namespace FunctionalExtensions.Validation.Fluent
                         join y in Validator.Create(predicate, error)(selection) on 1 equals 1
                         select _instance);
             }
-            catch (Exception)
+            catch (NullReferenceException)
             {
                 return new FluentValidator<T, TError>(_instance, _result);
             }
