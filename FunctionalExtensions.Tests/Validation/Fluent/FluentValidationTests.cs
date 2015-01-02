@@ -127,5 +127,21 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
             ShouldNotBeNull,
             ForenameShouldNotBeNull
         }
+
+        [Test]
+        public void NullReferenceException_Test()
+        {
+            var customer = new Customer();
+
+            Validate
+                .That(customer).IsNotNull("customer should not be null")
+                .AndSelect(x => customer.Address)
+                .Fulfills(x => x.Postcode.Length > 3, "length of postcode should be at least 4", "postcode cannot be null")
+                .Result
+                .Match(
+                    x => Assert.Fail(),
+                    err => Assert.That(err.Errors, Is.EquivalentTo(new[]{"postcode cannot be null"})));
+
+        }
     }
 }

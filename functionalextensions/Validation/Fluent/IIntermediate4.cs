@@ -6,5 +6,6 @@ namespace FunctionalExtensions.Validation.Fluent
     {
         IIntermediate2A<T, TError> IsNotNull(TError error);
         IIntermediate2A<T, TError> Fulfills(Predicate<TResult> predicate, TError error);
+        IIntermediate2A<T, TError> Fulfills(Predicate<TResult> predicate, TError error, TError onNullReferenceException);
     }
 }

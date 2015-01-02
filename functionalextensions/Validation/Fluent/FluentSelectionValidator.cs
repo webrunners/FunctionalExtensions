@@ -22,9 +22,10 @@ namespace FunctionalExtensions.Validation.Fluent
             try
             {
                 var selection = _selector(_instance);
+                var validationResult = Validator.NotNull(selection, error);
                 return new FluentValidator<T, TError>(_instance,
                     from x in _result
-                    join y in Validator.NotNull(selection, error) on 1 equals 1
+                    join y in validationResult on 1 equals 1
                     select _instance);
             }
             catch (NullReferenceException)
@@ -37,18 +38,37 @@ namespace FunctionalExtensions.Validation.Fluent
         {
             try
             {
-                var selection = _selector(_instance);
-                return selection == default(TResult)
-                    ? new FluentValidator<T, TError>(_instance, _result)
-                    : new FluentValidator<T, TError>(_instance,
-                        from x in _result
-                        join y in Validator.Create(predicate, error)(selection) on 1 equals 1
-                        select _instance);
+                return ValidateSelection(predicate, error);
             }
             catch (NullReferenceException)
             {
                 return new FluentValidator<T, TError>(_instance, _result);
             }
+        }
+
+        public IIntermediate2A<T, TError> Fulfills(Predicate<TResult> predicate, TError error, TError onNullReferenceException)
+        {
+            try
+            {
+                return ValidateSelection(predicate, error);
+            }
+            catch (NullReferenceException)
+            {
+                return new FluentValidator<T, TError>(_instance,
+                    from x in _result
+                    join y in Result.Failure<T, TError>(onNullReferenceException) on 1 equals 1
+                    select _instance);
+            }
+        }
+
+        private IIntermediate2A<T, TError> ValidateSelection(Predicate<TResult> predicate, TError error)
+        {
+            var selection = _selector(_instance);
+            var validationResult = Validator.Create(predicate, error)(selection);
+            return new FluentValidator<T, TError>(_instance,
+                from x in _result
+                join y in validationResult on 1 equals 1
+                select _instance);
         }
     }
 }
