@@ -54,5 +54,42 @@ namespace FunctionalExtensions.Tests
             )
                 .Match(callBackSome, callBackNone);
         }
+
+        [Test]
+        public void Monad_Laws_Test()
+        {
+            var k = Fun.Create((string x) => Choice.NewChoice1Of2<string, int>(x.ToUpper()));
+
+            // Left Identity
+            var choice1 = Choice.Unit<string, int>("hello").Bind(k);
+            var choice2 = k("hello");
+
+            Assert.That(ChoiceEquals(choice1, choice2));
+
+            // Right Identity
+            var m = Choice.Unit<string, int>("hello");
+            var choice4 = m.Bind(Choice.Unit<string, int>);
+
+            Assert.That(ChoiceEquals(m, choice4));
+
+            // Associativity
+            var h = Fun.Create((string x) => Choice.NewChoice1Of2<string, int>(x + x));
+
+            var choice5 = m.Bind(x1 => k(x1).Bind(h));
+            var choice6 = m.Bind(k).Bind(h);
+
+            Assert.That(ChoiceEquals(choice5, choice6));
+        }
+
+        private static bool ChoiceEquals<T1, T2>(Choice<T1, T2> choice5, Choice<T1, T2> choice6)
+        {
+            var b = false;
+            choice5.Match(
+                x1 => choice6.Match(
+                    x2 => b = x1.Equals(x2),
+                    _ => { }),
+                _ => { });
+            return b;
+        }
     }
 }

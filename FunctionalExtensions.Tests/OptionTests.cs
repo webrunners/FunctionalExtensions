@@ -64,7 +64,7 @@ namespace FunctionalExtensions.Tests
 
             option1.Match(
                 x => Assert.That(x, Is.EqualTo(5)),
-                () => Assert.Fail());
+                Assert.Fail);
 
             String s = null;
 
@@ -72,7 +72,7 @@ namespace FunctionalExtensions.Tests
 
             option2.Match(
                 x => Assert.Fail(),
-                () => Assert.Pass());
+                Assert.Pass);
         }
 
         [Test]
@@ -96,18 +96,18 @@ namespace FunctionalExtensions.Tests
         }
 
         [Test]
-        public void Monad_Credentials_Test()
+        public void Monad_Laws_Test()
         {
             var k = Fun.Create((int x) => Option.Some(x * 2));
 
             // Left Identity
-            Assert.That(Option.Some(42).Bind(k), Is.EqualTo(k(42)));
+            Assert.That(42.ToOption().Bind(k), Is.EqualTo(k(42)));
 
             // Right Identity
             var m = Option.Some(42);
             Assert.That(m.Bind(x => x.ToOption()), Is.EqualTo(m));
 
-            // Associative
+            // Associativity
             var h = Fun.Create((int x) => Option.Some(x + 1));
             Assert.That(
                 m.Bind(x => k(x).Bind(h)),
