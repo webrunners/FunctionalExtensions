@@ -46,7 +46,7 @@ namespace FunctionalExtensions
             return new Choice2Of2<T1, T2>(value);
         }
 
-        public static Choice<T1, T2> Unit<T1, T2>(T1 value)
+        public static Choice<T1, T2> Return<T1, T2>(T1 value)
         {
             return new Choice1Of2<T1, T2>(value);
         }

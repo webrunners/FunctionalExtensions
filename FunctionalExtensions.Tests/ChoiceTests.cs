@@ -61,14 +61,14 @@ namespace FunctionalExtensions.Tests
             var k = Fun.Create((string x) => Choice.NewChoice1Of2<string, int>(x.ToUpper()));
 
             // Left Identity
-            var choice1 = Choice.Unit<string, int>("hello").Bind(k);
+            var choice1 = Choice.Return<string, int>("hello").Bind(k);
             var choice2 = k("hello");
 
             Assert.That(ChoiceEquals(choice1, choice2));
 
             // Right Identity
-            var m = Choice.Unit<string, int>("hello");
-            var choice4 = m.Bind(Choice.Unit<string, int>);
+            var m = Choice.Return<string, int>("hello");
+            var choice4 = m.Bind(Choice.Return<string, int>);
 
             Assert.That(ChoiceEquals(m, choice4));
 
