@@ -34,31 +34,35 @@ namespace FunctionalExtensions.Validation.Fluent
             }
         }
 
-        public IIntermediate2A<T, TError> Fulfills(Predicate<TResult> predicate, TError error)
+        public IIntermediate2A<T, TError> Fulfills(Predicate<TResult> predicate, Func<TResult, TError> error, Func<NullReferenceException, TError> onNullReferenceException = null, Func<ArgumentOutOfRangeException, TError> onArgumentOutOfRangeException  = null)
         {
             try
             {
-                return ValidateSelection(predicate, error);
+                return ValidateSelection(predicate, error(_selector(_instance)));
             }
-            catch (NullReferenceException)
+            catch (ArgumentOutOfRangeException ex)
             {
-                return new FluentValidator<T, TError>(_instance, _result);
+                return onArgumentOutOfRangeException == null
+                    ? new FluentValidator<T, TError>(_instance, _result)
+                    : new FluentValidator<T, TError>(_instance,
+                        from x in _result
+                        join y in Result.Failure<T, TError>(onArgumentOutOfRangeException(ex)) on 1 equals 1
+                        select _instance);
+            }
+            catch (NullReferenceException ex)
+            {
+                return onNullReferenceException == null
+                    ? new FluentValidator<T, TError>(_instance, _result)
+                    : new FluentValidator<T, TError>(_instance,
+                        from x in _result
+                        join y in Result.Failure<T, TError>(onNullReferenceException(ex)) on 1 equals 1
+                        select _instance);
             }
         }
 
-        public IIntermediate2A<T, TError> Fulfills(Predicate<TResult> predicate, TError error, TError onNullReferenceException)
+        public IIntermediate2A<T, TError> Fulfills(Predicate<TResult> predicate, TError error, Func<NullReferenceException, TError> onNullReferenceException = null, Func<ArgumentOutOfRangeException, TError> onArgumentOutOfRangeException = null)
         {
-            try
-            {
-                return ValidateSelection(predicate, error);
-            }
-            catch (NullReferenceException)
-            {
-                return new FluentValidator<T, TError>(_instance,
-                    from x in _result
-                    join y in Result.Failure<T, TError>(onNullReferenceException) on 1 equals 1
-                    select _instance);
-            }
+            return Fulfills(predicate, x => error, onNullReferenceException, onArgumentOutOfRangeException);
         }
 
         private IIntermediate2A<T, TError> ValidateSelection(Predicate<TResult> predicate, TError error)

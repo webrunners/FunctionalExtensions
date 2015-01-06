@@ -1,4 +1,8 @@
-﻿using FunctionalExtensions.Validation.Fluent;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using FunctionalExtensions.Validation.Fluent;
 using NUnit.Framework;
 
 namespace FunctionalExtensions.Tests.Validation.Fluent
@@ -136,12 +140,29 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
             Validate
                 .That(customer).IsNotNull("customer should not be null")
                 .AndSelect(x => customer.Address)
-                .Fulfills(x => x.Postcode.Length > 3, "length of postcode should be at least 4", "postcode cannot be null")
+                .Fulfills(x => x.Postcode.Length > 3, "length of postcode should be at least 4", x => "postcode cannot be null")
                 .Result
                 .Match(
                     x => Assert.Fail(),
                     err => Assert.That(err.Errors, Is.EquivalentTo(new[]{"postcode cannot be null"})));
 
+        }
+
+        [Test]
+        public void Enumerable_Tests()
+        {
+            var args = new List<string> {"1", "2", "3" };
+
+            Validate
+                .That(args).IsNotNull("args should not be null")
+                .And.Fulfills(x => x.Count > 4, "args should have 4 items")
+                .AndSelect(x => x.ElementAt(0)).Fulfills(x => x == "0", x => String.Format("first element should be 0 but is {0}", x))
+                .AndSelect(x => x.ElementAt(20)).Fulfills(x => x == "19", "20th item should be 19")
+                .AndSelect(x => x.ElementAt(100)).Fulfills(x => x == "99", "100th item should be 99", onArgumentOutOfRangeException: x => "there should be a 100th item")
+                .Result
+                .Match(
+                    x => Assert.Fail(),
+                    err => Assert.That(err.Errors, Is.EquivalentTo(new[] { "args should have 4 items", "first element should be 0 but is 1", "there should be a 100th item" })));
         }
     }
 }
