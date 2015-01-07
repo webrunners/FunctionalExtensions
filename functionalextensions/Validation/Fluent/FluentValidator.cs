@@ -27,14 +27,31 @@ namespace FunctionalExtensions.Validation.Fluent
                 select _instance);
         }
 
-        public IIntermediate2<T, TError> Fulfills(Predicate<T> pred, TError err)
+        public IIntermediate2<T, TError> Fulfills(Predicate<T> pred, TError err, Func<Exception, TError> onException = null)
         {
-            return _instance == default(T)
-                ? this
-                : new FluentValidator<T, TError>(_instance,
-                    from x in Result
-                    join y in Validator.Create(pred, err)(_instance) on 1 equals 1
-                    select _instance);
+            return Fulfills(pred, x => err, onException);
+        }
+
+        public IIntermediate2<T, TError> Fulfills(Predicate<T> predicate, Func<T, TError> onError, Func<Exception, TError> onException = null)
+        {
+            try
+            {
+                var validationResult = Validator.Create(predicate, onError(_instance))(_instance);
+
+                return new FluentValidator<T, TError>(_instance,
+                        from x in Result
+                        join y in validationResult on 1 equals 1
+                        select _instance);
+            }
+            catch (Exception ex)
+            {
+                return onException == null
+                    ? new FluentValidator<T, TError>(_instance, _result)
+                    : new FluentValidator<T, TError>(_instance,
+                        from x in Result
+                        join y in Validation.Result.Failure<T, TError>(onException(ex)) on 1 equals 1
+                        select _instance);
+            }
         }
 
         public Choice<T, Failures<TError>> Result

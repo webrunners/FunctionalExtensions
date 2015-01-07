@@ -146,6 +146,13 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                     x => Assert.Fail(),
                     err => Assert.That(err.Errors, Is.EquivalentTo(new[]{"postcode cannot be null"})));
 
+            Validate
+                .That((Customer) null).IsNotNull("not null")
+                .And.Fulfills(x => x.Address != null, "address not null", x => "address field should be accessible") // should cause exception that will be caught
+                .Result
+                .Match(
+                    x => Assert.Fail(),
+                    err => Assert.That(err.Errors, Is.EquivalentTo(new[] { "not null", "address field should be accessible" })));
         }
 
         [Test]
@@ -158,7 +165,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .And.Fulfills(x => x.Count > 4, "args should have 4 items")
                 .AndSelect(x => x.ElementAt(0)).Fulfills(x => x == "0", x => String.Format("first element should be 0 but is {0}", x))
                 .AndSelect(x => x.ElementAt(20)).Fulfills(x => x == "19", "20th item should be 19")
-                .AndSelect(x => x.ElementAt(100)).Fulfills(x => x == "99", "100th item should be 99", onArgumentOutOfRangeException: x => "there should be a 100th item")
+                .AndSelect(x => x.ElementAt(100)).Fulfills(x => x == "99", "100th item should be 99", x => "there should be a 100th item")
                 .Result
                 .Match(
                     x => Assert.Fail(),
