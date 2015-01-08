@@ -13,14 +13,16 @@ namespace FunctionalExtensions.ConsoleApp
         {
             Console.WriteLine("Enter two (floating point) numbers:");
 
-            OptionMonad
+            var result = OptionMonad
                 .From(ReadDecimal)
                 .From(ReadDecimal)
                 .Bind(Divide)
                 .Result()
                 .Match(
-                    x => Console.WriteLine("Result = {0} %", x.ToString("F")),
-                    () => Console.WriteLine("An error occurred."));
+                    x => String.Format("Result = {0} %", x.ToString("F")),
+                    () => "An error occurred.");
+
+            Console.WriteLine(result);
         }
 
         enum Error
@@ -38,11 +40,11 @@ namespace FunctionalExtensions.ConsoleApp
             Console.WriteLine("Enter a (floating point) number:");
 
             (
-                from v1 in ReadDecimal().ToChoice(new Failures<Error>(Error.CannotNotParse1StInput))
-                join v2 in ReadDecimal().ToChoice(new Failures<Error>(Error.CannotNotParse2NdInput)) on 1 equals 1
-                from result in Divide(v1, v2).ToChoice(new Failures<Error>(Error.CannotDivideByZero))
+                from v1 in ReadDecimal().ToChoice(Failure.Create(Error.CannotNotParse1StInput))
+                join v2 in ReadDecimal().ToChoice(Failure.Create(Error.CannotNotParse2NdInput)) on 1 equals 1
+                from result in Divide(v1, v2).ToChoice(Failure.Create(Error.CannotDivideByZero))
                 select result
-                )
+            )
                 .Match(
                     x => Console.WriteLine("Result = {0}", x),
                     err => err.Errors.ToList().ForEach(x => Console.WriteLine(x.GetDisplayName())));
@@ -53,15 +55,16 @@ namespace FunctionalExtensions.ConsoleApp
         {
             Console.WriteLine("Enter two (floating point) numbers:");
 
-            (
-                from v1 in ReadDecimal()
-                from v2 in ReadDecimal()
-                from result in Divide(v1, v2)
-                select result*100
-            )
-                .Match(
-                    x => Console.WriteLine("Result = {0} %", x.ToString("F")),
-                    () => Console.WriteLine("An error occurred."));
+            var output = 
+                (
+                    from v1 in ReadDecimal()
+                    from v2 in ReadDecimal()
+                    from result in Divide(v1, v2)
+                    select result*100
+                )
+                    .Match(
+                        x => String.Format("Result = {0} %", x.ToString("F")),
+                        () => "An error occurred.");
         }
 
         private static void ValidationWithChoiceMonad()

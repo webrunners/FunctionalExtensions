@@ -2,6 +2,6 @@
 {
     public interface IResult<T, TError>
     {
-        Choice<T, Failures<TError>> Result { get; }
+        Choice<T, Failure<TError>> Result { get; }
     }
 }

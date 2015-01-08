@@ -8,9 +8,9 @@ namespace FunctionalExtensions.Validation.Fluent
     {
         private readonly T _instance;
         private readonly Func<T, TResult> _selector;
-        private readonly Choice<T, Failures<TError>> _result;
+        private readonly Choice<T, Failure<TError>> _result;
 
-        public FluentSelectionValidator(T instance, Func<T, TResult> selector, Choice<T, Failures<TError>> result)
+        public FluentSelectionValidator(T instance, Func<T, TResult> selector, Choice<T, Failure<TError>> result)
         {
             _instance = instance;
             _selector = selector;

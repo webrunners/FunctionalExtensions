@@ -15,9 +15,13 @@ namespace FunctionalExtensions.Tests
             var d1 = Fun.Create(() => Option.Some(2.5m));
             var d2 = Fun.Create(() => Option.Some(2.5m));
 
-            var callbackSome = Act.Create((decimal x) => result = x);
+            var callbackSome = Fun.Create((decimal x) =>
+            {
+                result = x;
+                return true;
+            });
 
-            var callbackNone = Act.Create(Assert.Fail);
+            var callbackNone = Fun.Create(() => false);
 
             ValidationWithOptionMonad(d1, d2, Division.Divide, callbackSome, callbackNone);
             Assert.That(result, Is.EqualTo(100));
@@ -31,8 +35,13 @@ namespace FunctionalExtensions.Tests
             var zero = Fun.Create(() => Option.Some(0.0m));
             var ex = Fun.Create(Option.None<decimal>);
 
-            Action callbackNone = () => isCalled = true;
-            var callbackSome = Act.Create((decimal x) => Assert.Fail());
+            var callbackNone = Fun.Create(() => isCalled = true);
+
+            var callbackSome = Fun.Create((decimal x) =>
+            {
+                Assert.Fail();
+                return false;
+            });
 
             isCalled = false;
             ValidationWithOptionMonad(d1, ex, Division.Divide, callbackSome, callbackNone);
@@ -47,33 +56,33 @@ namespace FunctionalExtensions.Tests
             Assert.That(isCalled, Is.EqualTo(true));
         }
 
-        private static void ValidationWithOptionMonad(Func<Option<decimal>> readdecimal1, Func<Option<decimal>> readdecimal2, Func<decimal, decimal, Option<decimal>> divide, Action<decimal> callBackSome, Action callBackNone)
+        private static void ValidationWithOptionMonad(Func<Option<decimal>> readdecimal1, Func<Option<decimal>> readdecimal2, Func<decimal, decimal, Option<decimal>> divide, Func<decimal, bool> callBackSome, Func<bool> callBackNone)
         {
+            var result = 
             (
                 from v1 in readdecimal1()
                 from v2 in readdecimal2()
-                from result in divide(v1, v2)
-                select result * 100
+                from x in divide(v1, v2)
+                select x * 100
             )
                 .Match(callBackSome, callBackNone);
+
+            Assert.That(result, Is.True);
         }
 
         [Test]
         public void ToOption_Test()
         {
-            var option1 = 5.ToOption();
+            var result = 5.ToOption()
+                .Match(x => x, () => 0);
 
-            option1.Match(
-                x => Assert.That(x, Is.EqualTo(5)),
-                Assert.Fail);
+            Assert.That(result, Is.EqualTo(5));
 
             String s = null;
 
             var option2 = s.ToOption();
 
-            option2.Match(
-                x => Assert.Fail(),
-                Assert.Pass);
+            Assert.That(option2.Match(x => false, () => true), Is.True);
         }
 
         [Test]
@@ -120,26 +129,26 @@ namespace FunctionalExtensions.Tests
         {
             var list = new List<int>();
 
-            list
-                .FirstOrOption()
-                .Match(x => Assert.Fail(), Assert.Pass);
+            Assert.That(list.FirstOrOption().Match(x => false, () => true), Is.True);
 
             list.AddRange(new[] { 1, 2, 3 });
 
-            list
-                .FirstOrOption(x => x > 3)
-                .Match(x => Assert.Fail(), Assert.Pass);
-
-            list
-                .FirstOrOption(x => x == 3)
-                .Match(x => Assert.That(x, Is.EqualTo(3)), Assert.Pass);
+            Assert.That(list.FirstOrOption(x => x > 3).Match(x => false, () => true), Is.True);
+            Assert.That(list.FirstOrOption(x => x == 3).Match(x => x, () => -1), Is.EqualTo(3));
         }
 
         [Test]
-        public void MatchFunction_Test()
+        public void SingleOrOptionTest()
         {
-            Assert.That(Option.Some(42).Match(x => x, () => 0), Is.EqualTo(42));
-            Assert.That(Option.None<int>().Match(x => x, () => 0), Is.EqualTo(0));
+            var list = new List<int>();
+
+            Assert.That(list.SingleOrOption().Match(x => false, () => true), Is.True);
+
+            list.AddRange(new[] { 1, 1, 2, 3 });
+
+            Assert.That(list.SingleOrOption(x => x > 3).Match(x => false, () => true), Is.True);
+            Assert.That(list.SingleOrOption(x => x == 3).Match(x => x, () => -1), Is.EqualTo(3));
+            Assert.That(list.SingleOrOption(x => x == 1).Match(x => false, () => true), Is.True);
         }
     }
 }

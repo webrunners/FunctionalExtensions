@@ -25,14 +25,6 @@ namespace FunctionalExtensions
             return Tag == OptionType.Some;
         }
 
-        public void Match(Action<T> onSome, Action onNone)
-        {
-            if (Tag == OptionType.Some)
-                onSome(((Some<T>)this).Value);
-            else
-                onNone();
-        }
-
         public TResult Match<TResult>(Func<T, TResult> onSome, Func<TResult> onNone)
         {
             return Tag == OptionType.Some ? onSome(((Some<T>) this).Value) : onNone();
@@ -57,7 +49,7 @@ namespace FunctionalExtensions
 
         public static bool operator ==(Option<T> a, Option<T> b)
         {
-            if (System.Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
                 return true;
             if ((object)a == null)
                 return b.Equals(a);

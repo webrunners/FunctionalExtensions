@@ -70,7 +70,8 @@
     <Compile Include="OptionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Some.cs" />
-    <Compile Include="Validation\Failures.cs" />
+    <Compile Include="Unit.cs" />
+    <Compile Include="Validation\Failure.cs" />
     <Compile Include="Validation\Fluent\IIntermediate2A.cs" />
     <Compile Include="Validation\Fluent\IResult.cs" />
     <Compile Include="Validation\Fluent\FluentSelectionValidator.cs" />

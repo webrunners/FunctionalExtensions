@@ -5,15 +5,15 @@ namespace FunctionalExtensions.Validation.Fluent
     internal class FluentValidator<T, TError> : IIntermediate1<T, TError>, IIntermediate2<T, TError>, IIntermediate3<T, TError>, IIntermediate2A<T, TError> where T : class
     {
         private readonly T _instance;
-        private readonly Choice<T, Failures<TError>> _result;
+        private readonly Choice<T, Failure<TError>> _result;
 
         internal FluentValidator(T instance)
         {
             _instance = instance;
-            _result = new Choice1Of2<T, Failures<TError>>(_instance);
+            _result = new Choice1Of2<T, Failure<TError>>(_instance);
         }
 
-        internal FluentValidator(T instance, Choice<T, Failures<TError>> result)
+        internal FluentValidator(T instance, Choice<T, Failure<TError>> result)
         {
             _instance = instance;
             _result = result;
@@ -54,7 +54,7 @@ namespace FunctionalExtensions.Validation.Fluent
             }
         }
 
-        public Choice<T, Failures<TError>> Result
+        public Choice<T, Failure<TError>> Result
         {
             get { return _result; }
         }

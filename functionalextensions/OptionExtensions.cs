@@ -35,5 +35,12 @@ namespace FunctionalExtensions
                 ? source.Any(x => predicate(x)) ? source.First(x => predicate(x)).ToOption() : Option.None<T>()
                 : source.Any() ? source.First().ToOption() : Option.None<T>();
         }
+
+        public static Option<T> SingleOrOption<T>(this ICollection<T> source, Predicate<T> predicate = null)
+        {
+            return predicate != null
+                ? source.Count(x => predicate(x)) == 1 ? source.Single(x => predicate(x)).ToOption() : Option.None<T>()
+                : source.Count() == 1 ? source.Single().ToOption() : Option.None<T>();
+        }
     }
 }
