@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FunctionalExtensions
 {
@@ -24,6 +27,13 @@ namespace FunctionalExtensions
         public static Option<T> ToOption<T>(this T value)
         {
             return value != null ? Option.Some(value) : Option.None<T>();
+        }
+
+        public static Option<T> FirstOrOption<T>(this ICollection<T> source, Predicate<T> predicate = null)
+        {
+            return predicate != null
+                ? source.Any(x => predicate(x)) ? source.First(x => predicate(x)).ToOption() : Option.None<T>()
+                : source.Any() ? source.First().ToOption() : Option.None<T>();
         }
     }
 }

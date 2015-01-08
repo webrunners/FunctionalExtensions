@@ -33,6 +33,11 @@ namespace FunctionalExtensions
                 onNone();
         }
 
+        public TResult Match<TResult>(Func<T, TResult> onSome, Func<TResult> onNone)
+        {
+            return Tag == OptionType.Some ? onSome(((Some<T>) this).Value) : onNone();
+        }
+
         public override int GetHashCode()
         {
             return Tag == OptionType.Some ? EqualityComparer<T>.Default.GetHashCode(((Some<T>)this).Value) : EqualityComparer<T>.Default.GetHashCode(default(T));

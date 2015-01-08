@@ -1,4 +1,5 @@
-﻿    using System;
+﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using FunctionalExtensions.Lambda;
 
@@ -52,7 +53,7 @@ namespace FunctionalExtensions.Tests
                 from v1 in readdecimal1()
                 from v2 in readdecimal2()
                 from result in divide(v1, v2)
-                select result*100
+                select result * 100
             )
                 .Match(callBackSome, callBackNone);
         }
@@ -112,6 +113,33 @@ namespace FunctionalExtensions.Tests
             Assert.That(
                 m.Bind(x => k(x).Bind(h)),
                 Is.EqualTo(m.Bind(k).Bind(h)));
+        }
+
+        [Test]
+        public void FirstOrOptionTest()
+        {
+            var list = new List<int>();
+
+            list
+                .FirstOrOption()
+                .Match(x => Assert.Fail(), Assert.Pass);
+
+            list.AddRange(new[] { 1, 2, 3 });
+
+            list
+                .FirstOrOption(x => x > 3)
+                .Match(x => Assert.Fail(), Assert.Pass);
+
+            list
+                .FirstOrOption(x => x == 3)
+                .Match(x => Assert.That(x, Is.EqualTo(3)), Assert.Pass);
+        }
+
+        [Test]
+        public void MatchFunction_Test()
+        {
+            Assert.That(Option.Some(42).Match(x => x, () => 0), Is.EqualTo(42));
+            Assert.That(Option.None<int>().Match(x => x, () => 0), Is.EqualTo(0));
         }
     }
 }
