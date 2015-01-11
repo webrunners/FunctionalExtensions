@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using NUnit.Framework;
 using FunctionalExtensions.Lambda;
 
@@ -123,6 +124,60 @@ namespace FunctionalExtensions.Tests
                 m.Bind(x => k(x).Bind(h)),
                 Is.EqualTo(m.Bind(k).Bind(h)));
         }
+
+        [Test]
+        public void Applicative_Test()
+        {
+            var add = new Func<int, Func<int, int>>(x => y => x + y);
+
+            var optAdd3 = Option.Some(3).Select(x => add(x));
+
+            var result = Option.Some(5).Apply(optAdd3);
+
+            Assert.That(result, Is.EqualTo(Option.Some(8)));
+            Assert.That(Option.None<int>().Apply(optAdd3), Is.EqualTo(Option.None<int>()));
+            Assert.That(Option.Some(42).Apply(Option.None<Func<int, int>>()), Is.EqualTo(Option.None<int>()));
+
+            var result2 = Option.Some(add).Apply(Option.Some(3)).Apply(Option.Some(5));
+            Assert.That(result2, Is.EqualTo(Option.Some(8)));
+
+            var result3 = Option.Some(add).Apply(Option.None<int>()).Apply(Option.Some(5));
+            Assert.That(result3, Is.EqualTo(Option.None<int>()));
+
+            Assert.That(add.Select(Option.Some(3)).Apply(Option.Some(5)), Is.EqualTo(Option.Some(8)));
+            Assert.That(add(3).Select(Option.Some(5)), Is.EqualTo(Option.Some(8)));
+
+            var multiply = new Func<int, Func<int, Func<int, int>>>(x => y => z => x*y*z);
+
+            var multResult = multiply.Select(Option.Some(1)).Apply(Option.Some(2)).Apply(Option.Some(3));
+
+            Assert.That(multResult, Is.EqualTo(Option.Some(6)));
+            Assert.That(multiply.Select().Apply(Option.Some(10)).Apply(Option.Some(20)).Apply(Option.Some(30)), Is.EqualTo(Option.Some(6000)));
+        }
+
+        [Test]
+        public void Applicative_Laws_Test()
+        {
+            var add = new Func<int, Func<int, int>>(x => y => x + y);
+            var add3 = add(3);
+            
+
+            // fmap
+            Assert.That(
+                Option.Some(42).Select(add3),
+                Is.EqualTo(Option.Some(add3).Apply(Option.Some(42))));
+
+            // Identity
+
+
+
+        }
+
+        private T Id<T>(T value)
+        {
+            return value;
+        }
+
 
         [Test]
         public void FirstOrOptionTest()
