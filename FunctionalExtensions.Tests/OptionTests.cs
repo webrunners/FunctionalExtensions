@@ -59,7 +59,7 @@ namespace FunctionalExtensions.Tests
 
         private static void ValidationWithOptionMonad(Func<Option<decimal>> readdecimal1, Func<Option<decimal>> readdecimal2, Func<decimal, decimal, Option<decimal>> divide, Func<decimal, bool> callBackSome, Func<bool> callBackNone)
         {
-            var result = 
+            var result =
             (
                 from v1 in readdecimal1()
                 from v2 in readdecimal2()
@@ -139,13 +139,13 @@ namespace FunctionalExtensions.Tests
             Assert.That(add.Select(Option.Some(3)).Apply(Option.Some(5)), Is.EqualTo(Option.Some(8)));
             Assert.That(add(3).Select(Option.Some(5)), Is.EqualTo(Option.Some(8)));
 
-            var multiply = Fun.Create((int x, int y, int z) => x*y*z).Curry();
+            var multiply = Fun.Create((int x, int y, int z) => x * y * z).Curry();
 
             var multResult = multiply.Select(Option.Some(1)).Apply(Option.Some(2)).Apply(Option.Some(3));
             Assert.That(multResult, Is.EqualTo(Option.Some(6)));
 
             // order matters
-            var divide = Fun.Create((decimal x, decimal y) => x/y).Curry();
+            var divide = Fun.Create((decimal x, decimal y) => x / y).Curry();
             Assert.That(Option.Return(divide).Apply(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
             Assert.That(divide.Select(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
         }
@@ -164,7 +164,7 @@ namespace FunctionalExtensions.Tests
         [Test]
         public void ReturnOption_OnExceptionNone_Test()
         {
-            var divide = Fun.Create((decimal x, decimal y) => x/y)
+            var divide = Fun.Create((decimal x, decimal y) => x / y)
                 .ReturnOption()
                 .OnExceptionNone()
                 .Curry();
@@ -176,32 +176,36 @@ namespace FunctionalExtensions.Tests
         }
 
         [Test]
-        public void Applicative_Laws_Test()
+        public void Applicative_Laws_fmap_Test()
         {
-            var add = new Func<int, Func<int, int>>(x => y => x + y);
+            var add = new Func<int, Func<int, int>>(x1 => x2 => x1 + x2);
             var add3 = add(3);
-            
+
             // fmap
             // fmap f x = pure f <*> x 
-            // (pure = Return)
-            // fmap = Select
+            var x = Option.Some(42);
             Assert.That(
-                Option.Return(42).Select(add3),
-                Is.EqualTo(Option.Return(add3).Apply(Option.Some(42))));
+                x.Select(add3), // fmap f x
+                Is.EqualTo(Option.Return(add3).Apply(x))); // pure f <*> x
+        }
 
+        [Test]
+        public void Applicative_Laws_Identity_Test()
+        {
             // Identity
             // pure id <*> v = v
-
-
-
-
+            var v = Option.Some(42);
+            Assert.That(
+                Option.Return(Fun.Id<int>()).Apply(v), // pure id <*> v
+                Is.EqualTo(v)); // v
         }
 
-        private T Id<T>(T value)
+        [Test]
+        public void Applicative_Laws_Composition_Test()
         {
-            return value;
+            // Composition
+            // pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
         }
-
 
         [Test]
         public void FirstOrOptionTest()

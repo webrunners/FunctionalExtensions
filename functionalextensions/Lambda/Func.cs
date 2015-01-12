@@ -23,5 +23,15 @@ namespace FunctionalExtensions.Lambda
         {
             return del;
         }
+
+        public static Func<T, T> Id<T>()
+        {
+            return x => x;
+        }
+
+        public static T Id<T>(T value)
+        {
+            return value;
+        }
     }
 }
