@@ -13,4 +13,4 @@ There is a fluent API on top of the validation framework.
 
 ### Grammar Diagram
 
-![Fluent Validation API](https://raw.githubusercontent.com/battermann/FunctionalExtensions/develop/functionalextensions/SolutionItems/FluentGrammar/Validate.png "Fluent Validation API")
+![Fluent Validation API](https://raw.githubusercontent.com/webrunners/FunctionalExtensions/develop/functionalextensions/SolutionItems/FluentGrammar/Validate.png "Fluent Validation API")
