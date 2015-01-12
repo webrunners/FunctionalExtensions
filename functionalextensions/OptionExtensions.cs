@@ -105,17 +105,12 @@ namespace FunctionalExtensions
 
         public static Func<T1, T2, Option<TResult>> OnExceptionNone<T1, T2, TResult>(this Func<T1, T2, Option<TResult>> func)
         {
-            return (x, y) =>
-            {
-                try
-                {
-                    return func(x, y);
-                }
-                catch (Exception)
-                {
-                    return Option.None<TResult>();
-                }
-            };
+            return (x, y) => func.Curry()(x).OnExceptionNone()(y);
+        }
+
+        public static Func<T1, T2, T3, Option<TResult>> OnExceptionNone<T1, T2, T3, TResult>(this Func<T1, T2, T3, Option<TResult>> func)
+        {
+            return (x1, x2, x3) => func.Curry()(x1)(x2).OnExceptionNone()(x3);
         }
     }
 }
