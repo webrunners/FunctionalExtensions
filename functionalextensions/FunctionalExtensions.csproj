@@ -62,6 +62,7 @@
     <Compile Include="FluentOption\Intermediate8.cs" />
     <Compile Include="FluentOption\IResult.cs" />
     <Compile Include="FluentOption\OptionMonad.cs" />
+    <Compile Include="FuncExtensions.cs" />
     <Compile Include="Lambda\Act.cs" />
     <Compile Include="Lambda\Func.cs" />
     <Compile Include="None.cs" />

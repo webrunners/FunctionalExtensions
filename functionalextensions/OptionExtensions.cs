@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,31 +42,80 @@ namespace FunctionalExtensions
                 : source.Count() == 1 ? source.Single().ToOption() : Option.None<T>();
         }
 
-        public static Option<TResult> Apply<T, TResult>(this Option<T> source,
-            Option<Func<T, TResult>> other)
+        public static Option<TResult> Apply<T, TResult>(this Option<Func<T, TResult>> func, Option<T> opt)
         {
-            return source.Bind(s => other.Select(o => o(s)));
+            return opt.Bind(o => func.Select(s => s(o)));
         }
 
-        public static Option<TResult> Apply<T, TResult>(this Option<Func<T, TResult>> source,
-            Option<T> other)
+        public static Option<TResult> Apply<T, TResult>(this Option<Func<T, Option<TResult>>> func, Option<T> opt)
         {
-            return other.Bind(o => source.Select(s => s(o)));
+            return opt.Bind(o => func.Bind(s => s(o)));
+        }
+    }
+
+    public static class FunctionExtensions
+    {
+        public static Option<Func<TResult1, TResult2>> Select<T, TResult1, TResult2>(this Func<T, Func<TResult1, TResult2>> func, Option<T> opt)
+        {
+            return opt.Select(func);
         }
 
-        public static Option<Func<TResult1, TResult2>> Select<T, TResult1, TResult2>(this Func<T, Func<TResult1, TResult2>> f, Option<T> optValue)
+        public static Option<TResult> Select<T, TResult>(this Func<T, TResult> func, Option<T> opt)
         {
-            return optValue.Select(f);
+            return opt.Select(func);
         }
 
-        public static Option<TResult> Select<T, TResult>(this Func<T, TResult> f, Option<T> optValue)
+        public static Option<TResult> Bind<T, TResult>(this Func<T, Option<TResult>> func, Option<T> opt)
         {
-            return optValue.Select(f);
+            return opt.Bind(func);
         }
 
-        public static Option<Func<T, TResult>> Select<T, TResult>(this Func<T, TResult> f)
+        public static Option<Func<TResult1, Option<TResult2>>> Bind<T, TResult1, TResult2>(this Func<T, Func<TResult1, Option<TResult2>>> func, Option<T> opt)
         {
-            return Option.Some(f);
+            return opt.Select(func);
+        }
+    }
+
+    public static class FunctionResultTransformExtensions
+    {
+        public static Func<T, Option<TResult>> ReturnOption<T, TResult>(this Func<T, TResult> func)
+        {
+            return x => func(x).ToOption();
+        }
+
+        public static Func<T1, T2, Option<TResult>> ReturnOption<T1, T2, TResult>(this Func<T1, T2, TResult> func)
+        {
+            return (x, y) => func(x, y).ToOption();
+        }
+
+        public static Func<T, Option<TResult>> OnExceptionNone<T, TResult>(this Func<T, Option<TResult>> func)
+        {
+            return x =>
+            {
+                try
+                {
+                    return func(x);
+                }
+                catch (Exception)
+                {
+                    return Option.None<TResult>();
+                }
+            };
+        }
+
+        public static Func<T1, T2, Option<TResult>> OnExceptionNone<T1, T2, TResult>(this Func<T1, T2, Option<TResult>> func)
+        {
+            return (x, y) =>
+            {
+                try
+                {
+                    return func(x, y);
+                }
+                catch (Exception)
+                {
+                    return Option.None<TResult>();
+                }
+            };
         }
     }
 }

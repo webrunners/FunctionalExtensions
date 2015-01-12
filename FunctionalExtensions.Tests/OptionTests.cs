@@ -112,11 +112,11 @@ namespace FunctionalExtensions.Tests
             var k = Fun.Create((int x) => Option.Some(x * 2));
 
             // Left Identity
-            Assert.That(42.ToOption().Bind(k), Is.EqualTo(k(42)));
+            Assert.That(Option.Return(42).Bind(k), Is.EqualTo(k(42)));
 
             // Right Identity
             var m = Option.Some(42);
-            Assert.That(m.Bind(x => x.ToOption()), Is.EqualTo(m));
+            Assert.That(m.Bind(Option.Return), Is.EqualTo(m));
 
             // Associativity
             var h = Fun.Create((int x) => Option.Some(x + 1));
@@ -128,15 +128,7 @@ namespace FunctionalExtensions.Tests
         [Test]
         public void Applicative_Test()
         {
-            var add = new Func<int, Func<int, int>>(x => y => x + y);
-
-            var optAdd3 = Option.Some(3).Select(x => add(x));
-
-            var result = Option.Some(5).Apply(optAdd3);
-
-            Assert.That(result, Is.EqualTo(Option.Some(8)));
-            Assert.That(Option.None<int>().Apply(optAdd3), Is.EqualTo(Option.None<int>()));
-            Assert.That(Option.Some(42).Apply(Option.None<Func<int, int>>()), Is.EqualTo(Option.None<int>()));
+            var add = Fun.Create((int x, int y) => x + y).Curry();
 
             var result2 = Option.Some(add).Apply(Option.Some(3)).Apply(Option.Some(5));
             Assert.That(result2, Is.EqualTo(Option.Some(8)));
@@ -147,12 +139,40 @@ namespace FunctionalExtensions.Tests
             Assert.That(add.Select(Option.Some(3)).Apply(Option.Some(5)), Is.EqualTo(Option.Some(8)));
             Assert.That(add(3).Select(Option.Some(5)), Is.EqualTo(Option.Some(8)));
 
-            var multiply = new Func<int, Func<int, Func<int, int>>>(x => y => z => x*y*z);
+            var multiply = Fun.Create((int x, int y, int z) => x*y*z).Curry();
 
             var multResult = multiply.Select(Option.Some(1)).Apply(Option.Some(2)).Apply(Option.Some(3));
-
             Assert.That(multResult, Is.EqualTo(Option.Some(6)));
-            Assert.That(multiply.Select().Apply(Option.Some(10)).Apply(Option.Some(20)).Apply(Option.Some(30)), Is.EqualTo(Option.Some(6000)));
+
+            // order matters
+            var divide = Fun.Create((decimal x, decimal y) => x/y).Curry();
+            Assert.That(Option.Return(divide).Apply(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
+            Assert.That(divide.Select(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
+        }
+
+        [Test]
+        public void Applicative_Bind_Test()
+        {
+            var divide = Fun.Create((decimal x, decimal y) => Division.Divide(x, y));
+
+            Assert.That(divide.Curry().Bind(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
+            Assert.That(divide.Curry().Bind(Option.None<decimal>()).Apply(Option.Some(2m)), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.Curry().Bind(Option.Some(1m)).Apply(Option.None<decimal>()), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.Curry().Bind(Option.Some(1m)).Apply(Option.Some(0m)), Is.EqualTo(Option.None<decimal>()));
+        }
+
+        [Test]
+        public void ReturnOption_OnExceptionNone_Test()
+        {
+            var divide = Fun.Create((decimal x, decimal y) => x/y)
+                .ReturnOption()
+                .OnExceptionNone()
+                .Curry();
+
+            Assert.That(divide.Bind(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
+            Assert.That(divide.Bind(Option.None<decimal>()).Apply(Option.Some(2m)), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.Bind(Option.Some(1m)).Apply(Option.None<decimal>()), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.Bind(Option.Some(1m)).Apply(Option.Some(0m)), Is.EqualTo(Option.None<decimal>()));
         }
 
         [Test]
@@ -161,13 +181,17 @@ namespace FunctionalExtensions.Tests
             var add = new Func<int, Func<int, int>>(x => y => x + y);
             var add3 = add(3);
             
-
             // fmap
+            // fmap f x = pure f <*> x 
+            // (pure = Return)
+            // fmap = Select
             Assert.That(
-                Option.Some(42).Select(add3),
-                Is.EqualTo(Option.Some(add3).Apply(Option.Some(42))));
+                Option.Return(42).Select(add3),
+                Is.EqualTo(Option.Return(add3).Apply(Option.Some(42))));
 
             // Identity
+            // pure id <*> v = v
+
 
 
 

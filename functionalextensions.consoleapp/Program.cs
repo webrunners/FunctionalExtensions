@@ -1,6 +1,7 @@
 ﻿using FunctionalExtensions.Attributes;
 using FunctionalExtensions.Extensions;
 using FunctionalExtensions.FluentOption;
+using FunctionalExtensions.Lambda;
 using FunctionalExtensions.Validation;
 using System;
 using System.Linq;
@@ -11,6 +12,21 @@ namespace FunctionalExtensions.ConsoleApp
     {
         private static void Main()
         {
+            var result = Fun.Create((decimal x, decimal y) => x/y)
+                .ReturnOption()
+                .OnExceptionNone()
+                .Curry()
+                .Bind(ReadDecimal())
+                .Apply(ReadDecimal())
+                .Match(
+                    x => String.Format("Result = {0}", x.ToString("F")),
+                    () => "An error occurred.");
+
+            Console.WriteLine(result);
+        }
+
+        private static void ValidationWithFluentOption()
+        {
             Console.WriteLine("Enter two (floating point) numbers:");
 
             var result = OptionMonad
@@ -19,7 +35,7 @@ namespace FunctionalExtensions.ConsoleApp
                 .Bind(Divide)
                 .Result()
                 .Match(
-                    x => String.Format("Result = {0} %", x.ToString("F")),
+                    x => String.Format("Result = {0}", x.ToString("F")),
                     () => "An error occurred.");
 
             Console.WriteLine(result);
@@ -35,7 +51,7 @@ namespace FunctionalExtensions.ConsoleApp
             CannotDivideByZero
         }
 
-        private static void ValidationAppF()
+        private static void ValidationWithResult()
         {
             Console.WriteLine("Enter a (floating point) number:");
 
@@ -51,7 +67,7 @@ namespace FunctionalExtensions.ConsoleApp
         }
 
 
-        private static void ValidationWithOptionMonad()
+        private static void ValidationWithOption()
         {
             Console.WriteLine("Enter two (floating point) numbers:");
 
@@ -65,9 +81,11 @@ namespace FunctionalExtensions.ConsoleApp
                     .Match(
                         x => String.Format("Result = {0} %", x.ToString("F")),
                         () => "An error occurred.");
+
+            Console.WriteLine(output);
         }
 
-        private static void ValidationWithChoiceMonad()
+        private static void ValidationWithChoice()
         {
             Console.WriteLine("Enter two (floating point) numbers:");
 
@@ -82,13 +100,13 @@ namespace FunctionalExtensions.ConsoleApp
                     Console.WriteLine);
         }
 
-        internal static Option<decimal> Divide(decimal a, decimal b)
+        private static Option<decimal> Divide(decimal a, decimal b)
         {
             try { return Option.Some(a / b); }
             catch (DivideByZeroException) { return Option.None<decimal>(); }
         }
 
-        public static Option<decimal> ReadDecimal()
+        private static Option<decimal> ReadDecimal()
         {
             decimal i;
             return decimal.TryParse(Console.ReadLine(), out i) ? Option.Some(i) : Option.None<decimal>();

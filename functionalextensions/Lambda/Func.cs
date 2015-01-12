@@ -18,5 +18,10 @@ namespace FunctionalExtensions.Lambda
         {
             return del;
         }
+
+        public static Func<T1, T2, T3, TResult> Create<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> del)
+        {
+            return del;
+        }
     }
 }

@@ -72,5 +72,10 @@ namespace FunctionalExtensions
         {
             return new Some<T>(value);
         }
+
+        public static Option<T> Return<T>(T value)
+        {
+            return new Some<T>(value);
+        }
     }
 }
