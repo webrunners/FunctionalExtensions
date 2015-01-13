@@ -1,5 +1,0 @@
-Validate ::= (
-    '.That(T instance).IsNotNull(TError err)'
-    ( '.Result' | ('.And' '.Fulfills(Predicate<T> pred, TError err)')+ ('.Result' | '.AndSelect(Func<T, TResult> selector) ... .Result' ) | ('.AndSelect(Func<T, TResult> selector)' 
-    ( '.IsNotNull(TError err)' | '.FulFills(Predicate<TResult> pred, TError err)'))+ '.Result')
-)
