@@ -24,6 +24,32 @@ var result = Fun.Create((decimal x, decimal y) => x/y)
 
 Console.WriteLine(result);
 ```
+#### Option Monad
+```c#
+private static Option<decimal> Divide(decimal a, decimal b)
+{
+    try { return Option.Some(a / b); }
+    catch (DivideByZeroException) { return Option.None<decimal>(); }
+}
+
+private static Option<decimal> ReadDecimal()
+{
+    decimal i;
+    return decimal.TryParse(Console.ReadLine(), out i) ? Option.Some(i) : Option.None<decimal>();
+}
+
+Console.WriteLine("Enter two (floating point) number:");
+
+(
+    from v1 in ReadDecimal().ToChoice(Failure.Create(Error.CannotNotParse1StInput))
+    join v2 in ReadDecimal().ToChoice(Failure.Create(Error.CannotNotParse2NdInput)) on 1 equals 1
+    from result in Divide(v1, v2).ToChoice(Failure.Create(Error.CannotDivideByZero))
+    select result
+)
+    .Match(
+        x => Console.WriteLine("Result = {0}", x),
+        err => err.Errors.ToList().ForEach(x => Console.WriteLine(x.GetDisplayName())));
+```
 
 ### Validation Framework (Fluent API)
 
