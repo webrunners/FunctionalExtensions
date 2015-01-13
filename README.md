@@ -6,7 +6,7 @@ This project includes some types and functions that support concepts from functi
 ##### Types
 * Option&lt;T&gt;
 * Choice&lt;T1, T2&gt;
-* Result : Choice<T, Failure<TError>>
+* Result : Choice&lt;T, Failure&lt;TError&gt;&gt;
 
 ### Examples
 #### Option Applicative
