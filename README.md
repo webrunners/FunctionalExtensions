@@ -5,7 +5,8 @@ This project includes some types and functions that support concepts from functi
 
 ##### Types
 * Option&lt;T&gt;
-* Choice&lt;T1, T2&gt;.
+* Choice&lt;T1, T2&gt;
+* Result : Choice<T, Failure<TError>>
 
 ### Examples
 #### Option Applicative
@@ -52,6 +53,18 @@ var output =
             () => "An error occurred.");
 
 Console.WriteLine(output);
+```
+#### Choice Applicative
+```c#
+(
+    from v1 in ReadDecimal().ToChoice(Failure.Create(Error.CannotNotParse1StInput))
+    join v2 in ReadDecimal().ToChoice(Failure.Create(Error.CannotNotParse2NdInput)) on 1 equals 1
+    from result in Divide(v1, v2).ToChoice(Failure.Create(Error.CannotDivideByZero))
+    select result
+)
+    .Match(
+        x => Console.WriteLine("Result = {0}", x),
+        errors => errors.ToList().ForEach(x => Console.WriteLine(x.GetDisplayName())));
 ```
 
 ### Validation Framework (Fluent API)
