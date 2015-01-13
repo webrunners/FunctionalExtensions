@@ -2,7 +2,8 @@ FunctionalExtensions
 ====================
 
 This project includes some types and functions that support concepts from functional programming.
-Types:
+
+##### Types
 * Option&lt;T&gt;
 * Choice&lt;T1, T2&gt;.
 
