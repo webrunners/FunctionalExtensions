@@ -29,18 +29,10 @@ Console.WriteLine(result);
 ```
 #### Option Monad
 ```c#
-private static Option<decimal> Divide(decimal a, decimal b)
-{
-    try { return Option.Some(a / b); }
-    catch (DivideByZeroException) { return Option.None<decimal>(); }
-}
+private static Option<decimal> Divide(decimal a, decimal b)  {...}
 
-private static Option<decimal> ReadDecimal()
-{
-    decimal i;
-    return decimal.TryParse(Console.ReadLine(), out i) ? Option.Some(i) : Option.None<decimal>();
-}
-
+private static Option<decimal> ReadDecimal() {...}
+...
 var output =
     (
         from v1 in ReadDecimal()
