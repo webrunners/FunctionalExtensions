@@ -45,7 +45,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 err =>
                 {
                     Assert.That(!isValid);
-                    Assert.That(err.Errors, Is.EquivalentTo(errors));
+                    Assert.That(err, Is.EquivalentTo(errors));
                 });
         }
 
@@ -65,7 +65,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
 
             result.Match(
                 x => Assert.Fail(),
-                err => Assert.That(err.Errors, Is.EquivalentTo(new[] { "customer cannot be null" })));
+                err => Assert.That(err, Is.EquivalentTo(new[] { "customer cannot be null" })));
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
 
             result.Match(
                 x => Assert.Fail(),
-                err => Assert.That(err.Errors, Is.EquivalentTo(new[] { "max length 5", "must start with \'Hello\'" })));
+                err => Assert.That(err, Is.EquivalentTo(new[] { "max length 5", "must start with \'Hello\'" })));
         }
 
         [Test]
@@ -95,14 +95,14 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .Result
                 .Match(
                     x => Assert.Fail(),
-                    err => Assert.That(err.Errors, Is.EquivalentTo(new[] { "customer not null" })));
+                    err => Assert.That(err, Is.EquivalentTo(new[] { "customer not null" })));
 
             Validate.That((Customer)null)
                 .IsNotNull("not null")
                 .Result
                 .Match(
                     x => Assert.Fail(),
-                    err => Assert.That(err.Errors, Is.EquivalentTo(new[] { "not null", })));
+                    err => Assert.That(err, Is.EquivalentTo(new[] { "not null", })));
 
             ValidateWithErrorType<string>.That(new Customer())
                 .IsNotNull("not null")
@@ -122,7 +122,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .AndSelect(x => x.Forename).Fulfills(x => x.Length < 10, Error.LengthShouldBeSmallerThan10)
                 .Result.Match(
                     x => Assert.Fail(),
-                    err => Assert.That(err.Errors, Is.EquivalentTo(new[] { Error.ForenameShouldNotBeNull })));
+                    err => Assert.That(err, Is.EquivalentTo(new[] { Error.ForenameShouldNotBeNull })));
         }
 
         enum Error
@@ -144,7 +144,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .Result
                 .Match(
                     x => Assert.Fail(),
-                    err => Assert.That(err.Errors, Is.EquivalentTo(new[]{"postcode cannot be null"})));
+                    err => Assert.That(err, Is.EquivalentTo(new[]{"postcode cannot be null"})));
 
             Validate
                 .That((Customer) null).IsNotNull("not null")
@@ -152,7 +152,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .Result
                 .Match(
                     x => Assert.Fail(),
-                    err => Assert.That(err.Errors, Is.EquivalentTo(new[] { "not null", "address field should be accessible" })));
+                    err => Assert.That(err, Is.EquivalentTo(new[] { "not null", "address field should be accessible" })));
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .Result
                 .Match(
                     x => Assert.Fail(),
-                    err => Assert.That(err.Errors, Is.EquivalentTo(new[] { "args should have 4 items", "first element should be 0 but is 1", "there should be a 100th item" })));
+                    err => Assert.That(err, Is.EquivalentTo(new[] { "args should have 4 items", "first element should be 0 but is 1", "there should be a 100th item" })));
         }
     }
 }

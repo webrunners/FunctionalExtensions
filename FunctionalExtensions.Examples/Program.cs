@@ -45,8 +45,9 @@ namespace FunctionalExtensions.Examples
                 .Apply(ReadDecimal())
                 .Do(() => Console.Write("Enter a flaoting point number: "))
                 .Apply(ReadDecimal())
+                .Select(x => x * 100)
                 .Match(
-                    x => String.Format("Result = {0}", x.ToString("F")),
+                    x => String.Format("Result = {0} %", x.ToString("F")),
                     () => "An error occurred.");
 
             Console.WriteLine(result);
@@ -113,7 +114,7 @@ namespace FunctionalExtensions.Examples
             )
                 .Match(
                     x => Console.WriteLine("Result = {0}", x),
-                    err => err.Errors.ToList().ForEach(x => Console.WriteLine(x.GetDisplayName())));
+                    errors => errors.ToList().ForEach(x => Console.WriteLine(x.GetDisplayName())));
         }
 
         private static Option<decimal> Divide(decimal a, decimal b)

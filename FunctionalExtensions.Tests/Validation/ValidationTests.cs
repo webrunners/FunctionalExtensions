@@ -33,7 +33,7 @@ namespace FunctionalExtensions.Tests.Validation
             var zero = Fun.Create(() => Choice.NewChoice1Of2<decimal, Failure<string>>(0.0m));
 
             var errors = new List<string>();
-            Action<Failure<string>> callbackNone = x => errors.AddRange(x.Errors);
+            Action<Failure<string>> callbackNone = errors.AddRange;
             Action<decimal> callbackSome = x => Assert.Fail();
 
             ValidationWithResultApplicativeFunctor(d1, ex2, callbackSome, callbackNone);
@@ -115,7 +115,7 @@ namespace FunctionalExtensions.Tests.Validation
                 err =>
                 {
                     Assert.That(!isValid);
-                    Assert.That(err.Errors, Is.EquivalentTo(errors));
+                    Assert.That(err, Is.EquivalentTo(errors));
                 });
         }
 
@@ -197,7 +197,7 @@ namespace FunctionalExtensions.Tests.Validation
 
             result.Match(
                 customer1 => { },
-                errors => Assert.That(errors.Errors.ToList(), Is.EquivalentTo(new[] { "Address cannot be null", "Surname can't be null", "Orders cannot be NULL" })));
+                errors => Assert.That(errors.ToList(), Is.EquivalentTo(new[] { "Address cannot be null", "Surname can't be null", "Orders cannot be NULL" })));
         }
 
         static Choice<Address, Failure<string>> ValidateAddress(Address address)

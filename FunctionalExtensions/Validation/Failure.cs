@@ -1,16 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FunctionalExtensions.Validation
 {
-    public class Failure<T>
+    public class Failure<T> : IEnumerable<T>
     {
         private readonly List<T> _errors = new List<T>();
-
-        public IReadOnlyCollection<T> Errors
-        {
-            get { return _errors; }
-        } 
 
         internal Failure(T message)
         {
@@ -34,7 +30,17 @@ namespace FunctionalExtensions.Validation
 
         public static Failure<T> Merge(Failure<T> errors1, Failure<T> errors2)
         {
-            return Failure.Create(errors1.Errors.Concat(errors2.Errors));
+            return Failure.Create(errors1.Concat(errors2));
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _errors.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 
