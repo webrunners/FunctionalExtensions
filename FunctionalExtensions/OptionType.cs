@@ -2,6 +2,6 @@ namespace FunctionalExtensions
 {
     public enum OptionType
     {
-        Some, None
+        None = 0, Some = 1
     }
 }

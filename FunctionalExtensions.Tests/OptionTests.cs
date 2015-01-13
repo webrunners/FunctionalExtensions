@@ -74,16 +74,23 @@ namespace FunctionalExtensions.Tests
         [Test]
         public void ToOption_Test()
         {
-            var result = 5.ToOption()
-                .Match(x => x, () => 0);
+            var result = 5.ToOption().Match(x => x, () => 0);
 
             Assert.That(result, Is.EqualTo(5));
 
             String s = null;
-
             var option2 = s.ToOption();
-
             Assert.That(option2.Match(x => false, () => true), Is.True);
+        }
+
+        [Test]
+        public void Null_Tests()
+        {
+            var opt1 = Option.Some<string>(null);
+            Assert.That(opt1, Is.EqualTo(Option.None<string>()));
+
+            var opt2 = Option.Return<string>(null);
+            Assert.That(opt2, Is.EqualTo(Option.None<string>()));
         }
 
         [Test]
@@ -94,16 +101,13 @@ namespace FunctionalExtensions.Tests
             Assert.That(Option.Some(42) != Option.Some(24));
             Assert.That(Option.None<int>() != Option.Some(42));
 
-            Option<int> nullOption1 = null;
-            Option<int> nullOption2 = null;
-
-            Assert.That(nullOption1 == nullOption2);
-
             Assert.That(Option.None<int>() == Option.None<int>());
             Assert.That(!Option.None<int>().Equals(Option.None<string>()));
 
-            Assert.That(null == Option.None<int>());
-            Assert.That(Option.None<int>() == null);
+            Assert.That(null != Option.None<int>());
+            Assert.That(Option.None<int>() != null);
+            Assert.That(new Option<int>() == Option.None<int>());
+            Assert.That(new Option<int>().Tag, Is.EqualTo(OptionType.None));
         }
 
         [Test]
@@ -248,6 +252,12 @@ namespace FunctionalExtensions.Tests
             Assert.That(list.SingleOrOption(x => x > 3).Match(x => false, () => true), Is.True);
             Assert.That(list.SingleOrOption(x => x == 3).Match(x => x, () => -1), Is.EqualTo(3));
             Assert.That(list.SingleOrOption(x => x == 1).Match(x => false, () => true), Is.True);
+        }
+
+        //[Test]
+        public void Exception_Test()
+        {
+            
         }
     }
 }

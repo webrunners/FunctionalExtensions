@@ -3,13 +3,21 @@ using System.Collections.Generic;
 
 namespace FunctionalExtensions
 {
-    public abstract class Option<T>
+    public struct Option<T>
     {
         private readonly OptionType _tag;
+        private readonly T _value;
 
-        protected Option(OptionType tag)
+        internal Option(T value)
         {
-            _tag = tag;
+            _value = value;
+            _tag = value != null ? OptionType.Some : OptionType.None;
+        }
+
+        internal Option(Unit unit)
+        {
+            _value = default(T);
+            _tag = OptionType.None;
         }
 
         public OptionType Tag { get { return _tag; } }
@@ -21,23 +29,23 @@ namespace FunctionalExtensions
 
         internal bool MatchSome(out T value)
         {
-            value = Tag == OptionType.Some ? ((Some<T>)this).Value : default(T);
+            value = Tag == OptionType.Some ? _value : default(T);
             return Tag == OptionType.Some;
         }
 
         public TResult Match<TResult>(Func<T, TResult> onSome, Func<TResult> onNone)
         {
-            return Tag == OptionType.Some ? onSome(((Some<T>) this).Value) : onNone();
+            return Tag == OptionType.Some ? onSome(_value) : onNone();
         }
 
         public override int GetHashCode()
         {
-            return Tag == OptionType.Some ? EqualityComparer<T>.Default.GetHashCode(((Some<T>)this).Value) : EqualityComparer<T>.Default.GetHashCode(default(T));
+            return Tag == OptionType.Some ? EqualityComparer<T>.Default.GetHashCode(_value) : EqualityComparer<T>.Default.GetHashCode(default(T));
         }
 
         private bool EqualsOption(Option<T> other)
         {
-            return Tag == OptionType.Some && other.Tag == OptionType.Some && Equals(((Some<T>)this).Value, ((Some<T>)other).Value)
+            return Tag == OptionType.Some && other.Tag == OptionType.Some && Equals(_value, other._value)
                 || Tag == OptionType.None && other.Tag == OptionType.None;
         }
 
@@ -49,10 +57,6 @@ namespace FunctionalExtensions
 
         public static bool operator ==(Option<T> a, Option<T> b)
         {
-            if (ReferenceEquals(a, b))
-                return true;
-            if ((object)a == null)
-                return b.Equals(a);
             return a.Equals(b);
         }
 
@@ -66,16 +70,16 @@ namespace FunctionalExtensions
     {
         public static Option<T> None<T>()
         {
-            return new None<T>();
+            return new Option<T>(Unit.Value);
         }
         public static Option<T> Some<T>(T value)
         {
-            return new Some<T>(value);
+            return new Option<T>(value);
         }
 
         public static Option<T> Return<T>(T value)
         {
-            return new Some<T>(value);
+            return Some(value);
         }
     }
 }
