@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalExtensions", "functionalextensions\FunctionalExtensions.csproj", "{D0B6546E-954B-4014-BF7C-8058B4F97108}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalExtensions", "FunctionalExtensions\FunctionalExtensions.csproj", "{D0B6546E-954B-4014-BF7C-8058B4F97108}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalExtensions.Examples", "functionalextensions.consoleapp\FunctionalExtensions.Examples.csproj", "{E59892FE-0602-4126-837E-7FB6EB4E567B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalExtensions.Examples", "Functionalextensions.Examples\FunctionalExtensions.Examples.csproj", "{E59892FE-0602-4126-837E-7FB6EB4E567B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalExtensions.Tests", "FunctionalExtensions.Tests\FunctionalExtensions.Tests.csproj", "{A2A4BD91-9F36-4537-AA44-584F2CE51964}"
 EndProject
