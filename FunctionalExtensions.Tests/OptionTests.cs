@@ -201,11 +201,27 @@ namespace FunctionalExtensions.Tests
                 Is.EqualTo(v)); // v
         }
 
-        [Test]
+        [Test, Ignore]
         public void Applicative_Laws_Composition_Test()
         {
-            // Composition
             // pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
+        }
+
+        [Test]
+        public void Applicative_Laws_Homomorphism_Test()
+        {
+            // pure f <*> pure x = pure (f x)
+            var f = Fun.Create((int i) => i + 3);
+            const int x = 5;
+            var lhs = Option.Return(f).Apply(Option.Return(x));
+            var rhs = Option.Return(f(x));
+            Assert.That(lhs, Is.EqualTo(rhs));
+        }
+
+        [Test, Ignore]
+        public void Applicative_Laws_Interchange_Test()
+        {
+            // u <*> pure y = pure ($ y) <*> u 
         }
 
         [Test]
