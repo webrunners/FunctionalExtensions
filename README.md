@@ -1,4 +1,4 @@
-FunctionalExtensions
+Functional Extensions
 ====================
 
 This project includes some types and functions that support concepts from functional programming.
