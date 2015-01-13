@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using FunctionalExtensions.Attributes;
+using EnumExtensions.Attributes;
 
-namespace FunctionalExtensions.Extensions
+namespace EnumExtensions.Extensions
 {
     public static class EnumExtensions
     {

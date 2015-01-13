@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using FunctionalExtensions.Currying;
 using NUnit.Framework;
 using FunctionalExtensions.Lambda;
@@ -148,11 +147,11 @@ namespace FunctionalExtensions.Tests
             // order matters
             var divide = Fun.Create((decimal x, decimal y) => x / y).Curry();
             Assert.That(divide.ToOption().Apply(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
-            Assert.That(divide.ToOption().Apply(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
+            Assert.That(divide.ToOption().Apply(Option.Some(2m)).Apply(Option.Some(1m)), Is.EqualTo(Option.Some(2m)));
         }
 
         [Test]
-        public void Applicative_Bind_Test()
+        public void Applicative_ToOption_Test()
         {
             var divide = Fun.Create((decimal x, decimal y) => Division.Divide(x, y));
 

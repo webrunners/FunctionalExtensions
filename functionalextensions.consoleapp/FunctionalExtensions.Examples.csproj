@@ -7,8 +7,8 @@
     <ProjectGuid>{E59892FE-0602-4126-837E-7FB6EB4E567B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FunctionalExtensions.ConsoleApp</RootNamespace>
-    <AssemblyName>FunctionalExtensions.ConsoleApp</AssemblyName>
+    <RootNamespace>FunctionalExtensions.Examples</RootNamespace>
+    <AssemblyName>FunctionalExtensions.Examples</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

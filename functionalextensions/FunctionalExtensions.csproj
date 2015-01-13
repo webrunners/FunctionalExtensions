@@ -71,6 +71,7 @@
     <Compile Include="OptionExtensions.cs" />
     <Compile Include="OptionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SideEffects\SideEffectExtensions.cs" />
     <Compile Include="Some.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="Validation\Failure.cs" />
