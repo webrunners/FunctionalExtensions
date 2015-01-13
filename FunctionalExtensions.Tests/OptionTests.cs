@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using FunctionalExtensions.Currying;
 using NUnit.Framework;
 using FunctionalExtensions.Lambda;
 
@@ -130,24 +131,24 @@ namespace FunctionalExtensions.Tests
         {
             var add = Fun.Create((int x, int y) => x + y).Curry();
 
-            var result2 = Option.Some(add).Apply(Option.Some(3)).Apply(Option.Some(5));
-            Assert.That(result2, Is.EqualTo(Option.Some(8)));
+            var result1 = add.ToOption().Apply(Option.Some(3)).Apply(Option.Some(5));
+            Assert.That(result1, Is.EqualTo(Option.Some(8)));
 
-            var result3 = Option.Some(add).Apply(Option.None<int>()).Apply(Option.Some(5));
-            Assert.That(result3, Is.EqualTo(Option.None<int>()));
+            var result2 = add.ToOption().Apply(Option.None<int>()).Apply(Option.Some(5));
+            Assert.That(result2, Is.EqualTo(Option.None<int>()));
 
-            Assert.That(add.Select(Option.Some(3)).Apply(Option.Some(5)), Is.EqualTo(Option.Some(8)));
-            Assert.That(add(3).Select(Option.Some(5)), Is.EqualTo(Option.Some(8)));
+            Assert.That(Option.Some(3).Select(add).Apply(Option.Some(5)), Is.EqualTo(Option.Some(8)));
+            Assert.That(Option.Some(5).Select(add(3)), Is.EqualTo(Option.Some(8)));
 
             var multiply = Fun.Create((int x, int y, int z) => x * y * z).Curry();
 
-            var multResult = multiply.Select(Option.Some(1)).Apply(Option.Some(2)).Apply(Option.Some(3));
+            var multResult = multiply.ToOption().Apply(Option.Some(1)).Apply(Option.Some(2)).Apply(Option.Some(3));
             Assert.That(multResult, Is.EqualTo(Option.Some(6)));
 
             // order matters
             var divide = Fun.Create((decimal x, decimal y) => x / y).Curry();
-            Assert.That(Option.Return(divide).Apply(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
-            Assert.That(divide.Select(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
+            Assert.That(divide.ToOption().Apply(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
+            Assert.That(divide.ToOption().Apply(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
         }
 
         [Test]
@@ -155,10 +156,10 @@ namespace FunctionalExtensions.Tests
         {
             var divide = Fun.Create((decimal x, decimal y) => Division.Divide(x, y));
 
-            Assert.That(divide.Curry().Bind(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
-            Assert.That(divide.Curry().Bind(Option.None<decimal>()).Apply(Option.Some(2m)), Is.EqualTo(Option.None<decimal>()));
-            Assert.That(divide.Curry().Bind(Option.Some(1m)).Apply(Option.None<decimal>()), Is.EqualTo(Option.None<decimal>()));
-            Assert.That(divide.Curry().Bind(Option.Some(1m)).Apply(Option.Some(0m)), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.Curry().ToOption().Apply(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
+            Assert.That(divide.Curry().ToOption().Apply(Option.None<decimal>()).Apply(Option.Some(2m)), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.Curry().ToOption().Apply(Option.Some(1m)).Apply(Option.None<decimal>()), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.Curry().ToOption().Apply(Option.Some(1m)).Apply(Option.Some(0m)), Is.EqualTo(Option.None<decimal>()));
         }
 
         [Test]
@@ -169,10 +170,10 @@ namespace FunctionalExtensions.Tests
                 .OnExceptionNone()
                 .Curry();
 
-            Assert.That(divide.Bind(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
-            Assert.That(divide.Bind(Option.None<decimal>()).Apply(Option.Some(2m)), Is.EqualTo(Option.None<decimal>()));
-            Assert.That(divide.Bind(Option.Some(1m)).Apply(Option.None<decimal>()), Is.EqualTo(Option.None<decimal>()));
-            Assert.That(divide.Bind(Option.Some(1m)).Apply(Option.Some(0m)), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.ToOption().Apply(Option.Some(1m)).Apply(Option.Some(2m)), Is.EqualTo(Option.Some(0.5m)));
+            Assert.That(divide.ToOption().Apply(Option.None<decimal>()).Apply(Option.Some(2m)), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.ToOption().Apply(Option.Some(1m)).Apply(Option.None<decimal>()), Is.EqualTo(Option.None<decimal>()));
+            Assert.That(divide.ToOption().Apply(Option.Some(1m)).Apply(Option.Some(0m)), Is.EqualTo(Option.None<decimal>()));
         }
 
         [Test]
@@ -196,7 +197,7 @@ namespace FunctionalExtensions.Tests
             // pure id <*> v = v
             var v = Option.Some(42);
             Assert.That(
-                Option.Return(Fun.Id<int>()).Apply(v), // pure id <*> v
+                Option.Return(Operators.Id<int>()).Apply(v), // pure id <*> v
                 Is.EqualTo(v)); // v
         }
 

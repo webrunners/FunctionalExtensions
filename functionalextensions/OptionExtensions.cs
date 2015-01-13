@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FunctionalExtensions.Currying;
 
 namespace FunctionalExtensions
 {
@@ -50,29 +51,6 @@ namespace FunctionalExtensions
         public static Option<TResult> Apply<T, TResult>(this Option<Func<T, Option<TResult>>> func, Option<T> opt)
         {
             return opt.Bind(o => func.Bind(s => s(o)));
-        }
-    }
-
-    public static class FunctionExtensions
-    {
-        public static Option<Func<TResult1, TResult2>> Select<T, TResult1, TResult2>(this Func<T, Func<TResult1, TResult2>> func, Option<T> opt)
-        {
-            return opt.Select(func);
-        }
-
-        public static Option<TResult> Select<T, TResult>(this Func<T, TResult> func, Option<T> opt)
-        {
-            return opt.Select(func);
-        }
-
-        public static Option<TResult> Bind<T, TResult>(this Func<T, Option<TResult>> func, Option<T> opt)
-        {
-            return opt.Bind(func);
-        }
-
-        public static Option<Func<TResult1, Option<TResult2>>> Bind<T, TResult1, TResult2>(this Func<T, Func<TResult1, Option<TResult2>>> func, Option<T> opt)
-        {
-            return opt.Select(func);
         }
     }
 

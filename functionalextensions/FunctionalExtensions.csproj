@@ -44,6 +44,7 @@
     <Compile Include="Choice2Of2.cs" />
     <Compile Include="ChoiceExtensions.cs" />
     <Compile Include="ChoiceType.cs" />
+    <Compile Include="Operators.cs" />
     <Compile Include="FluentOption\Intermediate3.cs" />
     <Compile Include="FluentOption\IIntermediate1.cs" />
     <Compile Include="FluentOption\IIntermediate2.cs" />
@@ -62,7 +63,7 @@
     <Compile Include="FluentOption\Intermediate8.cs" />
     <Compile Include="FluentOption\IResult.cs" />
     <Compile Include="FluentOption\OptionMonad.cs" />
-    <Compile Include="FuncExtensions.cs" />
+    <Compile Include="Currying\FunctionExtensions.cs" />
     <Compile Include="Lambda\Act.cs" />
     <Compile Include="Lambda\Func.cs" />
     <Compile Include="None.cs" />

@@ -1,4 +1,5 @@
 ﻿using FunctionalExtensions.Attributes;
+using FunctionalExtensions.Currying;
 using FunctionalExtensions.Extensions;
 using FunctionalExtensions.FluentOption;
 using FunctionalExtensions.Lambda;
@@ -16,7 +17,8 @@ namespace FunctionalExtensions.ConsoleApp
                 .ReturnOption()
                 .OnExceptionNone()
                 .Curry()
-                .Bind(ReadDecimal())
+                .ToOption()
+                .Apply(ReadDecimal())
                 .Apply(ReadDecimal())
                 .Match(
                     x => String.Format("Result = {0}", x.ToString("F")),

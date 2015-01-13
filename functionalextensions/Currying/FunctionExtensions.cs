@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace FunctionalExtensions
+namespace FunctionalExtensions.Currying
 {
-    public static class FuncExtensions
+    public static class FunctionExtensions
     {
         public static Func<T1, Func<T2, TResult>> Curry<T1, T2, TResult>(this Func<T1, T2, TResult> func)
         {
