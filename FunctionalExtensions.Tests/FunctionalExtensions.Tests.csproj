@@ -55,15 +55,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\funcextdummy\FunctionalExtensions.csproj">
-      <Project>{D0B6546E-954B-4014-BF7C-8058B4F97108}</Project>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FunctionalExtensions\FunctionalExtensions.csproj">
+      <Project>{d0b6546e-954b-4014-bf7c-8058b4f97108}</Project>
       <Name>FunctionalExtensions</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
