@@ -38,17 +38,18 @@ private static Option<decimal> ReadDecimal()
     return decimal.TryParse(Console.ReadLine(), out i) ? Option.Some(i) : Option.None<decimal>();
 }
 
-Console.WriteLine("Enter two (floating point) number:");
+var output =
+    (
+        from v1 in ReadDecimal()
+        from v2 in ReadDecimal()
+        from result in Divide(v1, v2)
+        select result * 100
+    )
+        .Match(
+            x => String.Format("Result = {0} %", x.ToString("F")),
+            () => "An error occurred.");
 
-(
-    from v1 in ReadDecimal().ToChoice(Failure.Create(Error.CannotNotParse1StInput))
-    join v2 in ReadDecimal().ToChoice(Failure.Create(Error.CannotNotParse2NdInput)) on 1 equals 1
-    from result in Divide(v1, v2).ToChoice(Failure.Create(Error.CannotDivideByZero))
-    select result
-)
-    .Match(
-        x => Console.WriteLine("Result = {0}", x),
-        err => err.Errors.ToList().ForEach(x => Console.WriteLine(x.GetDisplayName())));
+Console.WriteLine(output);
 ```
 
 ### Validation Framework (Fluent API)
