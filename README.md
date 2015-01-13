@@ -18,8 +18,9 @@ var result = Fun.Create((decimal x, decimal y) => x/y)
     .Apply(ReadDecimal())
     .Do(() => Console.Write("Enter a flaoting point number: "))
     .Apply(ReadDecimal())
+    .Select(x => x * 100)
     .Match(
-        x => String.Format("Result = {0}", x.ToString("F")),
+        x => String.Format("Result = {0} %", x.ToString("F")),
         () => "An error occurred.");
 
 Console.WriteLine(result);
