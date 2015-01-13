@@ -52,7 +52,7 @@
       <Project>{71321685-A629-443C-A573-07B9E8FAA7DE}</Project>
       <Name>EnumExtensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\functionalextensions\FunctionalExtensions.csproj">
+    <ProjectReference Include="..\funcextdummy\FunctionalExtensions.csproj">
       <Project>{d0b6546e-954b-4014-bf7c-8058b4f97108}</Project>
       <Name>FunctionalExtensions</Name>
     </ProjectReference>

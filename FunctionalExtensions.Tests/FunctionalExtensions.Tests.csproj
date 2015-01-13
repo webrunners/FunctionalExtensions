@@ -55,7 +55,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\functionalextensions\FunctionalExtensions.csproj">
+    <ProjectReference Include="..\funcextdummy\FunctionalExtensions.csproj">
       <Project>{D0B6546E-954B-4014-BF7C-8058B4F97108}</Project>
       <Name>FunctionalExtensions</Name>
     </ProjectReference>
