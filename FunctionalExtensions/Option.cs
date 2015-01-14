@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace FunctionalExtensions
 {
+    /// <summary>
+    /// Union type with two cases: Some and None
+    /// </summary>
+    /// <typeparam name="T">Type of the contained value</typeparam>
     public struct Option<T>
     {
         private readonly OptionType _tag;
@@ -20,6 +24,9 @@ namespace FunctionalExtensions
             _tag = OptionType.None;
         }
 
+        /// <summary>
+        /// Specifies wether the option is Some or None
+        /// </summary>
         public OptionType Tag { get { return _tag; } }
 
         internal bool MatchNone()
@@ -33,6 +40,13 @@ namespace FunctionalExtensions
             return Tag == OptionType.Some;
         }
 
+        /// <summary>
+        /// Pattern matching for the option type
+        /// </summary>
+        /// <typeparam name="TResult">Type of the return value</typeparam>
+        /// <param name="onSome">Function that will be invoked if the option is Some</param>
+        /// <param name="onNone">Function that will be invoked if the option is None</param>
+        /// <returns>The result of the invoked function</returns>
         public TResult Match<TResult>(Func<T, TResult> onSome, Func<TResult> onNone)
         {
             return Tag == OptionType.Some ? onSome(_value) : onNone();
@@ -66,17 +80,38 @@ namespace FunctionalExtensions
         }
     }
 
+    /// <summary>
+    /// Union type with two cases: Some and None
+    /// </summary>
     public static class Option
     {
+        /// <summary>
+        /// Returns None
+        /// </summary>
+        /// <typeparam name="T">Type of the contained value</typeparam>
+        /// <returns>None</returns>
         public static Option<T> None<T>()
         {
             return new Option<T>(Unit.Value);
         }
+
+        /// <summary>
+        /// Returns Some&lt;T&gt;
+        /// </summary>
+        /// <typeparam name="T">Type of the value</typeparam>
+        /// <param name="value">The contained value</param>
+        /// <returns>Some</returns>
         public static Option<T> Some<T>(T value)
         {
             return new Option<T>(value);
         }
 
+        /// <summary>
+        /// Returns Some&lt;T&gt;
+        /// </summary>
+        /// <typeparam name="T">Type of the value</typeparam>
+        /// <param name="value">The contained value</param>
+        /// <returns>Some</returns>
         public static Option<T> Return<T>(T value)
         {
             return Some(value);

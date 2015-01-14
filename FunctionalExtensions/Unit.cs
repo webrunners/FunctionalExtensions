@@ -1,5 +1,8 @@
 ﻿namespace FunctionalExtensions
 {
+    /// <summary>
+    /// This type represents void
+    /// </summary>
     public class Unit
     {
         private Unit() { }
