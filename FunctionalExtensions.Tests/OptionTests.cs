@@ -110,6 +110,7 @@ namespace FunctionalExtensions.Tests
             Assert.That(Option.None<int>() != null);
             Assert.That(new Option<int>() == Option.None<int>());
             Assert.That(new Option<int>().Tag, Is.EqualTo(OptionType.None));
+            Assert.That(Option.Some<string>(null), Is.EqualTo(Option.None<string>()));
         }
 
         [Test]
