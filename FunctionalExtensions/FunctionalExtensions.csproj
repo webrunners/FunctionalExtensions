@@ -44,6 +44,7 @@
     <Compile Include="Choice2Of2.cs" />
     <Compile Include="ChoiceExtensions.cs" />
     <Compile Include="ChoiceType.cs" />
+    <Compile Include="Linq\OptionExtensions.cs" />
     <Compile Include="Operators.cs" />
     <Compile Include="FluentOption\Intermediate3.cs" />
     <Compile Include="FluentOption\IIntermediate1.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="OptionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SideEffects\SideEffectExtensions.cs" />
+    <Compile Include="Transform\FunctionResultTransformExtensions.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="Validation\Failure.cs" />
     <Compile Include="Validation\Fluent\IIntermediate2A.cs" />
@@ -93,6 +95,7 @@
   <ItemGroup>
     <Content Include="SolutionItems\FluentGrammar\Validate.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

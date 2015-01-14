@@ -4,7 +4,9 @@ using EnumExtensions.Attributes;
 using EnumExtensions.Extensions;
 using FunctionalExtensions.Currying;
 using FunctionalExtensions.Lambda;
+using FunctionalExtensions.Linq;
 using FunctionalExtensions.SideEffects;
+using FunctionalExtensions.Transform;
 using FunctionalExtensions.Validation;
 
 namespace FunctionalExtensions.Examples

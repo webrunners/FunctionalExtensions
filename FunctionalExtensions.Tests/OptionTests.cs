@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using FunctionalExtensions.Currying;
+using FunctionalExtensions.Linq;
+using FunctionalExtensions.Transform;
 using NUnit.Framework;
 using FunctionalExtensions.Lambda;
 
@@ -254,10 +256,14 @@ namespace FunctionalExtensions.Tests
             Assert.That(list.SingleOrOption(x => x == 1).Match(x => false, () => true), Is.True);
         }
 
-        //[Test]
-        public void Exception_Test()
+        [Test]
+        public void DefaultIfNone_Test()
         {
-            
+            var x = Option.None<int>().DefaultIfNone(-1);
+            Assert.That(x, Is.EqualTo(-1));
+
+            var y = Option.Some(42).DefaultIfNone(-1);
+            Assert.That(y, Is.EqualTo(42));
         }
     }
 }
