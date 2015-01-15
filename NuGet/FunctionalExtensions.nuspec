@@ -7,17 +7,16 @@
     <owners>Webrunners GmbH</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Functions and Types for C# adopted from FP e.g. Option, Choice</description>
-    <releaseNotes></releaseNotes>
     <copyright>Webrunners GmbH Copyright 2015</copyright>
     <tags>FP Option Choice Maybe Either C# .Net Functional Monad</tags>
     <releaseNotes>XML Docs added. ToString for Option and Choice added.</releaseNotes>
     <dependencies>
     </dependencies>
-    <files>
-      <file src="FunctionalExtensions.dll" target="lib\Net40" />
-      <file src="FunctionalExtensions.xml" target="lib\Net40" />
-      <file src="FunctionalExtensions.dll" target="lib\Net45" />
-      <file src="FunctionalExtensions.xml" target="lib\Net45" />
-    </files>
   </metadata>
+  <files>
+    <file src="lib\net40\FunctionalExtensions.xml" target="lib\Net40" />
+    <file src="lib\net40\FunctionalExtensions.dll" target="lib\Net40" />
+    <file src="lib\net45\FunctionalExtensions.xml" target="lib\Net45" />
+    <file src="lib\net45\FunctionalExtensions.dll" target="lib\Net45" />
+  </files>
 </package>
