@@ -40,8 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Choice.cs" />
-    <Compile Include="Choice1Of2.cs" />
-    <Compile Include="Choice2Of2.cs" />
     <Compile Include="ChoiceExtensions.cs" />
     <Compile Include="ChoiceType.cs" />
     <Compile Include="Linq\OptionExtensions.cs" />
