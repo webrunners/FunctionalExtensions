@@ -291,5 +291,13 @@ namespace FunctionalExtensions.Tests
             Assert.That(!some.IsNone);
             Assert.That(none.IsNone);
         }
+
+        [Test]
+        public void ToString_Test()
+        {
+            Assert.That(Option.Return(42).ToString(), Is.EqualTo("Some(42)"));
+            Assert.That(Option.None<int>().ToString(), Is.EqualTo("None<Int32>"));
+            Assert.That(Option.None<string>().ToString(), Is.EqualTo("None<String>"));
+        }
     }
 }

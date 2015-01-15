@@ -2,15 +2,22 @@
 <package >
   <metadata>
     <id>FunctionalExtensions</id>
-    <version>1.0.1</version>
+    <version>1.2.0</version>
     <authors>Leif Battermann</authors>
     <owners>Webrunners GmbH</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Functions and Types for C# adopted from FP e.g. Option, Choice</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2015</copyright>
-    <tags></tags>
+    <copyright>Webrunners GmbH Copyright 2015</copyright>
+    <tags>FP Option Choice Maybe Either C# .Net Functional Monad</tags>
+    <releaseNotes>XML Docs added. ToString for Option and Choice added.</releaseNotes>
     <dependencies>
     </dependencies>
+    <files>
+      <file src="FunctionalExtensions.dll" target="lib\Net40" />
+      <file src="FunctionalExtensions.xml" target="lib\Net40" />
+      <file src="FunctionalExtensions.dll" target="lib\Net45" />
+      <file src="FunctionalExtensions.xml" target="lib\Net45" />
+    </files>
   </metadata>
 </package>

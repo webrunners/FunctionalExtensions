@@ -51,6 +51,12 @@ namespace FunctionalExtensions
         {
             return Tag == ChoiceType.Choice1Of2 ? onChoice1Of2(_choice1Of2) : onChoice2Of2(_choice2Of2);
         }
+
+        public override string ToString()
+        {
+            var t1T2 = String.Format("<{0}, {1}>", typeof (T1).Name, typeof (T2).Name);
+            return Tag == ChoiceType.Choice1Of2 ? String.Format("Choice1Of2{1}({0})", _choice1Of2, t1T2) : String.Format("Choice2Of2{1}({0})", _choice2Of2, t1T2);
+        }
     }
 
     public static class Choice

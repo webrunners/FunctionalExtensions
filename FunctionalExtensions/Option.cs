@@ -82,6 +82,11 @@ namespace FunctionalExtensions
         {
             return !(a == b);
         }
+
+        public override string ToString()
+        {
+            return Tag == OptionType.Some ? String.Format("Some({0})", _value) : String.Format("None<{0}>", typeof(T).Name);
+        }
     }
 
     /// <summary>
