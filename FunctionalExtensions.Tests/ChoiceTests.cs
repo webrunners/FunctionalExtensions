@@ -86,6 +86,7 @@ namespace FunctionalExtensions.Tests
         {
             Assert.That(Choice.NewChoice1Of2<string, int>("42").ToString(), Is.EqualTo("Choice1Of2<String, Int32>(42)"));
             Assert.That(Choice.NewChoice2Of2<string, int>(42).ToString(), Is.EqualTo("Choice2Of2<String, Int32>(42)"));
+            Assert.That(new Choice<string, int>().ToString(), Is.EqualTo("Choice1Of2<String, Int32>()"));
         }
 
         private static bool ChoiceEquals<T1, T2>(Choice<T1, T2> choice5, Choice<T1, T2> choice6)
