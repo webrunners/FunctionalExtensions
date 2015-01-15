@@ -265,6 +265,9 @@ namespace FunctionalExtensions.Tests
 
             var y = Option.Some(42).DefaultIfNone(-1);
             Assert.That(y, Is.EqualTo(42));
+
+            var f = Fun.Create((int i) => i%2 == 0 ? "foo" : null).ReturnOption();
+            Assert.That(f(3), Is.EqualTo(Option.None<string>()));
         }
     }
 }
