@@ -1,10 +1,28 @@
 Functional Extensions for C#
 ====================
 This project includes types and higher-order functions adopted from functional programming.
+### Table of contents
+* [Option&lt;T&gt;](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#optiont)  
+    * [Creation of an instance of Option](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#creation-of-an-instance-of-option)  
+    * [Extraction of the value from an instance of Option](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#extraction-of-the-value-from-an-instance-of-option)  
+* [Functions and higher-order functions](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#functions-and-higher-order-functions)  
+    * [Fun.Create](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#funcreate)  
+    * [ReturnOption](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#returnoption)  
+    * [OnExceptionNone](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#onexceptionnone)  
+    * [Parsing](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#parsing)  
+    * [Curry](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#curry)  
+* [Option Applicative](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#option-applicative)  
+* [Linq query syntax](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#linq-query-syntax)  
+    * [Option (with Linq query syntax)](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#option-with-linq-query-syntax)  
+    * [Choice Applicative (with Linq query syntax)](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#choice-applicative-with-linq-query-syntax)  
+* [Validation Framework (Fluent API)](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#validation-framework-fluent-api)
+    * [Grammar Diagram](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#grammar-diagram)  
+    * [Example](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#example)
+    
 ### Option&lt;T&gt;
 The ``Option<T>`` type encapsulates an optional value. It is usefull when the actual value (of type ``T``) might not exist. ``Option`` is defined as a union type with two cases: ``Some`` and ``None``.
 
-#### Creation of an instances of Option
+#### Creation of an instance of Option
 ```c#
 var someInt = Option.Some(42);      // creates an instance of Some<int>
 var noneInt = Option.None<int>();   // creates an instance of None<int>
@@ -20,8 +38,12 @@ If ``null`` is passed as an argument to ``Option.Some<T>(T value)`` it will yiel
 var none = Option.Some<string>(null); // the result is None<string>
 ```
 #### Extraction of the value from an instance of Option
+The extraction of the value should be easy but safe. It is supposed to be made difficult to extract the value when it is null (in case of ``None``) to prevent any kind of NullReferenceExceptions. Also the consumer should be forced to handle both cases of an exisitng value (Some) and non-existing value (None). (This concept is close to pattern matching from FP, e.g. F#.)
+
 The value can be retrieved by calling the ``Match`` method. This method has the following signature: 
 ``TResult Match<TResult>(Func<T, TResult> onSome, Func<TResult> onNone)`` or in F# notation: ``((T -> TResult)*(unit -> TResult)) -> TResult``
+
+This 
 ```c#
 Option.Some(49.9m)
     .Match(
@@ -53,6 +75,13 @@ var result = Fun.Create((decimal x, decimal y) => x/y)
     .ReturnOption()
     .OnExceptionNone(); // if 0 is passed as the second argument result will be None<decimal>
 ```
+##### Parsing
+There are no parsing function included. But it is very easy to create them if needed with any operation that might return null or throw an exception.
+```c#
+var parseInt = Fun.Create((string s) => Int32.Parse(s)).ReturnOption().OnExceptionNone();
+var i = parseInt("sdfs"); // i will be Option.None<int>
+```
+
 ##### Curry
 ``Curry()`` returns the curried version of a function. (This is i.e necessary for the option type to act like an applicative functor.)
 ```c#
@@ -112,3 +141,18 @@ There is a fluent API on top of the validation framework.
 #### Grammar Diagram
 
 ![Fluent Validation API](https://raw.githubusercontent.com/webrunners/FunctionalExtensions/develop/FunctionalExtensions/SolutionItems/FluentGrammar/Validate.png "Fluent Validation API")
+
+#### Example
+This returns an instance of ``Choice<Customer, Failure<string>>`` which will contain either a valid ``Customer`` object or a List of error messages.
+```c#
+return Validate
+    .That(customer).IsNotNull("customer cannot be null")
+    .AndSelect(x => x.Surname).IsNotNull("surname cannot be null")
+    .AndSelect(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
+    .AndSelect(x => x.Forename).IsNotNull("forename cannot be null")
+    .AndSelect(x => x.Forename).Fulfills(x => x != "friedrich", "forename connot be friedrich")
+    .AndSelect(x => x.Forename).Fulfills(x => x.StartsWith("A"), "forename must start with an \'A\'")
+    .AndSelect(x => x.Gender).IsNotNull("gender cannot be null")
+    .AndSelect(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
+    .Result;
+```                
