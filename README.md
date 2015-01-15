@@ -43,7 +43,6 @@ The extraction of the value should be easy but safe. It is supposed to be made d
 The value can be retrieved by calling the ``Match`` method. This method has the following signature: 
 ``TResult Match<TResult>(Func<T, TResult> onSome, Func<TResult> onNone)`` or in F# notation: ``((T -> TResult)*(unit -> TResult)) -> TResult``
 
-This 
 ```c#
 Option.Some(49.9m)
     .Match(
