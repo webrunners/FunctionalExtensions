@@ -1,10 +1,28 @@
 Functional Extensions for C#
 ====================
 This project includes types and higher-order functions adopted from functional programming.
+### Table of contents
+* [Option&lt;T&gt;](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#optiont)  
+    * [Creation of an instance of Option](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#creation-of-an-instance-of-option)  
+    * [Extraction of the value from an instance of Option](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#extraction-of-the-value-from-an-instance-of-option)  
+* [Functions and higher-order functions](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#functions-and-higher-order-functions)  
+    * [Fun.Create](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#funcreate)  
+    * [ReturnOption](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#returnoption)  
+    * [OnExceptionNone](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#onexceptionnone)  
+    * [Parsing](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#parsing)  
+    * [Curry](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#curry)  
+* [Option Applicative](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#option-applicative)  
+* [Linq query syntax](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#linq-query-syntax)  
+    * [Option (with Linq query syntax)](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#option-with-linq-query-syntax)  
+    * [Choice Applicative (with Linq query syntax)](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#choice-applicative-with-linq-query-syntax)  
+* [Validation Framework (Fluent API)](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#validation-framework-fluent-api)
+    * [Grammar Diagram](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#grammar-diagram)  
+    * [Example](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#example)
+    
 ### Option&lt;T&gt;
 The ``Option<T>`` type encapsulates an optional value. It is usefull when the actual value (of type ``T``) might not exist. ``Option`` is defined as a union type with two cases: ``Some`` and ``None``.
 
-#### Creation of an instances of Option
+#### Creation of an instance of Option
 ```c#
 var someInt = Option.Some(42);      // creates an instance of Some<int>
 var noneInt = Option.None<int>();   // creates an instance of None<int>
