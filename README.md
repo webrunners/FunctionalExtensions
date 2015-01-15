@@ -76,7 +76,7 @@ var result = Fun.Create((decimal x, decimal y) => x/y)
     .OnExceptionNone(); // if 0 is passed as the second argument result will be None<decimal>
 ```
 ##### Parsing
-There are no parsing function included. But it is very easy to create them if needed.
+There are no parsing function included. But it is very easy to create them if needed with any operation that might return null or throw an exception.
 ```c#
 var parseInt = Fun.Create((string s) => Int32.Parse(s)).ReturnOption().OnExceptionNone();
 var i = parseInt("sdfs"); // i will be Option.None<int>
