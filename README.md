@@ -20,8 +20,12 @@ If ``null`` is passed as an argument to ``Option.Some<T>(T value)`` it will yiel
 var none = Option.Some<string>(null); // the result is None<string>
 ```
 #### Extraction of the value from an instance of Option
+The extraction of the value should be easy but safe. It is supposed to be made difficult to extract the value when it is null (in case of ``None``) to prevent any kind of NullReferenceExceptions. Also the consumer should be forced to handle both cases of an exisitng value (Some) and non-existing value (None). (This concept is close to pattern matching from FP, e.g. F#.)
+
 The value can be retrieved by calling the ``Match`` method. This method has the following signature: 
 ``TResult Match<TResult>(Func<T, TResult> onSome, Func<TResult> onNone)`` or in F# notation: ``((T -> TResult)*(unit -> TResult)) -> TResult``
+
+This 
 ```c#
 Option.Some(49.9m)
     .Match(
@@ -53,6 +57,13 @@ var result = Fun.Create((decimal x, decimal y) => x/y)
     .ReturnOption()
     .OnExceptionNone(); // if 0 is passed as the second argument result will be None<decimal>
 ```
+##### Parsing
+There are no parsing function included. But it is very easy to create them if needed.
+```c#
+var parseInt = Fun.Create((string s) => Int32.Parse(s)).ReturnOption().OnExceptionNone();
+var i = parseInt("sdfs"); // i will be Option.None<int>
+```
+
 ##### Curry
 ``Curry()`` returns the curried version of a function. (This is i.e necessary for the option type to act like an applicative functor.)
 ```c#
@@ -112,3 +123,18 @@ There is a fluent API on top of the validation framework.
 #### Grammar Diagram
 
 ![Fluent Validation API](https://raw.githubusercontent.com/webrunners/FunctionalExtensions/develop/FunctionalExtensions/SolutionItems/FluentGrammar/Validate.png "Fluent Validation API")
+
+#### Example
+This returns an instance of ``Choice<Customer, Failure<string>>`` which will contain either a valid ``Customer`` object or a List of error messages.
+```c#
+return Validate
+    .That(customer).IsNotNull("customer cannot be null")
+    .AndSelect(x => x.Surname).IsNotNull("surname cannot be null")
+    .AndSelect(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
+    .AndSelect(x => x.Forename).IsNotNull("forename cannot be null")
+    .AndSelect(x => x.Forename).Fulfills(x => x != "friedrich", "forename connot be friedrich")
+    .AndSelect(x => x.Forename).Fulfills(x => x.StartsWith("A"), "forename must start with an \'A\'")
+    .AndSelect(x => x.Gender).IsNotNull("gender cannot be null")
+    .AndSelect(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
+    .Result;
+```                
