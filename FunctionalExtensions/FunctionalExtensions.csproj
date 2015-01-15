@@ -42,6 +42,21 @@
     <Compile Include="Choice.cs" />
     <Compile Include="ChoiceExtensions.cs" />
     <Compile Include="ChoiceType.cs" />
+    <Compile Include="Currying\FunctionExtensions.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FunctionExtensions.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Lambda\Act.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Act.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Lambda\Fun.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Fun.tt</DependentUpon>
+    </Compile>
     <Compile Include="Linq\OptionExtensions.cs" />
     <Compile Include="Operators.cs" />
     <Compile Include="FluentOption\Intermediate3.cs" />
@@ -62,15 +77,16 @@
     <Compile Include="FluentOption\Intermediate8.cs" />
     <Compile Include="FluentOption\IResult.cs" />
     <Compile Include="FluentOption\OptionMonad.cs" />
-    <Compile Include="Currying\FunctionExtensions.cs" />
-    <Compile Include="Lambda\Act.cs" />
-    <Compile Include="Lambda\Func.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="OptionExtensions.cs" />
     <Compile Include="OptionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SideEffects\SideEffectExtensions.cs" />
-    <Compile Include="Transform\FunctionResultTransformExtensions.cs" />
+    <Compile Include="Transform\FunctionResultTransformExtensions.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FunctionResultTransformExtensions.tt</DependentUpon>
+    </Compile>
     <Compile Include="Unit.cs" />
     <Compile Include="Validation\Failure.cs" />
     <Compile Include="Validation\Fluent\IIntermediate2A.cs" />
@@ -88,12 +104,30 @@
     <Compile Include="Validation\Validator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Currying\FunctionExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FunctionExtensions.cs</LastGenOutput>
+    </None>
+    <None Include="Lambda\Act.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Act.cs</LastGenOutput>
+    </None>
+    <None Include="Lambda\Fun.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Fun.cs</LastGenOutput>
+    </None>
     <None Include="SolutionItems\FluentGrammar\validate.ebnf" />
+    <None Include="Transform\FunctionResultTransformExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FunctionResultTransformExtensions.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="SolutionItems\FluentGrammar\Validate.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
