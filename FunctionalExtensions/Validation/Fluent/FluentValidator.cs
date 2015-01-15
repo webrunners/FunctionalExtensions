@@ -10,7 +10,9 @@ namespace FunctionalExtensions.Validation.Fluent
         internal FluentValidator(T instance)
         {
             _instance = instance;
-            _result = new Choice1Of2<T, Failure<TError>>(_instance);
+            _result = instance != null
+                ? Choice.NewChoice1Of2<T, Failure<TError>>(_instance)
+                : new Choice<T, Failure<TError>>();
         }
 
         internal FluentValidator(T instance, Choice<T, Failure<TError>> result)

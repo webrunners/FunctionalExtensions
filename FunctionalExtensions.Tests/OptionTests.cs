@@ -269,5 +269,27 @@ namespace FunctionalExtensions.Tests
             var f = Fun.Create((int i) => i%2 == 0 ? "foo" : null).ReturnOption();
             Assert.That(f(3), Is.EqualTo(Option.None<string>()));
         }
+
+        [Test]
+        public void Parse_Test()
+        {
+            var parseInt = Fun.Create((string s) => Int32.Parse(s)).ReturnOption().OnExceptionNone();
+            var i = parseInt("sdfs");
+
+            Assert.That(i, Is.EqualTo(Option.None<int>()));
+        }
+
+        [Test]
+        public void IsSome_IsNone_Test()
+        {
+            var some = Option.Return(42);
+            var none = Option.None<int>();
+
+            Assert.That(some.IsSome);
+            Assert.That(!none.IsSome);  
+
+            Assert.That(!some.IsNone);
+            Assert.That(none.IsNone);
+        }
     }
 }

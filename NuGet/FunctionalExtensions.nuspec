@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>FunctionalExtensions</id>
+    <version>1.0.1</version>
+    <authors>Leif Battermann</authors>
+    <owners>Webrunners GmbH</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Functions and Types for C# adopted from FP e.g. Option, Choice</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags></tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>
