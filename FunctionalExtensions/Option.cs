@@ -29,6 +29,10 @@ namespace FunctionalExtensions
         /// </summary>
         public OptionType Tag { get { return _tag; } }
 
+        public bool IsNone { get { return Tag == OptionType.None; } }
+
+        public bool IsSome { get { return Tag == OptionType.Some; } }
+
         internal bool MatchNone()
         {
             return Tag == OptionType.None;
