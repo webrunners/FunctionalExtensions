@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>FunctionalExtensions</id>
+    <id>FunctionalExtensions for C#</id>
     <version>1.2.0</version>
     <authors>Leif Battermann</authors>
     <owners>Webrunners GmbH</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Functions and Types for C# adopted from FP e.g. Option, Choice</description>
+    <description>Functions and types for C# adopted from FP e.g. Option, Choice</description>
     <releaseNotes></releaseNotes>
     <copyright>Webrunners GmbH Copyright 2015</copyright>
     <tags>FP Option Choice Maybe Either C# .Net Functional Monad</tags>
