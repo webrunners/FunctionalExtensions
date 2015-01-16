@@ -7,9 +7,9 @@
     <owners>Webrunners GmbH</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Functions and types for C# adopted from FP e.g. Option, Choice</description>
-    <copyright>Webrunners GmbH Copyright 2015</copyright>
+    <copyright>Copyright 2015 Webrunners GmbH </copyright>
     <tags>FP Option Choice Maybe Either C# .Net Functional Monad</tags>
-    <releaseNotes>XML Docs added. ToString for Option and Choice added.</releaseNotes>
+    <releaseNotes></releaseNotes>
     <dependencies>
     </dependencies>
   </metadata>
