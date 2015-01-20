@@ -299,5 +299,12 @@ namespace FunctionalExtensions.Tests
             Assert.That(Option.None<int>().ToString(), Is.EqualTo("None<Int32>"));
             Assert.That(Option.None<string>().ToString(), Is.EqualTo("None<String>"));
         }
+
+        [Test]
+        public void FromNullable_Test()
+        {
+            Assert.That(((int?) 5).ToOption(), Is.EqualTo(Option.Some(5)));
+            Assert.That(((int?) null).ToOption(), Is.EqualTo(Option.None<int>()));
+        }
     }
 }
