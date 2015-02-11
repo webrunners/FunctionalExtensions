@@ -11,14 +11,12 @@ namespace FunctionalExtensions.Tests.Pipeline
         [Test]
         public void Pipeline_Test()
         {
-            var i = 1;
-
             var inc = Fun.Create((int x) => x + 1);
 
-            var result = i
+            var result = 1
                 .Pipeline(inc)
                 .Pipeline(inc)
-                .Pipeline(inc);
+                .Pipeline(x => x + 1);
 
             Check.That(result).IsEqualTo(4);
         }
