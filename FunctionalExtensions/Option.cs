@@ -87,6 +87,11 @@ namespace FunctionalExtensions
         {
             return Tag == OptionType.Some ? String.Format("Some({0})", _value) : String.Format("None<{0}>", typeof(T).Name);
         }
+
+        public static implicit operator Option<T>(T value)
+        {
+            return value.ToOption();
+        }
     }
 
     /// <summary>

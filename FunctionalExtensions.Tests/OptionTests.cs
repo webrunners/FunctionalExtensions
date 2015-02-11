@@ -306,5 +306,18 @@ namespace FunctionalExtensions.Tests
             Assert.That(((int?) 5).ToOption(), Is.EqualTo(Option.Some(5)));
             Assert.That(((int?) null).ToOption(), Is.EqualTo(Option.None<int>()));
         }
+
+        [Test]
+        public void Implicit_Operator_Test()
+        {
+            Option<int> i = 6;
+            Assert.That(i, Is.EqualTo(Option.Some(6)));
+
+            Option<string> s = "hello";
+            Assert.That(s, Is.EqualTo(Option.Some("hello")));
+
+            s = null;
+            Assert.That(s, Is.EqualTo(Option.None<string>()));
+        }
     }
 }
