@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NFluent">
+      <HintPath>..\packages\NFluent.1.3.1.0\lib\net40\NFluent.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -47,7 +50,9 @@
     <Compile Include="FluentOption\FluentOptionTests.cs" />
     <Compile Include="OperatorsTests.cs" />
     <Compile Include="OptionTests.cs" />
+    <Compile Include="Pipeline\PipelineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SideEffects\SideEffectExtensionsTests.cs" />
     <Compile Include="Validation\Fluent\FluentValidationTests.cs" />
     <Compile Include="Validation\TestModels.cs" />
     <Compile Include="Validation\ValidationTests.cs" />
