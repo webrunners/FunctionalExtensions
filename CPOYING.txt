@@ -1,5 +1,5 @@
-Author:
-    Webrunners GmbH team
+Authors:
+    Leif Battermann
 Copyright:
     Copyright (C) 2015 Webrunners GmbH
 Licence: LGPL-3
