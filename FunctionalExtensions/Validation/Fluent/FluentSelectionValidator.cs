@@ -2,7 +2,7 @@ using System;
 
 namespace FunctionalExtensions.Validation.Fluent
 {
-    public class FluentSelectionValidator<T, TResult, TError> : IIntermediate4<T, TResult, TError>
+    internal class FluentSelectionValidator<T, TResult, TError> : IIntermediate4<T, TResult, TError>
         where T : class
         where TResult : class
     {

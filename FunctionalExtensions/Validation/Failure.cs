@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FunctionalExtensions.Validation
 {
+    [Obsolete("The Validation framework will be moved to another package.")]
     public class Failure<T> : IEnumerable<T>
     {
         private readonly List<T> _errors = new List<T>();

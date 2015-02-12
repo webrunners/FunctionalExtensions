@@ -5,6 +5,9 @@ This project includes types and higher-order functions adopted from functional p
 * [Option&lt;T&gt;](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#optiont)  
     * [Creation of an instance of Option](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#creation-of-an-instance-of-option)  
     * [Extraction of the value from an instance of Option](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#extraction-of-the-value-from-an-instance-of-option)  
+* [Choice&lt;T1, T2&gt;](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#choicet1t2) 
+    * [Creation of an instance of Choice](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#creation-of-an-instance-of-choice)  
+    * [Extraction of the value from an instance of Choice](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#extraction-of-the-value-from-an-instance-of-choice)  
 * [Functions and higher-order functions](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#functions-and-higher-order-functions)  
     * [Fun.Create](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#funcreate)  
     * [ReturnOption](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#returnoption)  
@@ -33,6 +36,18 @@ var someInt = 5.ToOption();     // creates Some<int>
 string s = null;
 var noneString = s.ToOption();  // yields None<string>
 ```
+
+##### Implicit Operator
+```c#
+Option<string> s = "hello"; // creates an instance of Some<string>
+```
+
+##### Nullable
+```c#
+int? i = 42;
+var o = i.ToOption(); // creates an instance of Some<int>
+```
+##### Null
 If ``null`` is passed as an argument to ``Option.Some<T>(T value)`` it will yield ``None``:
 ```c#
 var none = Option.Some<string>(null); // the result is None<string>
@@ -49,6 +64,43 @@ Option.Some(49.9m)
         x => String.Format("Result = {0} %", x.ToString("F")),
         () => "An error occurred.");
 ```
+
+##### DefaultIfNone
+The `DefaultIfNone(T defaultValue)` extension method will return the inner value of an Option instance. If the Option is `None` a default value that is specified as an argument will be returned.
+```c#
+var x = Option.None<int>().DefaultIfNone(-1); // x will be -1
+var y = Option.Some(42).DefaultIfNone(-1);    // y will be 42
+```
+### Choice&lt;T1,T2&gt;
+`Choice<T1, T2>` is a type which represents either a value of type `T1` or a value of type `T2`.
+#### Creation of an instance of Choice
+Create an instance of `Choice` that represents Choice 1 of 2:
+```c#
+var c = Choice.NewChoice1Of2<decimal, string>(2.5m);
+```
+Create an instance of `Choice` that represents Choice 2 of 2:
+```c#
+var c = Choice.NewChoice2Of2<decimal, string>("An error occurred.");
+```
+##### ToChoice
+An instance of `Choice` can be created from an instance of `Option`. If the Option is Some then the Choice will represent the value of the Option instance.
+```c#
+var c = Option.Some(42).ToChoice("No value specified."); // c represents 42
+```
+If the Option is None it will represent an alternative value which was passed as an argument.
+```c#
+var c = Option.None<int>().ToChoice("No value specified."); // c represents "No value specified"
+```
+
+#### Extraction of the value from an instance of Choice
+The extraction of the inner value of the choice type can be done with `Match()` similar to the extraction of Option values.
+```c#
+var result = Choice.NewChoice1Of2<string, int>("world")
+    .Match(
+        onChoice1Of2: x => String.Format("Hello {0}", x),
+        onChoice2Of2: x => String.Format("The number is {0}", x));
+```
+
 ### Functions and higher-order functions
 ##### Fun.Create
 ``Fun.Create()`` helps with creating instances of ``Func``.
@@ -131,27 +183,4 @@ Console.WriteLine(output);
         x => Console.WriteLine("Result = {0}", x),
         errors => errors.ToList().ForEach(x => Console.WriteLine(x.GetDisplayName())));
 ```
-
-### Validation Framework (Fluent API)
-
-This project also includes a simple validation framework that makes use of the applicative character of the Choice type.
-There is a fluent API on top of the validation framework.
-
-#### Grammar Diagram
-
-![Fluent Validation API](https://raw.githubusercontent.com/webrunners/FunctionalExtensions/develop/FunctionalExtensions/SolutionItems/FluentGrammar/Validate.png "Fluent Validation API")
-
-#### Example
-This returns an instance of ``Choice<Customer, Failure<string>>`` which will contain either a valid ``Customer`` object or a List of error messages.
-```c#
-return Validate
-    .That(customer).IsNotNull("customer cannot be null")
-    .AndSelect(x => x.Surname).IsNotNull("surname cannot be null")
-    .AndSelect(x => x.Surname).Fulfills(x => x != "kukku mukku", "surname cannot be kukku mukku")
-    .AndSelect(x => x.Forename).IsNotNull("forename cannot be null")
-    .AndSelect(x => x.Forename).Fulfills(x => x != "friedrich", "forename connot be friedrich")
-    .AndSelect(x => x.Forename).Fulfills(x => x.StartsWith("A"), "forename must start with an \'A\'")
-    .AndSelect(x => x.Gender).IsNotNull("gender cannot be null")
-    .AndSelect(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
-    .Result;
-```                
+             

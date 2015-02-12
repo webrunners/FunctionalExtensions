@@ -17,11 +17,6 @@ namespace FunctionalExtensions
             return source.MatchSome(out value) ? Option.Some(selector(value)) : Option.None<TResult>();
         }
 
-        public static Option<T> ToOption<T>(this T value)
-        {
-            return new Option<T>(value);
-        }
-
         public static Option<TResult> Apply<T, TResult>(this Option<Func<T, TResult>> func, Option<T> opt)
         {
             return opt.Bind(o => func.Select(s => s(o)));
@@ -32,9 +27,19 @@ namespace FunctionalExtensions
             return opt.Bind(o => func.Bind(s => s(o)));
         }
 
+        public static Option<T> ToOption<T>(this T value)
+        {
+            return new Option<T>(value);
+        }
+
         public static T DefaultIfNone<T>(this Option<T> source, T defaultValue)
         {
             return source.Match(x => x, () => defaultValue);
+        }
+
+        public static Option<T> ToOption<T>(this T? value) where T : struct
+        {
+            return value.HasValue ? Option.Some(value.Value) : Option.None<T>();
         }
     }
 }
