@@ -5,7 +5,7 @@ This project includes types and higher-order functions adopted from functional p
 * [Option&lt;T&gt;](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#optiont)  
     * [Creation of an instance of Option](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#creation-of-an-instance-of-option)  
     * [Extraction of the value from an instance of Option](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#extraction-of-the-value-from-an-instance-of-option)  
-* [Choice&lt;T1, T2&gt;](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#choice) 
+* [Choice&lt;T1, T2&gt;](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#choicet1t2) 
     * [Creation of an instance of Choice](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#creation-of-an-instance-of-choice)  
     * [Extraction of the value from an instance of Choice](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#extraction-of-the-value-from-an-instance-of-choice)  
 * [Functions and higher-order functions](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#functions-and-higher-order-functions)  
