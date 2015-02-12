@@ -1,0 +1,6 @@
+Author:
+    Webrunners GmbH team
+Copyright:
+    Copyright (C) 2015 Webrunners GmbH
+Licence: LGPL-3
+The full text of the licence can be found in the 'LICENSE.txt' file.
