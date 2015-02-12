@@ -11,6 +11,7 @@
     <description>Functions and types for C# adopted from FP e.g. Option, Choice</description>
     <copyright>Copyright 2015 Webrunners GmbH </copyright>
     <projectUrl>https://github.com/webrunners/FunctionalExtensions</projectUrl>
+    <licenseUrl>https://github.com/webrunners/FunctionalExtensions/blob/develop/LICENSE.txt</licenseUrl>
     <tags>FP Option Choice Maybe Either C# .Net Functional Monad</tags>
     <releaseNotes>Create Option instances from Nullable&lt;T&gt;, implicit operator for Option, extension method for pipelining</releaseNotes>
     <dependencies>
