@@ -106,11 +106,22 @@ namespace FunctionalExtensions.Tests
             Assert.That(Option.None<int>() == Option.None<int>());
             Assert.That(!Option.None<int>().Equals(Option.None<string>()));
 
-            Assert.That(null != Option.None<int>());
-            Assert.That(Option.None<int>() != null);
+            string s = null;
+            Assert.That(s == Option.None<string>());
+            Assert.That(null == Option.None<string>());
+            Assert.That(Option.None<string>() == s);
+            Assert.That(Option.None<string>() == null);
             Assert.That(new Option<int>() == Option.None<int>());
             Assert.That(new Option<int>().Tag, Is.EqualTo(OptionType.None));
             Assert.That(Option.Some<string>(null), Is.EqualTo(Option.None<string>()));
+
+            Assert.That(Option.Some(42).Equals(42));
+            Assert.That(Option.Some(42) == 42);
+            Assert.That(Option.Some(42) != 24);
+            Assert.That(Option.None<int>() != 42);
+            Assert.That(42 == Option.Some(42));
+            Assert.That(42 != Option.Some(24));
+            Assert.That(42 != Option.None<int>());
         }
 
         [Test]

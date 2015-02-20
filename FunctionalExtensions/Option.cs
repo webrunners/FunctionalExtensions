@@ -56,21 +56,43 @@ namespace FunctionalExtensions
             return Tag == OptionType.Some ? onSome(_value) : onNone();
         }
 
-        public override int GetHashCode()
+        //public override int GetHashCode()
+        //{
+        //    return Tag == OptionType.Some ? EqualityComparer<T>.Default.GetHashCode(_value) : EqualityComparer<T>.Default.GetHashCode(default(T));
+        //}
+
+        //private bool EqualsOption(Option<T> other)
+        //{
+        //    return Tag == OptionType.Some && other.Tag == OptionType.Some && Equals(_value, other._value)
+        //        || Tag == OptionType.None && other.Tag == OptionType.None;
+        //}
+
+        //public override bool Equals(object obj)
+        //{
+        //    return obj == null && Tag == OptionType.None
+        //        || obj is Option<T> && EqualsOption((Option<T>)obj);
+        //}
+
+        public bool Equals(Option<T> other)
         {
-            return Tag == OptionType.Some ? EqualityComparer<T>.Default.GetHashCode(_value) : EqualityComparer<T>.Default.GetHashCode(default(T));
+            return EqualityComparer<T>.Default.Equals(_value, other._value);
         }
 
-        private bool EqualsOption(Option<T> other)
+        public bool Equals(T other)
         {
-            return Tag == OptionType.Some && other.Tag == OptionType.Some && Equals(_value, other._value)
-                || Tag == OptionType.None && other.Tag == OptionType.None;
+            return EqualityComparer<T>.Default.Equals(_value, other);
         }
 
         public override bool Equals(object obj)
         {
             return obj == null && Tag == OptionType.None
-                || obj is Option<T> && EqualsOption((Option<T>)obj);
+                || obj is T && Equals((T) obj)
+                || obj is Option<T> && Equals((Option<T>) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return EqualityComparer<T>.Default.GetHashCode(_value);
         }
 
         public static bool operator ==(Option<T> a, Option<T> b)
