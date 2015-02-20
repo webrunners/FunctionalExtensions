@@ -51,7 +51,9 @@
     <Compile Include="FluentOption\FluentOptionTests.cs" />
     <Compile Include="OperatorsTests.cs" />
     <Compile Include="OptionTests.cs" />
+    <Compile Include="Pipeline\PipelineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SideEffects\SideEffectExtensionsTests.cs" />
     <Compile Include="Validation\Fluent\FluentValidationTests.cs" />
     <Compile Include="Validation\TestModels.cs" />
     <Compile Include="Validation\ValidationTests.cs" />

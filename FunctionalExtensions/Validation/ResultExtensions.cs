@@ -2,6 +2,7 @@
 
 namespace FunctionalExtensions.Validation
 {
+    [Obsolete("The Validation framework will be moved to another package.")]
     public static class ResultExtensions
     {
         public static Choice<Tuple<T1First, T1Second>, Failure<TError>> Merge<T1First, T1Second, TError>(this Choice<T1First, Failure<TError>> first, Choice<T1Second, Failure<TError>> second)

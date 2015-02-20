@@ -1,15 +1,19 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>FunctionalExtensions for C#</id>
-    <version>1.2.0</version>
+    <id>FunctionalExtensions</id>
+    <title>Functional Extensions for C#</title>
+    <version>1.3.0.0</version>
     <authors>Leif Battermann</authors>
     <owners>Webrunners GmbH</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Functions and types for C# adopted from FP e.g. Option, Choice</summary>
     <description>Functions and types for C# adopted from FP e.g. Option, Choice</description>
     <copyright>Copyright 2015 Webrunners GmbH </copyright>
+    <projectUrl>https://github.com/webrunners/FunctionalExtensions</projectUrl>
+    <licenseUrl>https://github.com/webrunners/FunctionalExtensions/blob/develop/LICENSE.txt</licenseUrl>
     <tags>FP Option Choice Maybe Either C# .Net Functional Monad</tags>
-    <releaseNotes></releaseNotes>
+    <releaseNotes>Create Option instances from Nullable&lt;T&gt;, implicit operator for Option, extension method for pipelining</releaseNotes>
     <dependencies>
     </dependencies>
   </metadata>
