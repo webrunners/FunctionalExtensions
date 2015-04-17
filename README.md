@@ -18,9 +18,6 @@ This project includes types and higher-order functions adopted from functional p
 * [Linq query syntax](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#linq-query-syntax)  
     * [Option (with Linq query syntax)](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#option-with-linq-query-syntax)  
     * [Choice Applicative (with Linq query syntax)](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#choice-applicative-with-linq-query-syntax)  
-* [Validation Framework (Fluent API)](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#validation-framework-fluent-api)
-    * [Grammar Diagram](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#grammar-diagram)  
-    * [Example](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#example)
     
 ### Option&lt;T&gt;
 The ``Option<T>`` type encapsulates an optional value. It is usefull when the actual value (of type ``T``) might not exist. ``Option`` is defined as a union type with two cases: ``Some`` and ``None``.
