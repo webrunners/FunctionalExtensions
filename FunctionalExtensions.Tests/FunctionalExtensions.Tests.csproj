@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChoiceTests.cs" />
+    <Compile Include="CompositionTests.cs" />
     <Compile Include="Division.cs" />
     <Compile Include="FluentOption\FluentOptionTests.cs" />
     <Compile Include="OperatorsTests.cs" />

@@ -48,6 +48,7 @@
     <Compile Include="Choice.cs" />
     <Compile Include="ChoiceExtensions.cs" />
     <Compile Include="ChoiceType.cs" />
+    <Compile Include="Composition.cs" />
     <Compile Include="Currying\FunctionExtensions.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
