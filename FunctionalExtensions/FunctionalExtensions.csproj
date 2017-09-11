@@ -2,6 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Product>Functional Extensions for C#</Product>
+    <AssemblyVersion>1.3.1.0</AssemblyVersion>
+    <FileVersion>1.3.1.0</FileVersion>
+    <Authors>Leif Battermann, Christoph von Krüchten</Authors>
+    <Company>Webrunners GmbH</Company>
+    <Description>Functions and types for C# adopted from FP e.g. Option, Choice</Description>
+    <Copyright>Copyright 2017 Webrunners GmbH</Copyright>
+    <PackageProjectUrl>https://github.com/webrunners/FunctionalExtensions</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/webrunners/FunctionalExtensions/blob/develop/LICENSE.txt</PackageLicenseUrl>
+    <PackageTags>FP Option Choice Maybe Either C# .Net Functional Monad</PackageTags>
+    <PackageReleaseNotes>Added dotnetcore compatibility</PackageReleaseNotes>
+    <Version>1.3.1</Version>
+    <RepositoryUrl></RepositoryUrl>
+    <RepositoryType></RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,10 +27,6 @@
     <None Update="FluentOption\IIntermediate.tt">
       <LastGenOutput>IIntermediate.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
-    <None Update="FluentOption\Intermediate.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Intermediate.cs</LastGenOutput>
     </None>
     <None Update="Lambda\Act.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -45,11 +56,6 @@
       <DependentUpon>IIntermediate.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="FluentOption\Intermediate.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Intermediate.tt</DependentUpon>
     </Compile>
     <Compile Update="Lambda\Act.cs">
       <DesignTime>True</DesignTime>
