@@ -1,11 +1,12 @@
 using System;
+using System.Linq;
 
 namespace FunctionalExtensions.FluentOption
 {
     public class Intermediate1<T1> : IIntermediate1<T1>
     {
         private readonly Func<Option<T1>> _f1;
-
+        
         public Intermediate1(Func<Option<T1>> f)
         {
             _f1 = f;

@@ -9,6 +9,14 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>FunctionExtensions.cs</LastGenOutput>
     </None>
+    <None Update="FluentOption\IIntermediate.tt">
+      <LastGenOutput>IIntermediate.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="FluentOption\Intermediate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Intermediate.cs</LastGenOutput>
+    </None>
     <None Update="Lambda\Act.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Act.cs</LastGenOutput>
@@ -32,6 +40,16 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>FunctionExtensions.tt</DependentUpon>
+    </Compile>
+    <Compile Update="FluentOption\IIntermediate.cs">
+      <DependentUpon>IIntermediate.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="FluentOption\Intermediate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Intermediate.tt</DependentUpon>
     </Compile>
     <Compile Update="Lambda\Act.cs">
       <DesignTime>True</DesignTime>
