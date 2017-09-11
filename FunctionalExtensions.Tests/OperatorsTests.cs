@@ -1,15 +1,14 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace FunctionalExtensions.Tests
 {
-    [TestFixture]
     public class OperatorsTests
     {
-        [Test]
+        [Fact]
         public void Id_Test()
         {
-            Assert.That(Operators.Id(42), Is.EqualTo(42));
-            Assert.That(Operators.Id<int>()(42), Is.EqualTo(42));
+            Assert.Equal(42, Operators.Id(42));
+            Assert.Equal(42, Operators.Id<int>()(42));
         }
     }
 }

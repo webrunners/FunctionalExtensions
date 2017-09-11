@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using FunctionalExtensions.Lambda;
 using FunctionalExtensions.Validation;
-using NUnit.Framework;
+using Xunit;
 
 namespace FunctionalExtensions.Tests.Validation
 {
-    [TestFixture]
     public class ValidationTests
     {
-        [Test]
+        [Fact]
         public void ValidationWithResultApplicativeFunctor_HappyDay_Test()
         {
             var result = 0.0m;
@@ -18,13 +17,13 @@ namespace FunctionalExtensions.Tests.Validation
             var d2 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Failure<string>>(2.5m));
 
             var callbackSome = Act.Create((decimal x) => result = x);
-            var callbackNone = Act.Create((Failure<string> x) => Assert.Fail());
+            var callbackNone = Act.Create((Failure<string> x) => Assert.True(false));
 
             ValidationWithResultApplicativeFunctor(d1, d2, callbackSome, callbackNone);
-            Assert.That(result, Is.EqualTo(100));
+            Assert.Equal(100, result);
         }
 
-        [Test]
+        [Fact]
         public void ValidationWithResultApplicativeFunctor_RainyDay_Test()
         {
             var d1 = Fun.Create(() => Choice.NewChoice1Of2<decimal, Failure<string>>(2.5m));
@@ -34,22 +33,22 @@ namespace FunctionalExtensions.Tests.Validation
 
             var errors = new List<string>();
             Action<Failure<string>> callbackNone = errors.AddRange;
-            Action<decimal> callbackSome = x => Assert.Fail();
+            Action<decimal> callbackSome = x => Assert.True(false);
 
             ValidationWithResultApplicativeFunctor(d1, ex2, callbackSome, callbackNone);
-            Assert.That(errors, Is.EquivalentTo(new[] {"Error2"}));
+            Assert.Equal(new[] { "Error2" }, errors);
 
             errors.Clear();
             ValidationWithResultApplicativeFunctor(ex1, d1, callbackSome, callbackNone);
-            Assert.That(errors, Is.EquivalentTo(new[] { "Error1" }));
+            Assert.Equal(new[] { "Error1" }, errors);
 
             errors.Clear();
             ValidationWithResultApplicativeFunctor(ex1, ex2, callbackSome, callbackNone);
-            Assert.That(errors, Is.EquivalentTo(new[] { "Error1", "Error2" }));
+            Assert.Equal(new[] { "Error1", "Error2" }, errors);
 
             errors.Clear();
             ValidationWithResultApplicativeFunctor(d1, zero, callbackSome, callbackNone);
-            Assert.That(errors, Is.EquivalentTo(new[] { "Cannot devide by zero." }));
+            Assert.Equal(new[] { "Cannot devide by zero." }, errors);
         }
 
         private static void ValidationWithResultApplicativeFunctor(Func<Choice<decimal, Failure<string>>> readdecimal1, Func<Choice<decimal, Failure<string>>> readdecimal2, Action<decimal> callBackSome, Action<Failure<string>> callBackNone)
@@ -63,14 +62,15 @@ namespace FunctionalExtensions.Tests.Validation
                 .Match(callBackSome, callBackNone);
         }
 
-        [TestCase(null, "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be null", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
-        [TestCase("al-Chwarizmi", null, "M", false, new[] { "forename cannot be null", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
-        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", null, false, new[] { "gender cannot be null", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
-        [TestCase(null, null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be null", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
-        [TestCase("kukku mukku", null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be kukku mukku", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
-        [TestCase("kukku mukku", "friedrich", null, false, new[] { "gender cannot be null", "forename cannot be friedrich", "surname cannot be kukku mukku", "forename must start with \'A\'", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
-        [TestCase("kukku mukku", "friedrich", "sdfsdffsdfd", false, new[] { "forename cannot be friedrich", "surname cannot be kukku mukku", "gender must be \'M\' or \'F\'", "forename must start with \'A\'", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
-        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "sdfsdf", false, new[] { "gender must be \'M\' or \'F\'", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
+        [Theory]
+        [InlineData(null, "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be null", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
+        [InlineData("al-Chwarizmi", null, "M", false, new[] { "forename cannot be null", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
+        [InlineData("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", null, false, new[] { "gender cannot be null", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
+        [InlineData(null, null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be null", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
+        [InlineData("kukku mukku", null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be kukku mukku", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
+        [InlineData("kukku mukku", "friedrich", null, false, new[] { "gender cannot be null", "forename cannot be friedrich", "surname cannot be kukku mukku", "forename must start with \'A\'", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
+        [InlineData("kukku mukku", "friedrich", "sdfsdffsdfd", false, new[] { "forename cannot be friedrich", "surname cannot be kukku mukku", "gender must be \'M\' or \'F\'", "forename must start with \'A\'", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
+        [InlineData("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "sdfsdf", false, new[] { "gender must be \'M\' or \'F\'", "Line1 is empty but Line2 is not", "Post code can't be null", "Product name can't be null", "Cost for product 'Axt' can't be negative" })]
         public void Validator_Customer_RainyDay_Test(string surname, string forename, string gender, bool isValid, string[] errors)
         {
             var customer = new Customer
@@ -111,15 +111,15 @@ namespace FunctionalExtensions.Tests.Validation
                 select customer;
 
             result.Match(
-                x => Assert.That(isValid),
+                x => Assert.True(isValid),
                 err =>
                 {
-                    Assert.That(!isValid);
-                    Assert.That(err, Is.EquivalentTo(errors));
+                    Assert.False(isValid);
+                    Assert.Equal(errors.OrderBy(e => e), err.OrderBy(e => e));
                 });
         }
 
-        [Test]
+        [Fact]
         public void Validator_Customer_HappyDay_Test()
         {
             var customer = new Customer
@@ -169,11 +169,11 @@ namespace FunctionalExtensions.Tests.Validation
                 select customer;
 
             result.Match(
-                x => Assert.Pass(),
-                err => Assert.Fail());
+                x => Assert.True(true),
+                err => Assert.True(false));
         }
 
-        [Test]
+        [Fact]
         public void Validator_Address_Null_Test()
         {
             var customer = new Customer
@@ -197,7 +197,8 @@ namespace FunctionalExtensions.Tests.Validation
 
             result.Match(
                 customer1 => { },
-                errors => Assert.That(errors.ToList(), Is.EquivalentTo(new[] { "Address cannot be null", "Surname can't be null", "Orders cannot be NULL" })));
+                errors => Assert.Equal(new[] { "Address cannot be null", "Orders cannot be NULL", "Surname can't be null" }, errors.OrderBy(e => e).ToList())
+            );
         }
 
         static Choice<Address, Failure<string>> ValidateAddress(Address address)
