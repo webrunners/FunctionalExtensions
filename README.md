@@ -1,5 +1,8 @@
 Functional Extensions for C#
 ====================
+
+[![Bulid status](https://ci.appveyor.com/api/projects/status/3gmwp78e7pcmaa57?svg=true)](https://ci.appveyor.com/project/cvk77/functionalextensions)
+
 This project includes types and higher-order functions adopted from functional programming.
 ### Table of contents
 * [Option&lt;T&gt;](https://github.com/webrunners/FunctionalExtensions/blob/develop/README.md#optiont)  
