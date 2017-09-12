@@ -13,7 +13,8 @@
     <PackageProjectUrl>https://github.com/webrunners/FunctionalExtensions</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/webrunners/FunctionalExtensions/blob/develop/LICENSE.txt</PackageLicenseUrl>
     <PackageTags>FP Option Choice Maybe Either C# .Net Functional Monad</PackageTags>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>- Added .NET Core compatibility
+- Extracted validation to a separate package: FunctionalExtensions.Validation</PackageReleaseNotes>
     <Version>1.4.0</Version>
     <RepositoryUrl></RepositoryUrl>
     <RepositoryType></RepositoryType>

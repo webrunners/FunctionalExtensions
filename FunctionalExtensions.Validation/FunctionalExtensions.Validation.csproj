@@ -16,6 +16,7 @@
     <PackageLicenseUrl>https://github.com/webrunners/FunctionalExtensions/blob/develop/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/webrunners/FunctionalExtensions</PackageProjectUrl>
     <PackageTags>FP C# .Net Functional Validation Monad</PackageTags>
+    <PackageReleaseNotes>Extracted validation from main package FunctionalExtensions.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
