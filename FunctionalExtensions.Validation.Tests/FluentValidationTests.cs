@@ -39,13 +39,17 @@ namespace FunctionalExtensions.Validation.Tests
                 .AndSelect(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
                 .Result;
 
-            result.Match(
-                x => Assert.True(isValid),
+            var valid = result.Match(
+                x => true,
                 err =>
                 {
-                    Assert.False(isValid);
                     Assert.Equal(errors.OrderBy(e => e), err.OrderBy(e => e));
-                });
+                    return false;
+                }
+            );
+
+            Assert.Equal(valid, isValid);
+            
         }
 
         [Fact]
@@ -62,10 +66,17 @@ namespace FunctionalExtensions.Validation.Tests
                 .AndSelect(x => x.Gender).Fulfills(x => x.ToUpper() == "M" || x.ToUpper() == "F", "gender must be \'M\' or \'F\'")
                 .Result;
 
-            result.Match(
-                x => Assert.True(false),
-                err => Assert.Equal(new[] { "customer cannot be null" }, err)
+            var valid = result.Match(
+                x => true,
+                err =>
+                {
+                    Assert.Equal(new[] {"customer cannot be null"}, err);
+                    return false;
+                }
             );
+
+            Assert.False(valid);
+
         }
 
         [Fact]
@@ -79,56 +90,88 @@ namespace FunctionalExtensions.Validation.Tests
                 .And.Fulfills(x => x.StartsWith("Hello"), "must start with \'Hello\'")
                 .Result;
 
-            result.Match(
-                x => Assert.True(false),
-                err => Assert.Equal(new[] { "max length 5", "must start with \'Hello\'" }, err)
+            var valid = result.Match(
+                x => true,
+                err =>
+                {
+                    Assert.Equal(new[] {"max length 5", "must start with \'Hello\'"}, err);
+                    return false;
+                }
             );
+
+            Assert.False(valid);
+
+
         }
 
         [Fact]
         public void Validate_IsNotNull_Test()
         {
-            Validate
+
+            var valid1 = Validate
                 .That((Customer)null)
                 .IsNotNull("customer not null")
                 .AndSelect(x => x.Address)
                 .IsNotNull("adresse not null")
                 .Result
                 .Match(
-                    x => Assert.True(false),
-                    err => Assert.Equal(new[] { "customer not null" }, err)
+                    x => true,
+                    err =>
+                    {
+                        Assert.Equal(new[] {"customer not null"}, err);
+                        return false;
+                    }
                 );
 
-            Validate.That((Customer)null)
+            Assert.False(valid1);
+
+            var valid2 = Validate.That((Customer) null)
                 .IsNotNull("not null")
                 .Result
                 .Match(
-                    x => Assert.True(false),
-                    err => Assert.Equal(new[] { "not null", }, err)
+                    x => true,
+                    err =>
+                    {
+                        Assert.Equal(new[] {"not null",}, err);
+                        return false;
+                    }
                 );
 
-            ValidateWithErrorType<string>.That(new Customer())
+            Assert.False(valid2);
+
+            var valid3 = ValidateWithErrorType<string>.That(new Customer())
                 .IsNotNull("not null")
                 .Result
                 .Match(
-                    x => Assert.True(true),
-                    err => Assert.True(false)
+                    x => true,
+                    err => false
                 );
+
+            Assert.True(valid3);
+
         }
 
         [Fact]
         public void Validate_NotNull_Fulfills_Test()
         {
-            ValidateWithErrorType<Error>
+            var valid = ValidateWithErrorType<Error>
                 .That(new Customer { Forename = null })
                 .IsNotNull(Error.ShouldNotBeNull)
                 .AndSelect(x => x.Forename).IsNotNull(Error.ForenameShouldNotBeNull)
                 .AndSelect(x => x.Forename).Fulfills(x => x.Length < 10, Error.LengthShouldBeSmallerThan10)
                 .Result.Match(
-                    x => Assert.True(false),
-                    err => Assert.Equal(new[] { Error.ForenameShouldNotBeNull }, err)
+                    x => true,
+                    err =>
+                    {
+                        Assert.Equal(new[] {Error.ForenameShouldNotBeNull}, err);
+                        return false;
+                    }
                 );
+
+            Assert.False(valid);
+
         }
+
 
         enum Error
         {
@@ -142,24 +185,38 @@ namespace FunctionalExtensions.Validation.Tests
         {
             var customer = new Customer();
 
-            Validate
+            var valid1 = Validate
                 .That(customer).IsNotNull("customer should not be null")
                 .AndSelect(x => customer.Address)
                 .Fulfills(x => x.Postcode.Length > 3, "length of postcode should be at least 4", x => "postcode cannot be null")
                 .Result
                 .Match(
-                    x => Assert.True(false),
-                    err => Assert.Equal(new[]{"postcode cannot be null"}, err)
+                    x => true,
+                    err =>
+                    {
+                        Assert.Equal(new[] {"postcode cannot be null"}, err);
+                        return false;
+                    }
                 );
 
-            Validate
+            Assert.False(valid1);
+
+
+            var valid2 = Validate
                 .That((Customer) null).IsNotNull("not null")
                 .And.Fulfills(x => x.Address != null, "address not null", x => "address field should be accessible") // should cause exception that will be caught
                 .Result
                 .Match(
-                    x => Assert.True(false),
-                    err => Assert.Equal(new[] { "not null", "address field should be accessible" }, err)
+                    x => true,
+                    err =>
+                    {
+                        Assert.Equal(new[] {"not null", "address field should be accessible"}, err);
+                        return false;
+                    }
                 );
+
+            Assert.False(valid2);
+
         }
 
         [Fact]
@@ -167,7 +224,7 @@ namespace FunctionalExtensions.Validation.Tests
         {
             var args = new List<string> {"1", "2", "3" };
 
-            Validate
+            var valid = Validate
                 .That(args).IsNotNull("args should not be null")
                 .And.Fulfills(x => x.Count > 4, "args should have 4 items")
                 .AndSelect(x => x.ElementAt(0)).Fulfills(x => x == "0", x => String.Format("first element should be 0 but is {0}", x))
@@ -175,9 +232,21 @@ namespace FunctionalExtensions.Validation.Tests
                 .AndSelect(x => x.ElementAt(100)).Fulfills(x => x == "99", "100th item should be 99", x => "there should be a 100th item")
                 .Result
                 .Match(
-                    x => Assert.True(false),
-                    err => Assert.Equal(new[] { "args should have 4 items", "first element should be 0 but is 1", "there should be a 100th item" }, err)
+                    x => true,
+                    err =>
+                    {
+                        Assert.Equal(
+                            new[]
+                            {
+                                "args should have 4 items", "first element should be 0 but is 1",
+                                "there should be a 100th item"
+                            }, err);
+                        return false;
+                    }
                 );
+
+            Assert.False(valid);
+
         }
     }
 }
