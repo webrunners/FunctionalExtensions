@@ -9,40 +9,27 @@ namespace FunctionalExtensions
     /// <typeparam name="T">Type of the contained value</typeparam>
     public struct Option<T>
     {
-        private readonly OptionType _tag;
         private readonly T _value;
 
         internal Option(T value)
         {
             _value = value;
-            _tag = value != null ? OptionType.Some : OptionType.None;
+            Tag = value != null ? OptionType.Some : OptionType.None;
         }
 
         internal Option(Unit unit)
         {
             _value = default(T);
-            _tag = OptionType.None;
+            Tag = OptionType.None;
         }
 
         /// <summary>
         /// Specifies wether the option is Some or None
         /// </summary>
-        public OptionType Tag { get { return _tag; } }
+        public OptionType Tag { get; }
 
-        public bool IsNone { get { return Tag == OptionType.None; } }
-
-        public bool IsSome { get { return Tag == OptionType.Some; } }
-
-        internal bool MatchNone()
-        {
-            return Tag == OptionType.None;
-        }
-
-        internal bool MatchSome(out T value)
-        {
-            value = Tag == OptionType.Some ? _value : default(T);
-            return Tag == OptionType.Some;
-        }
+        public bool IsNone => Tag == OptionType.None;
+        public bool IsSome => Tag == OptionType.Some;
 
         /// <summary>
         /// Pattern matching for the option type
@@ -55,23 +42,6 @@ namespace FunctionalExtensions
         {
             return Tag == OptionType.Some ? onSome(_value) : onNone();
         }
-
-        //public override int GetHashCode()
-        //{
-        //    return Tag == OptionType.Some ? EqualityComparer<T>.Default.GetHashCode(_value) : EqualityComparer<T>.Default.GetHashCode(default(T));
-        //}
-
-        //private bool EqualsOption(Option<T> other)
-        //{
-        //    return Tag == OptionType.Some && other.Tag == OptionType.Some && Equals(_value, other._value)
-        //        || Tag == OptionType.None && other.Tag == OptionType.None;
-        //}
-
-        //public override bool Equals(object obj)
-        //{
-        //    return obj == null && Tag == OptionType.None
-        //        || obj is Option<T> && EqualsOption((Option<T>)obj);
-        //}
 
         public bool Equals(Option<T> other)
         {

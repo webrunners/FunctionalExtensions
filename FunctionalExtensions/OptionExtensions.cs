@@ -6,15 +6,19 @@ namespace FunctionalExtensions
     {
         public static Option<TResult> Bind<T, TResult>(this Option<T> source, Func<T, Option<TResult>> selector)
         {
-            T value;
-            return source.MatchSome(out value) ? selector(value) : Option.None<TResult>();
+            return source.Match(
+                onSome: selector,
+                onNone: Option.None<TResult>
+            );
         }
 
         // fmap
         public static Option<TResult> Select<T, TResult>(this Option<T> source, Func<T, TResult> selector)
         {
-            T value;
-            return source.MatchSome(out value) ? Option.Some(selector(value)) : Option.None<TResult>();
+            return source.Match(
+                onSome: value => Option.Some(selector(value)),
+                onNone: Option.None<TResult>
+            );
         }
 
         public static Option<TResult> Apply<T, TResult>(this Option<Func<T, TResult>> func, Option<T> opt)

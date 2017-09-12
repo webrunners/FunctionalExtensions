@@ -30,22 +30,6 @@ namespace FunctionalExtensions
 
         public ChoiceType Tag { get; }
 
-        internal bool MatchChoice1Of2(out T1 value)
-        {
-            value = IsChoice1Of2 
-                ? _choice1Of2 
-                : default(T1);
-            return IsChoice1Of2;
-        }
-
-        internal bool MatchChoice2Of2(out T2 value)
-        {
-            value = IsChoice2Of2 
-                ? _choice2Of2 
-                : default(T2);
-            return IsChoice2Of2;
-        }
-
         [Obsolete("Match is deprecated, please use overload of Match: TResult Match<TResult>(Func<T1, TResult> onChoice1Of2, Func<T2, TResult> onChoice2Of2) instead.")]
         public void Match(Action<T1> onChoice1Of2, Action<T2> onChoice2Of2)
         {
