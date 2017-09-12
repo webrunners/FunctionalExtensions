@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using FunctionalExtensions.Lambda;
 using Xunit;
 
@@ -9,16 +10,13 @@ namespace FunctionalExtensions.Tests
         [Fact]
         public void ValidationWithChoiceMonad_HappyDay_Test()
         {
-            var result = 0.0m;
             var d1 = Fun.Create(() => Choice.NewChoice1Of2<decimal, string>(2.5m));
             var d2 = Fun.Create(() => Choice.NewChoice1Of2<decimal, string>(2.5m));
 
-            var callbackSome = Act.Create((decimal x) => result = x);
+            var callbackSome = Fun.Create((decimal x) => x.ToString("#.00", CultureInfo.InvariantCulture));
+            var callbackNone = Fun.Create((string x) => string.Empty);
 
-            var callbackNone = new Action<string>(x => Assert.True(false));
-
-            ValidationWithChoiceMonad(d1, d2, callbackSome, callbackNone);
-            Assert.Equal(100, result);
+            Assert.Equal("100.00", ValidationWithChoiceMonad(d1, d2, callbackSome, callbackNone));
         }
 
         [Fact]
@@ -29,29 +27,12 @@ namespace FunctionalExtensions.Tests
             var ex2 = Fun.Create(() => Choice.NewChoice2Of2<decimal, string>("Error2"));
             var zero = Fun.Create(() => Choice.NewChoice1Of2<decimal, string>(0.0m));
 
-            var error = String.Empty;
-            Action<string> callbackNone = s => error = s;
-            Action<decimal> callbackSome = x => Assert.True(false);
+            var callbackNone = Fun.Create((string s) => s);
+            var callbackSome = Fun.Create((decimal x) => string.Empty);
 
-            ValidationWithChoiceMonad(d1, ex2, callbackSome, callbackNone);
-            Assert.Equal("Error2", error);
-
-            ValidationWithChoiceMonad(ex1, d1, callbackSome, callbackNone);
-            Assert.Equal("Error1", error);
-
-            ValidationWithChoiceMonad(d1, zero, callbackSome, callbackNone);
-            Assert.Equal("Cannot Devide by zero.", error);
-        }
-
-        private static void ValidationWithChoiceMonad(Func<Choice<decimal, string>> readdecimal1, Func<Choice<decimal, string>> readdecimal2, Action<decimal> callBackSome, Action<string> callBackNone)
-        {
-            (
-                from v1 in readdecimal1()
-                from v2 in readdecimal2()
-                from devisionResult in Division.Divide(v1, v2).ToChoice("Cannot Devide by zero.")
-                select devisionResult*100
-            )
-                .Match(callBackSome, callBackNone);
+            Assert.Equal("Error2", ValidationWithChoiceMonad(d1, ex2, callbackSome, callbackNone));
+            Assert.Equal("Error1", ValidationWithChoiceMonad(ex1, d1, callbackSome, callbackNone));
+            Assert.Equal("Cannot divide by zero.", ValidationWithChoiceMonad(d1, zero, callbackSome, callbackNone));
         }
 
         [Fact]
@@ -88,15 +69,32 @@ namespace FunctionalExtensions.Tests
             Assert.Equal("Choice1Of2<String, Int32>()", new Choice<string, int>().ToString());
         }
 
-        private static bool ChoiceEquals<T1, T2>(Choice<T1, T2> choice5, Choice<T1, T2> choice6)
+        private static bool ChoiceEquals<T1, T2>(Choice<T1, T2> first, Choice<T1, T2> second)
         {
-            var b = false;
-            choice5.Match(
-                x1 => choice6.Match(
-                    x2 => b = x1.Equals(x2),
-                    _ => { }),
-                _ => { });
-            return b;
+            return first.Match(
+                onChoice1Of2: f1 => second.Match(
+                    onChoice1Of2: s1 => f1.Equals(s1),
+                    onChoice2Of2: s2 => false
+                ),
+                onChoice2Of2: f2 => false
+            );
         }
+
+        private static string ValidationWithChoiceMonad(
+            Func<Choice<decimal, string>> readdecimal1,
+            Func<Choice<decimal, string>> readdecimal2,
+            Func<decimal, string> onSome,
+            Func<string, string> onNone
+        )
+        {
+            return (
+                    from v1 in readdecimal1()
+                    from v2 in readdecimal2()
+                    from divisionResult in Division.Divide(v1, v2).ToChoice("Cannot divide by zero.")
+                    select divisionResult * 100
+                )
+                .Match(onSome, onNone);
+        }
+
     }
 }
