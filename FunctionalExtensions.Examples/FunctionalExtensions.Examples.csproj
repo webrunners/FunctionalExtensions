@@ -6,9 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FunctionalExtensions" Version="1.4.0" />
+    <PackageReference Include="FunctionalExtensions.Validation" Version="1.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EnumExtensions\EnumExtensions.csproj" />
-    <ProjectReference Include="..\FunctionalExtensions.Validation\FunctionalExtensions.Validation.csproj" />
-    <ProjectReference Include="..\FunctionalExtensions\FunctionalExtensions.csproj" />
   </ItemGroup>
 
 </Project>
