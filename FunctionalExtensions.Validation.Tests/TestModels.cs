@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FunctionalExtensions.Tests.Validation
+namespace FunctionalExtensions.Validation.Tests
 {
     internal class Address
     {

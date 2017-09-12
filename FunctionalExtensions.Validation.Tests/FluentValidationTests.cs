@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using FunctionalExtensions.Validation.Fluent;
 using Xunit;
 
-namespace FunctionalExtensions.Tests.Validation.Fluent
+namespace FunctionalExtensions.Validation.Tests
 {
     public class FluentValidationTests
     {

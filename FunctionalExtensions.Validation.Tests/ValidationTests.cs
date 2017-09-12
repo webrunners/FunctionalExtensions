@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using FunctionalExtensions.Lambda;
-using FunctionalExtensions.Validation;
 using Xunit;
 
-namespace FunctionalExtensions.Tests.Validation
+namespace FunctionalExtensions.Validation.Tests
 {
     public class ValidationTests
     {

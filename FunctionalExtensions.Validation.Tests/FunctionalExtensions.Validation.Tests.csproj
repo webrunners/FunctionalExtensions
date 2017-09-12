@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EnumExtensions\EnumExtensions.csproj" />
+    <ProjectReference Include="..\FunctionalExtensions.Validation\FunctionalExtensions.Validation.csproj" />
     <ProjectReference Include="..\FunctionalExtensions\FunctionalExtensions.csproj" />
   </ItemGroup>
 

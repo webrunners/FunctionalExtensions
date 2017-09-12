@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
+    <ApplicationIcon />
+    <OutputTypeEx>library</OutputTypeEx>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EnumExtensions\EnumExtensions.csproj" />
-    <ProjectReference Include="..\FunctionalExtensions.Validation\FunctionalExtensions.Validation.csproj" />
     <ProjectReference Include="..\FunctionalExtensions\FunctionalExtensions.csproj" />
   </ItemGroup>
 

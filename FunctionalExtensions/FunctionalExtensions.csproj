@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/webrunners/FunctionalExtensions</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/webrunners/FunctionalExtensions/blob/develop/LICENSE.txt</PackageLicenseUrl>
     <PackageTags>FP Option Choice Maybe Either C# .Net Functional Monad</PackageTags>
-    <PackageReleaseNotes>Added dotnetcore compatibility</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <Version>1.3.1</Version>
     <RepositoryUrl></RepositoryUrl>
     <RepositoryType></RepositoryType>

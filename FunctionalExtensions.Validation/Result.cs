@@ -2,7 +2,6 @@
 
 namespace FunctionalExtensions.Validation
 {
-    [Obsolete("The Validation framework will be moved to another package.")]
     public static class Result
     {
         public static Choice<T, Failure<TError>> Success<T, TError>(T value)
