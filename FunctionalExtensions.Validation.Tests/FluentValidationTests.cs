@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using FunctionalExtensions.Validation.Fluent;
-using NUnit.Framework;
+using Xunit;
 
-namespace FunctionalExtensions.Tests.Validation.Fluent
+namespace FunctionalExtensions.Validation.Tests
 {
-    [TestFixture]
     public class FluentValidationTests
     {
-        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "M", true, new string[] { })]
-        [TestCase(null, "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be null" })]
-        [TestCase("kukku mukku", "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be kukku mukku" })]
-        [TestCase("al-Chwarizmi", null, "M", false, new[] { "forename cannot be null" })]
-        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", null, false, new[] { "gender cannot be null" })]
-        [TestCase(null, null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be null" })]
-        [TestCase("kukku mukku", null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be kukku mukku" })]
-        [TestCase("kukku mukku", "friedrich", null, false, new[] { "gender cannot be null", "forename connot be friedrich", "surname cannot be kukku mukku", "forename must start with an \'A\'" })]
-        [TestCase("kukku mukku", "friedrich", "sdfsdffsdfd", false, new[] { "forename connot be friedrich", "surname cannot be kukku mukku", "gender must be \'M\' or \'F\'", "forename must start with an \'A\'" })]
-        [TestCase("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "sdfsdf", false, new[] { "gender must be \'M\' or \'F\'" })]
+        [Theory]
+        [InlineData("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "M", true, new string[] { })]
+        [InlineData(null, "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be null" })]
+        [InlineData("kukku mukku", "Abu Dscha'far Muhammad ibn Musa", "M", false, new[] { "surname cannot be kukku mukku" })]
+        [InlineData("al-Chwarizmi", null, "M", false, new[] { "forename cannot be null" })]
+        [InlineData("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", null, false, new[] { "gender cannot be null" })]
+        [InlineData(null, null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be null" })]
+        [InlineData("kukku mukku", null, null, false, new[] { "gender cannot be null", "forename cannot be null", "surname cannot be kukku mukku" })]
+        [InlineData("kukku mukku", "friedrich", null, false, new[] { "gender cannot be null", "forename connot be friedrich", "surname cannot be kukku mukku", "forename must start with an \'A\'" })]
+        [InlineData("kukku mukku", "friedrich", "sdfsdffsdfd", false, new[] { "forename connot be friedrich", "surname cannot be kukku mukku", "gender must be \'M\' or \'F\'", "forename must start with an \'A\'" })]
+        [InlineData("al-Chwarizmi", "Abu Dscha'far Muhammad ibn Musa", "sdfsdf", false, new[] { "gender must be \'M\' or \'F\'" })]
         public void Validate_Test(string surname, string forename, string gender, bool isValid, string[] errors)
         {
             var customer = new Customer
@@ -41,15 +40,15 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .Result;
 
             result.Match(
-                x => Assert.That(isValid),
+                x => Assert.True(isValid),
                 err =>
                 {
-                    Assert.That(!isValid);
-                    Assert.That(err, Is.EquivalentTo(errors));
+                    Assert.False(isValid);
+                    Assert.Equal(errors.OrderBy(e => e), err.OrderBy(e => e));
                 });
         }
 
-        [Test]
+        [Fact]
         public void Validate_Customer_Null()
         {
             var result = Validate
@@ -64,11 +63,12 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .Result;
 
             result.Match(
-                x => Assert.Fail(),
-                err => Assert.That(err, Is.EquivalentTo(new[] { "customer cannot be null" })));
+                x => Assert.True(false),
+                err => Assert.Equal(new[] { "customer cannot be null" }, err)
+            );
         }
 
-        [Test]
+        [Fact]
         public void Validate_Instance_Test()
         {
             const string s = "hello World";
@@ -80,11 +80,12 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .Result;
 
             result.Match(
-                x => Assert.Fail(),
-                err => Assert.That(err, Is.EquivalentTo(new[] { "max length 5", "must start with \'Hello\'" })));
+                x => Assert.True(false),
+                err => Assert.Equal(new[] { "max length 5", "must start with \'Hello\'" }, err)
+            );
         }
 
-        [Test]
+        [Fact]
         public void Validate_IsNotNull_Test()
         {
             Validate
@@ -94,25 +95,28 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .IsNotNull("adresse not null")
                 .Result
                 .Match(
-                    x => Assert.Fail(),
-                    err => Assert.That(err, Is.EquivalentTo(new[] { "customer not null" })));
+                    x => Assert.True(false),
+                    err => Assert.Equal(new[] { "customer not null" }, err)
+                );
 
             Validate.That((Customer)null)
                 .IsNotNull("not null")
                 .Result
                 .Match(
-                    x => Assert.Fail(),
-                    err => Assert.That(err, Is.EquivalentTo(new[] { "not null", })));
+                    x => Assert.True(false),
+                    err => Assert.Equal(new[] { "not null", }, err)
+                );
 
             ValidateWithErrorType<string>.That(new Customer())
                 .IsNotNull("not null")
                 .Result
                 .Match(
-                    x => Assert.Pass(),
-                    err => Assert.Fail());
+                    x => Assert.True(true),
+                    err => Assert.True(false)
+                );
         }
 
-        [Test]
+        [Fact]
         public void Validate_NotNull_Fulfills_Test()
         {
             ValidateWithErrorType<Error>
@@ -121,8 +125,9 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .AndSelect(x => x.Forename).IsNotNull(Error.ForenameShouldNotBeNull)
                 .AndSelect(x => x.Forename).Fulfills(x => x.Length < 10, Error.LengthShouldBeSmallerThan10)
                 .Result.Match(
-                    x => Assert.Fail(),
-                    err => Assert.That(err, Is.EquivalentTo(new[] { Error.ForenameShouldNotBeNull })));
+                    x => Assert.True(false),
+                    err => Assert.Equal(new[] { Error.ForenameShouldNotBeNull }, err)
+                );
         }
 
         enum Error
@@ -132,7 +137,7 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
             ForenameShouldNotBeNull
         }
 
-        [Test]
+        [Fact]
         public void NullReferenceException_Test()
         {
             var customer = new Customer();
@@ -143,19 +148,21 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .Fulfills(x => x.Postcode.Length > 3, "length of postcode should be at least 4", x => "postcode cannot be null")
                 .Result
                 .Match(
-                    x => Assert.Fail(),
-                    err => Assert.That(err, Is.EquivalentTo(new[]{"postcode cannot be null"})));
+                    x => Assert.True(false),
+                    err => Assert.Equal(new[]{"postcode cannot be null"}, err)
+                );
 
             Validate
                 .That((Customer) null).IsNotNull("not null")
                 .And.Fulfills(x => x.Address != null, "address not null", x => "address field should be accessible") // should cause exception that will be caught
                 .Result
                 .Match(
-                    x => Assert.Fail(),
-                    err => Assert.That(err, Is.EquivalentTo(new[] { "not null", "address field should be accessible" })));
+                    x => Assert.True(false),
+                    err => Assert.Equal(new[] { "not null", "address field should be accessible" }, err)
+                );
         }
 
-        [Test]
+        [Fact]
         public void Enumerable_Tests()
         {
             var args = new List<string> {"1", "2", "3" };
@@ -168,8 +175,9 @@ namespace FunctionalExtensions.Tests.Validation.Fluent
                 .AndSelect(x => x.ElementAt(100)).Fulfills(x => x == "99", "100th item should be 99", x => "there should be a 100th item")
                 .Result
                 .Match(
-                    x => Assert.Fail(),
-                    err => Assert.That(err, Is.EquivalentTo(new[] { "args should have 4 items", "first element should be 0 but is 1", "there should be a 100th item" })));
+                    x => Assert.True(false),
+                    err => Assert.Equal(new[] { "args should have 4 items", "first element should be 0 but is 1", "there should be a 100th item" }, err)
+                );
         }
     }
 }

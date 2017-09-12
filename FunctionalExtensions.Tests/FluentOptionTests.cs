@@ -1,9 +1,9 @@
 ﻿using FunctionalExtensions.FluentOption;
 using FunctionalExtensions.Lambda;
-using NUnit.Framework;
 using System;
+using Xunit;
 
-namespace FunctionalExtensions.Tests.FluentOption
+namespace FunctionalExtensions.Tests
 {
     internal static class OptionExtensions
     {
@@ -23,10 +23,9 @@ namespace FunctionalExtensions.Tests.FluentOption
         }
     }
 
-    [TestFixture]
     public class FluentOptionTests
     {
-        [Test]
+        [Fact]
         public void From_Result_Test1()
         {
             var readInt = Fun.Create(() => Option.Some(1));
@@ -35,11 +34,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .From(readInt)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(1)),
-                    Assert.Fail);
+                    x => Assert.Equal(1, x),
+                    () => Assert.True(false)
+                );
         }
 
-        [Test]
+        [Fact]
         public void From_Result_Test2()
         {
             var readInt1 = Fun.Create(() => Option.Some(1));
@@ -50,19 +50,21 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .From(readInt2)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(2)),
-                    Assert.Fail);
+                    x => Assert.Equal(2, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(Option.None<int>)
                 .From(readInt2)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.Fail(),
-                    Assert.Pass);
+                    x => Assert.True(false),
+                    () => Assert.True(true)
+                );
         }
 
-        [Test]
+        [Fact]
         public void From_Result_Test3()
         {
             var readInt1 = Fun.Create(() => Option.Some(1));
@@ -75,8 +77,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .From(readInt3)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(3)),
-                    Assert.Fail);
+                    x => Assert.Equal(3, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(Option.None<decimal>)
@@ -84,11 +87,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .From(readInt3)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.Fail(),
-                    Assert.Pass);
+                    x => Assert.True(false),
+                    () => Assert.True(true)
+                );
         }
 
-        [Test]
+        [Fact]
         public void Select_Test()
         {
             var readInt1 = Fun.Create(() => Option.Some(5));
@@ -101,8 +105,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Select(x => add(x, 1))
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(6)),
-                    Assert.Fail);
+                    x => Assert.Equal(6, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(readInt1)
@@ -110,8 +115,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Select(add)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(12)),
-                    Assert.Fail);
+                    x => Assert.Equal(12, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(readInt1)
@@ -119,11 +125,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Select(add)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.Fail(),
-                    Assert.Pass);
+                    x => Assert.True(false),
+                    () => Assert.True(true)
+                );
         }
 
-        [Test]
+        [Fact]
         public void Bind_Test()
         {
             var divide = Fun.Create((int i) =>
@@ -140,11 +147,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Result()
                 .Select(x => x * 100)
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(50m)),
-                    Assert.Fail);
+                    x => Assert.Equal(50m, x),
+                    () => Assert.True(false)
+                );
         }
 
-        [Test]
+        [Fact]
         public void Bind_Test2()
         {
             var divide = Fun.Create((int a, int b) =>
@@ -163,8 +171,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Result()
                 .Select(x => x * 100)
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(25m)),
-                    Assert.Fail);
+                    x => Assert.Equal(25m, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(readInt1)
@@ -173,11 +182,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Result()
                 .Select(x => x * 100)
                 .MatchForTesting(
-                    x => Assert.Fail(),
-                    Assert.Pass);
+                    x => Assert.True(false),
+                    () => Assert.True(true)
+                );
         }
 
-        [Test]
+        [Fact]
         public void Multiple_Combinations_Test()
         {
             OptionMonad
@@ -190,8 +200,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Bind((x, y) => Option.Some(x + y))
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(5)),
-                    Assert.Fail);
+                    x => Assert.Equal(5, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(() => Option.Some(1))
@@ -205,8 +216,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Select((x, s) => Option.Some(s + x))
                 .Result()
                 .MatchForTesting(
-                    x => Assert.Fail(),
-                    () => { });
+                    x => Assert.True(false),
+                    () => { }
+                );
 
             OptionMonad
                 .From(() => Option.Some(1))
@@ -220,11 +232,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Bind(x => Option.Some(x.ToString()))
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo("8")),
-                    Assert.Fail);
+                    x => Assert.Equal("8", x),
+                    () => Assert.True(false)
+                );
         }
 
-        [Test]
+        [Fact]
         public void From_8x_Test()
         {
             OptionMonad
@@ -239,8 +252,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Bind((x1, x2, x3, x4, x5, x6, x7, x8) => Option.Some(x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8))
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(8)),
-                    Assert.Fail);
+                    x => Assert.Equal(8, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(() => Option.Some(1))
@@ -254,11 +268,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Select((x1, x2, x3, x4, x5, x6, x7, x8) => x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(8)),
-                    Assert.Fail);
+                    x => Assert.Equal(8, x),
+                    () => Assert.True(false)
+                );
         }
 
-        [Test]
+        [Fact]
         public void From_7x_Test()
         {
             OptionMonad
@@ -272,8 +287,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Bind((x1, x2, x3, x4, x5, x6, x7) => Option.Some(x1 + x2 + x3 + x4 + x5 + x6 + x7))
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(7)),
-                    Assert.Fail);
+                    x => Assert.Equal(7, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(() => Option.Some(1))
@@ -286,11 +302,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Select((x1, x2, x3, x4, x5, x6, x7) => x1 + x2 + x3 + x4 + x5 + x6 + x7)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(7)),
-                    Assert.Fail);
+                    x => Assert.Equal(7, x),
+                    () => Assert.True(false)
+                );
         }
 
-        [Test]
+        [Fact]
         public void From_6x_Test()
         {
             OptionMonad
@@ -303,8 +320,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Bind((x1, x2, x3, x4, x5, x6) => Option.Some(x1 + x2 + x3 + x4 + x5 + x6))
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(6)),
-                    Assert.Fail);
+                    x => Assert.Equal(6, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(() => Option.Some(1))
@@ -316,11 +334,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Select((x1, x2, x3, x4, x5, x6) => x1 + x2 + x3 + x4 + x5 + x6)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(6)),
-                    Assert.Fail);
+                    x => Assert.Equal(6, x),
+                    () => Assert.True(false)
+                );
         }
 
-        [Test]
+        [Fact]
         public void From_5x_Test()
         {
             OptionMonad
@@ -332,8 +351,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Bind((x1, x2, x3, x4, x5) => Option.Some(x1 + x2 + x3 + x4 + x5))
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(5)),
-                    Assert.Fail);
+                    x => Assert.Equal(5, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(() => Option.Some(1))
@@ -344,11 +364,12 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Select((x1, x2, x3, x4, x5) => x1 + x2 + x3 + x4 + x5)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(5)),
-                    Assert.Fail);
+                    x => Assert.Equal(5, x),
+                    () => Assert.True(false)
+                );
         }
 
-        [Test]
+        [Fact]
         public void From_4x_Test()
         {
             OptionMonad
@@ -359,8 +380,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Bind((x1, x2, x3, x4) => Option.Some(x1 + x2 + x3 + x4))
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(4)),
-                    Assert.Fail);
+                    x => Assert.Equal(4, x),
+                    () => Assert.True(false)
+                );
 
             OptionMonad
                 .From(() => Option.Some(1))
@@ -370,8 +392,9 @@ namespace FunctionalExtensions.Tests.FluentOption
                 .Select((x1, x2, x3, x4) => x1 + x2 + x3 + x4)
                 .Result()
                 .MatchForTesting(
-                    x => Assert.That(x, Is.EqualTo(4)),
-                    Assert.Fail);
+                    x => Assert.Equal(4, x),
+                    () => Assert.True(false)
+                );
         }
     }
 }   

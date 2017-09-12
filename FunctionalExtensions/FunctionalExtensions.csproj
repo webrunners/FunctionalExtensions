@@ -1,146 +1,83 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D0B6546E-954B-4014-BF7C-8058B4F97108}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FunctionalExtensions</RootNamespace>
-    <AssemblyName>FunctionalExtensions</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Product>Functional Extensions for C#</Product>
+    <AssemblyVersion>1.3.1.0</AssemblyVersion>
+    <FileVersion>1.3.1.0</FileVersion>
+    <Authors>Leif Battermann, Christoph von Krüchten</Authors>
+    <Company>Webrunners GmbH</Company>
+    <Description>Functions and types for C# adopted from FP e.g. Option, Choice</Description>
+    <Copyright>Copyright 2017 Webrunners GmbH</Copyright>
+    <PackageProjectUrl>https://github.com/webrunners/FunctionalExtensions</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/webrunners/FunctionalExtensions/blob/develop/LICENSE.txt</PackageLicenseUrl>
+    <PackageTags>FP Option Choice Maybe Either C# .Net Functional Monad</PackageTags>
+    <PackageReleaseNotes>- Added .NET Core compatibility
+- Extracted validation to a separate package: FunctionalExtensions.Validation</PackageReleaseNotes>
+    <Version>1.4.0</Version>
+    <RepositoryUrl></RepositoryUrl>
+    <RepositoryType></RepositoryType>
+    <PackageId>FunctionalExtensions</PackageId>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Debug\FunctionalExtensions.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\FunctionalExtensions.XML</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Choice.cs" />
-    <Compile Include="ChoiceExtensions.cs" />
-    <Compile Include="ChoiceType.cs" />
-    <Compile Include="Currying\FunctionExtensions.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FunctionExtensions.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Lambda\Act.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Act.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Lambda\Fun.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Fun.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Linq\OptionExtensions.cs" />
-    <Compile Include="Operators.cs" />
-    <Compile Include="FluentOption\Intermediate3.cs" />
-    <Compile Include="FluentOption\IIntermediate1.cs" />
-    <Compile Include="FluentOption\IIntermediate2.cs" />
-    <Compile Include="FluentOption\IIntermediate3.cs" />
-    <Compile Include="FluentOption\IIntermediate4.cs" />
-    <Compile Include="FluentOption\IIntermediate5.cs" />
-    <Compile Include="FluentOption\IIntermediate6.cs" />
-    <Compile Include="FluentOption\IIntermediate7.cs" />
-    <Compile Include="FluentOption\IIntermediate8.cs" />
-    <Compile Include="FluentOption\Intermediate1.cs" />
-    <Compile Include="FluentOption\Intermediate2.cs" />
-    <Compile Include="FluentOption\Intermediate4.cs" />
-    <Compile Include="FluentOption\Intermediate5.cs" />
-    <Compile Include="FluentOption\Intermediate6.cs" />
-    <Compile Include="FluentOption\Intermediate7.cs" />
-    <Compile Include="FluentOption\Intermediate8.cs" />
-    <Compile Include="FluentOption\IResult.cs" />
-    <Compile Include="FluentOption\OptionMonad.cs" />
-    <Compile Include="Option.cs" />
-    <Compile Include="OptionExtensions.cs" />
-    <Compile Include="OptionType.cs" />
-    <Compile Include="Pipeline\ObjectExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SideEffects\SideEffectExtensions.cs" />
-    <Compile Include="Transform\FunctionResultTransformExtensions.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FunctionResultTransformExtensions.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Unit.cs" />
-    <Compile Include="Validation\Failure.cs" />
-    <Compile Include="Validation\Fluent\IIntermediate2A.cs" />
-    <Compile Include="Validation\Fluent\IResult.cs" />
-    <Compile Include="Validation\Fluent\FluentSelectionValidator.cs" />
-    <Compile Include="Validation\Fluent\IIntermediate1.cs" />
-    <Compile Include="Validation\Fluent\IIntermediate2.cs" />
-    <Compile Include="Validation\Fluent\IIntermediate3.cs" />
-    <Compile Include="Validation\Fluent\IIntermediate4.cs" />
-    <Compile Include="Validation\Fluent\Validate.cs" />
-    <Compile Include="Validation\Fluent\FluentValidator.cs" />
-    <Compile Include="Validation\Fluent\ValidateWithErrorType.cs" />
-    <Compile Include="Validation\Result.cs" />
-    <Compile Include="Validation\ResultExtensions.cs" />
-    <Compile Include="Validation\Validator.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Currying\FunctionExtensions.tt">
+    <None Update="Currying\FunctionExtensions.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>FunctionExtensions.cs</LastGenOutput>
     </None>
-    <None Include="Lambda\Act.tt">
+    <None Update="FluentOption\IIntermediate.tt">
+      <LastGenOutput>IIntermediate.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Lambda\Act.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Act.cs</LastGenOutput>
     </None>
-    <None Include="Lambda\Fun.tt">
+    <None Update="Lambda\Fun.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Fun.cs</LastGenOutput>
     </None>
-    <None Include="SolutionItems\FluentGrammar\validate.ebnf" />
-    <None Include="Transform\FunctionResultTransformExtensions.tt">
+    <None Update="Transform\FunctionResultTransformExtensions.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>FunctionResultTransformExtensions.cs</LastGenOutput>
     </None>
   </ItemGroup>
+
   <ItemGroup>
-    <Content Include="SolutionItems\FluentGrammar\Validate.png" />
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
+
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Compile Update="Currying\FunctionExtensions.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FunctionExtensions.tt</DependentUpon>
+    </Compile>
+    <Compile Update="FluentOption\IIntermediate.cs">
+      <DependentUpon>IIntermediate.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Lambda\Act.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Act.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Lambda\Fun.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Fun.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Transform\FunctionResultTransformExtensions.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FunctionResultTransformExtensions.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
+    <ApplicationIcon />
+    <OutputTypeEx>library</OutputTypeEx>
+    <StartupObject />
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.4.0</Version>
+    <Authors>Leif Battermann, Christoph von Krüchten</Authors>
+    <Company>Webrunners GmbH</Company>
+    <Product>Functional Validation Extensions for C#</Product>
+    <Description>Functional validation for C#</Description>
+    <Copyright>Copyright 2017 Webrunners GmbH</Copyright>
+    <PackageLicenseUrl>https://github.com/webrunners/FunctionalExtensions/blob/develop/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/webrunners/FunctionalExtensions</PackageProjectUrl>
+    <PackageTags>FP C# .Net Functional Validation Monad</PackageTags>
+    <PackageReleaseNotes>Extracted validation from main package FunctionalExtensions.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FunctionalExtensions\FunctionalExtensions.csproj" />
+  </ItemGroup>
+
+</Project>

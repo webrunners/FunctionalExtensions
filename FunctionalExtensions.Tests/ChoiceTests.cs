@@ -1,13 +1,12 @@
 ﻿using System;
-using NUnit.Framework;
 using FunctionalExtensions.Lambda;
+using Xunit;
 
 namespace FunctionalExtensions.Tests
 {
-    [TestFixture]
     public class ChoiceTests
     {
-        [Test]
+        [Fact]
         public void ValidationWithChoiceMonad_HappyDay_Test()
         {
             var result = 0.0m;
@@ -16,13 +15,13 @@ namespace FunctionalExtensions.Tests
 
             var callbackSome = Act.Create((decimal x) => result = x);
 
-            var callbackNone = new Action<string>(x => Assert.Fail());
+            var callbackNone = new Action<string>(x => Assert.True(false));
 
             ValidationWithChoiceMonad(d1, d2, callbackSome, callbackNone);
-            Assert.That(result, Is.EqualTo(100));
+            Assert.Equal(100, result);
         }
 
-        [Test]
+        [Fact]
         public void ValidationWithChoiceMonad_RainyDay_Test()
         {
             var d1 = Fun.Create(() => Choice.NewChoice1Of2<decimal, string>(2.5m));
@@ -32,16 +31,16 @@ namespace FunctionalExtensions.Tests
 
             var error = String.Empty;
             Action<string> callbackNone = s => error = s;
-            Action<decimal> callbackSome = x => Assert.Fail();
+            Action<decimal> callbackSome = x => Assert.True(false);
 
             ValidationWithChoiceMonad(d1, ex2, callbackSome, callbackNone);
-            Assert.That(error, Is.EqualTo("Error2"));
+            Assert.Equal("Error2", error);
 
             ValidationWithChoiceMonad(ex1, d1, callbackSome, callbackNone);
-            Assert.That(error, Is.EqualTo("Error1"));
+            Assert.Equal("Error1", error);
 
             ValidationWithChoiceMonad(d1, zero, callbackSome, callbackNone);
-            Assert.That(error, Is.EqualTo("Cannot Devide by zero."));
+            Assert.Equal("Cannot Devide by zero.", error);
         }
 
         private static void ValidationWithChoiceMonad(Func<Choice<decimal, string>> readdecimal1, Func<Choice<decimal, string>> readdecimal2, Action<decimal> callBackSome, Action<string> callBackNone)
@@ -55,7 +54,7 @@ namespace FunctionalExtensions.Tests
                 .Match(callBackSome, callBackNone);
         }
 
-        [Test]
+        [Fact]
         public void Monad_Laws_Test()
         {
             var k = Fun.Create((string x) => Choice.NewChoice1Of2<string, int>(x.ToUpper()));
@@ -64,13 +63,13 @@ namespace FunctionalExtensions.Tests
             var choice1 = Choice.Return<string, int>("hello").Bind(k);
             var choice2 = k("hello");
 
-            Assert.That(ChoiceEquals(choice1, choice2));
+            Assert.True(ChoiceEquals(choice1, choice2));
 
             // Right Identity
             var m = Choice.Return<string, int>("hello");
             var choice4 = m.Bind(Choice.Return<string, int>);
 
-            Assert.That(ChoiceEquals(m, choice4));
+            Assert.True(ChoiceEquals(m, choice4));
 
             // Associativity
             var h = Fun.Create((string x) => Choice.NewChoice1Of2<string, int>(x + x));
@@ -78,15 +77,15 @@ namespace FunctionalExtensions.Tests
             var choice5 = m.Bind(x1 => k(x1).Bind(h));
             var choice6 = m.Bind(k).Bind(h);
 
-            Assert.That(ChoiceEquals(choice5, choice6));
+            Assert.True(ChoiceEquals(choice5, choice6));
         }
 
-        [Test]
+        [Fact]
         public void ToString_Test()
         {
-            Assert.That(Choice.NewChoice1Of2<string, int>("42").ToString(), Is.EqualTo("Choice1Of2<String, Int32>(42)"));
-            Assert.That(Choice.NewChoice2Of2<string, int>(42).ToString(), Is.EqualTo("Choice2Of2<String, Int32>(42)"));
-            Assert.That(new Choice<string, int>().ToString(), Is.EqualTo("Choice1Of2<String, Int32>()"));
+            Assert.Equal("Choice1Of2<String, Int32>(42)", Choice.NewChoice1Of2<string, int>("42").ToString());
+            Assert.Equal("Choice2Of2<String, Int32>(42)", Choice.NewChoice2Of2<string, int>(42).ToString());
+            Assert.Equal("Choice1Of2<String, Int32>()", new Choice<string, int>().ToString());
         }
 
         private static bool ChoiceEquals<T1, T2>(Choice<T1, T2> choice5, Choice<T1, T2> choice6)

@@ -1,20 +1,18 @@
 ﻿using FunctionalExtensions.SideEffects;
-using NFluent;
-using NUnit.Framework;
+using Xunit;
 
-namespace FunctionalExtensions.Tests.SideEffects
+namespace FunctionalExtensions.Tests
 {
-    [TestFixture]
     public class SideEffectExtensionsTests
     {
-        [Test]
+        [Fact]
         public void Do1_Test()
         {
             var o = Option.Some(5);
             var isCalled = false;
             o.Do(() => isCalled = true);
 
-            Check.That(isCalled);
+            Assert.True(isCalled);
         }
     }
 }

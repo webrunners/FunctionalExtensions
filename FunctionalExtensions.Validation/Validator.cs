@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace FunctionalExtensions.Validation
 {
-    [Obsolete("The Validation framework will be moved to another package.")]
     public static class Validator
     {
         public static Choice<T, Failure<TError>> NotNull<T, TError>(T value, TError err) where T : class

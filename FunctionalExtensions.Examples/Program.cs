@@ -43,9 +43,9 @@ namespace FunctionalExtensions.Examples
                 .OnExceptionNone()
                 .Curry()
                 .ToOption()
-                .Do(() => Console.Write("Enter a flaoting point number: "))
+                .Do(() => Console.Write("Enter a floating point number: "))
                 .Apply(ReadDecimal())
-                .Do(() => Console.Write("Enter a flaoting point number: "))
+                .Do(() => Console.Write("Enter a floating point number: "))
                 .Apply(ReadDecimal())
                 .Select(x => x * 100)
                 .Match(

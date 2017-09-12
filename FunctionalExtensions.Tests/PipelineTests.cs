@@ -1,14 +1,12 @@
 ﻿using FunctionalExtensions.Lambda;
 using FunctionalExtensions.Pipeline;
-using NFluent;
-using NUnit.Framework;
+using Xunit;
 
-namespace FunctionalExtensions.Tests.Pipeline
+namespace FunctionalExtensions.Tests
 {
-    [TestFixture]
     public class PipelineTests
     {
-        [Test]
+        [Fact]
         public void Pipeline_Test()
         {
             var inc = Fun.Create((int x) => x + 1);
@@ -18,7 +16,7 @@ namespace FunctionalExtensions.Tests.Pipeline
                 .Pipeline(inc)
                 .Pipeline(x => x + 1);
 
-            Check.That(result).IsEqualTo(4);
+            Assert.Equal(4, result);
         }
     }
 }
